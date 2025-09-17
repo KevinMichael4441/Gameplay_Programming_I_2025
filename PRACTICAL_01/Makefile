@@ -1,16 +1,17 @@
-CXX	:= g++
+CXX		:= g++
 MSG_START	:="Build Started"
-MSG_END	:= "Buld Ended"
+MSG_END		:= "Buld Ended"
 MSG_CLEAN	:= "Cleaning Up!"
 BUILD_DIR	:= ./bin
-SRC_DIR	:= ./src
-TARGET	:= ${BUILD_DIR}/sampleapp.bin
-SRC	:= ${SRC_DIR}/main.cpp ${SRC_DIR}/sample_function.cpp
+SRC_DIR		:= ./src
+TARGET		:= ${BUILD_DIR}/sampleapp.bin
+SRC		:= ${SRC_DIR}/main.cpp ${SRC_DIR}/sample_function.cpp
 
 all:	build
 
 CXXFLAGS	:= -Wall
-DEBUG	:= 1
+DEBUG		:= 1
+
 
 ifeq ($(DEBUG), 1)
 	CXXFLAGS += -g
