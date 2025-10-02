@@ -69,6 +69,35 @@ bool checkStrike(struct Missile *missile, struct Target *target1, struct Target 
     }
   }
 
+  else if (missile->payload == WarHead::NUCLEAR)
+  {
+    int const MAX_SIZE = 3;
+    Coordinates affected[MAX_SIZE][MAX_SIZE];
+    Coordinates pointOfContact = missile->coordinates;
+
+    for (int i = 0; i < MAX_SIZE; i++)
+    {
+      for (int j = 0; j < MAX_SIZE; j++)
+      {
+        affected[i][j].x = pointOfContact.x + i - 1;
+        affected[i][j].y = pointOfContact.y + j - 1;	      
+      } 
+    }
+  
+
+    for (int i = 0; i < MAX_SIZE; i++)
+    {
+      for (int j = 0; j < MAX_SIZE; j++)
+      {
+        if (target1->coordinates.x == affected[i][j].x &&
+            target1->coordinates.y == affected[i][j].y)
+        {
+          return true;
+        }
+      } 
+    }
+  }
+
   return false;
 }
 
@@ -101,6 +130,7 @@ void printCoordinates(Coordinates c)
 // Main entry point for the game
 int main()
 {
+  srand(time(nullptr));
   // Create a new Target
   Target *target1 = (Target *)malloc(sizeof(Target));
   Target *target2 = (Target *)malloc(sizeof(Target));
@@ -130,7 +160,7 @@ int main()
   std::cout << missile->target.coordinates.x;
   std::cout << missile->target.coordinates.y;
 
-  missile->payload = EXPLOSIVE;
+  missile->payload = NUCLEAR;
   missile->arm = armMissile;
   missile->update = updateMissile;
 
