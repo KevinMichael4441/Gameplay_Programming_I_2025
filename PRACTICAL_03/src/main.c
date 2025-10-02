@@ -56,23 +56,39 @@ void armMissile(struct Missile *missile)
     missile->armed = false;
 }
 
+bool checkStrike(struct Missile *missile, struct Target *target1, struct Target *target2)
+{
+  if (missile->payload == WarHead::EXPLOSIVE)
+  {  
+    if((missile->coordinates.x == target1->coordinates.x && 
+        missile->coordinates.y == target1->coordinates.y) ||
+       (missile->coordinates.x == target2->coordinates.x &&
+        missile->coordinates.y == target2->coordinates.y))
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // Function to update missile position
 void updateMissile(struct Missile *missile)
 {
   if (missile->target.coordinates.x < missile->coordinates.x)
   {
-    missile->coordinates.x++;
+    missile->coordinates.x--;
   }else if (missile->target.coordinates.x > missile->coordinates.x)
   {
-    missile->coordinates.x--;
+    missile->coordinates.x++;
   }
 
   if (missile->target.coordinates.y < missile->coordinates.y)
   {
-    missile->coordinates.y++;
+    missile->coordinates.y--;
   }else if (missile->target.coordinates.y > missile->coordinates.y)
   {
-    missile->coordinates.y--;
+    missile->coordinates.y++;
   }
 }
 
@@ -132,7 +148,7 @@ int main()
   missile->coordinates.y = 0;
 
   // Update Position
-  while(missile->coordinates.x != missile->target.coordinates.x &&
+  while(missile->coordinates.x != missile->target.coordinates.x ||
   missile->coordinates.y != missile->target.coordinates.y)
   {
     missile->update(missile);
@@ -147,6 +163,10 @@ int main()
   // Print Missile target
   printf("Print Missile Target Position\n");
   printCoordinates(missile->target.coordinates);
+
+  std::cout << "\n\n";
+  std::cout << checkStrike(missile, target1,target2) << "\n";
+  
 
   // Free Memory
   free(target2);
