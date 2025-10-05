@@ -4,6 +4,11 @@
 #include <math.h>
 #include <iostream>
 
+
+
+int const PASSWORD_SIZE = 5;
+
+
 // Define Position xy struct
 typedef struct Position
 {
@@ -32,6 +37,7 @@ typedef struct Missile
   Coordinates coordinates;
   Target target;
 
+  int password[5];//[5] = {103,114,101,101,110};
   bool armed;
 
   // ADVANCED: Function pointers (direct function calls can be used instead)
@@ -93,6 +99,45 @@ void setPayload(struct Missile *missile)
 }
 
 
+
+bool checkPassword(struct Missile *missile)
+{
+
+  bool passwordMatches = true;
+  
+  std::string userPassword = "";
+  std::cout << "\nEnter the password: ";
+  std::cin >> userPassword;
+  
+ 
+  if (userPassword.size() == PASSWORD_SIZE)
+  {
+    for (int index = 0; index < PASSWORD_SIZE; index++)
+    {
+      if (missile->password[index] != static_cast<int>(userPassword[index]))
+      {
+        passwordMatches = false;
+      }
+    }
+  }
+  else
+  {
+    passwordMatches = false;
+  }
+  
+  if (passwordMatches)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+
+
+
 bool checkStrike(struct Missile *missile, struct Target *t_target)
 {
   if (missile->payload == WarHead::EXPLOSIVE)
@@ -140,7 +185,6 @@ bool checkStrike(struct Missile *missile, struct Target *t_target)
 void updateMissile(struct Missile *missile)
 {
 
-  std::cout << "Function Entered!!!\n\n";
   if (missile->target.coordinates.x < missile->coordinates.x)
   {
     missile->coordinates.x--;
@@ -156,8 +200,6 @@ void updateMissile(struct Missile *missile)
   {
     missile->coordinates.y++;
   }
-
-  std::cout << "FUCTION RAN AND DONE\n\n";
 }
 
 // Function to print coordinates
@@ -185,6 +227,9 @@ int main()
   target2->coordinates.y = floor(rand()%10);
   target2->hit = false;
   
+  
+
+  
   while (!target1->hit || !target2->hit)
   { 
     // Create a new Missile
@@ -195,38 +240,56 @@ int main()
     std::cout << "\nEnter Target y: \n";
     std::cin >> missile->target.coordinates.y;
     std::cout << "\n\n";
+
+    missile->password[0] = 103;
+    missile->password[1] = 114;
+    missile->password[2] = 101;
+    missile->password[3] = 101;
+    missile->password[4] = 110;
+
+
+    
 	
     // Set Initial Position
-    missile->coordinates.x = 0;
-    missile->coordinates.y = 0;
+    missile->coordinates.x = -1;
+    missile->coordinates.y = -1;
 
     setPayload(missile);
     armMissile(missile);
 
     missile->update = updateMissile;
-    //checkPassword(missile);
+    
+
+    if (missile->armed)
+
+      if (checkPassword(missile))
+      {
+        std::cout << "\nCorrect code. Missile Launching!\n";
+      }
+      else 
+      {
+        missile->armed = false;
+        std::cout << "\nINCORRECT CODE. SHUTTING DOWN....\n\n";
+        free(missile);
+        break;
+      }
+
+    else
+    {
+      std::cout << "If you don't want to fire, no need to play anymore.\n\n";
+      break;        
+    }
 
 
     //Update Position
     while(missile->coordinates.x != missile->target.coordinates.x ||
     missile->coordinates.y != missile->target.coordinates.y)
     {
-      std::cout << "ENTERED UPDATE WHILE LOOP\n\n";
       missile->update(missile);
-      printf("Missile Updated!");
+      printf("Missile Updated!\n");
       printCoordinates(missile->coordinates);
+      printf("\n");
     }
-
-    // Print Missile Position
-    printf("Print Missile Position after Update\n");
-    printCoordinates(missile->coordinates);
-
-    // Print Missile target
-    printf("\nPrint Target Position\n");
-    printCoordinates(target1->coordinates);
-    printCoordinates(target2->coordinates);
-
-    std::cout << "\n\n";
 
     if (checkStrike(missile, target1))
     {
@@ -240,13 +303,13 @@ int main()
       target2->hit = true;
       std::cout << "THE MISSILE HAS HIT THE SECOND TARGET!\n";
     }
+
+
     // Free Missile Memory
     free(missile);
 
     
   }
-
-  std::cout << "Congratz Comrade! You took out the targets!\n\n";
   
   free(target1);
   free(target2);
