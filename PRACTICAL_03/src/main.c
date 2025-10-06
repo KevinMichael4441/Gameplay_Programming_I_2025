@@ -208,6 +208,7 @@ void printCoordinates(Coordinates c)
   printf("X: %d, Y: %d\n", c.x, c.y);
 }
 
+
 // Main entry point for the game
 int main()
 {
@@ -234,7 +235,9 @@ int main()
   { 
     // Create a new Missile
     Missile *missile = (Missile *)malloc(sizeof(Missile));
-	
+
+    std::cout << "\n\n-------------------------------------------------\n";
+    std::cout << "Missile Initialised!\n";	
     std::cout << "Enter Target x: \n";
     std::cin >> missile->target.coordinates.x;
     std::cout << "\nEnter Target y: \n";
