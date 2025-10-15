@@ -22,8 +22,9 @@ public:
 		while(playerAction == 0)
 		{
 			std::cout << "Choose your Action:\n";
-			std::cout << "1 - Attack\n2 - Defend\n3 - Special";
+			std::cout << "1 - Attack\n2 - Defend\n3 - Special\n\n";
 			std::cin >> playerAction;
+			std::cout << "\n\n";
 			
 			if (playerAction == 1)
 			{
@@ -63,10 +64,83 @@ public:
 			npc.setTauntState();
 		}	
 	}	
+	
+	void npcTaunts()
+	// What interaction will happen when npc taunts; based on Player's choice
+	{
+		npc.taunt();
+		if (player.state == GameObject::States::ATTACK)
+		{
+			player.attack(npc);
+		}	
+		else if (player.state == GameObject::States::DEFEND)
+		{
+			player.defend();
+		}
+		else if (player.state == GameObject::States::SPECIAL)
+		{
+			player.attack(npc);
+		}			
+	}
+	
+	void npcDefends()
+	// What interaction will happen when npc defends; based on Player's choice
+	{
+		if (player.state == GameObject::States::ATTACK)
+		{
+			npc.defend();
+		}	
+		else if (player.state == GameObject::States::DEFEND)
+		{
+			player.defend();
+			npc.defend();
+		}
+		else if (player.state == GameObject::States::SPECIAL)
+		{
+			npc.defend();
+			player.attack(npc);
+		}		
+	}
+	
+	void npcAttacks()
+	// What interaction will happen when npc attacks; based on Player's choice
+	{
+		if (player.state == GameObject::States::ATTACK)
+		{
+			npc.attack(player);
+			player.attack(npc);
+		}	
+		else if (player.state == GameObject::States::DEFEND)
+		{
+			player.defend();
+		}
+		else if (player.state == GameObject::States::SPECIAL)
+		{
+			npc.attack(player);
+		}	
+	}
+	
+	void npcSpecialAttacks()
+	// What interaction will happen when npc Special attacks; based on Player's choice
+	{
+		if (player.state == GameObject::States::ATTACK)
+		{
+			player.attack(npc);
+		}	
+		else if (player.state == GameObject::States::DEFEND)
+		{
+			npc.attack(player);
+		}
+		else if (player.state == GameObject::States::SPECIAL)
+		{
+			npc.attack(player);
+			player.attack(npc);
+		}	
+	}
 
     void gameloop()
     {
-        std::cout << "Let make a virtual ;-) Turn Based Console Game" << std::endl;
+        std::cout << "\n\n\n\n\nWelcome to the OO Console Game" << std::endl;
 
         // Uncomment and try to compile. Why are errors produced?
         // GameObject go; // Error: Cannot instantiate an abstract class (GameObject has pure virtual methods)
@@ -79,11 +153,9 @@ public:
         // Uncomment and try to compile. What happens if we try to access a non-virtual method?
         // NPC npc;
         // npc.getHealth(); // This is fine, but if getHealth() is not overridden, it uses the base class method
-
-        std::cout << "Let go create a Player" << std::endl;
-        player.walk(); // Method call walk() - Bound at compile time to Player's walk()
-
-        std::cout << "Let go create an NPC" << std::endl;
+        
+		
+		player.walk(); // Method call walk() - Bound at compile time to Player's walk()
         npc.walk(); // Method call walk() - Bound at compile time to NPC's walk()
 
         // Uncomment to see the issue with calling the pure virtual method
@@ -97,68 +169,19 @@ public:
 			
 			if (npc.state == GameObject::States::TAUNT)
 			{
-				npc.taunt();
-				if (player.state == GameObject::States::ATTACK)
-				{
-					player.attack(npc);
-				}	
-				else if (player.state == GameObject::States::DEFEND)
-				{
-					player.defend();
-				}
-				else if (player.state == GameObject::States::SPECIAL)
-				{
-					player.attack(npc);
-				}					
+				npcTaunts();		
 			}
 			else if (npc.state == GameObject::States::DEFEND)
 			{
-				if (player.state == GameObject::States::ATTACK)
-				{
-					npc.defend();
-				}	
-				else if (player.state == GameObject::States::DEFEND)
-				{
-					player.defend();
-					npc.defend();
-				}
-				else if (player.state == GameObject::States::SPECIAL)
-				{
-					npc.defend();
-					player.attack(npc);
-				}					
+				npcDefends();
 			}
 			else if (npc.state == GameObject::States::ATTACK)
 			{
-				if (player.state == GameObject::States::ATTACK)
-				{
-					npc.attack(player);
-					player.attack(npc);
-				}	
-				else if (player.state == GameObject::States::DEFEND)
-				{
-					player.defend();
-				}
-				else if (player.state == GameObject::States::SPECIAL)
-				{
-					npc.attack(player);
-				}					
+				npcAttacks();				
 			}
 			else if (npc.state == GameObject::States::SPECIAL)
 			{
-				if (player.state == GameObject::States::ATTACK)
-				{
-					player.attack(npc);
-				}	
-				else if (player.state == GameObject::States::DEFEND)
-				{
-					npc.attack(player);
-				}
-				else if (player.state == GameObject::States::SPECIAL)
-				{
-					npc.attack(player);
-					player.attack(npc);
-				}					
+				npcSpecialAttacks();				
 			}
 
 			
