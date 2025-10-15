@@ -10,6 +10,10 @@ class GameObject
 protected:
     std::string name; // Protected so derived classes can access it
     int health;       // Protected so derived classes can access it
+	
+	enum class States{TAUNT, ATTACK, DEFEND};	// States in which go 
+	
+	GameObject::States state = GameObject::States::TAUNT;
 
 public:
     // Constructor to initialize health (default is set to 100)
@@ -25,8 +29,8 @@ public:
     // Marked as const as it does not modify member variable
     std::string getName() const;
 
-    // Pure virtual function for attack. This function must be implemented by derived classes.
-    virtual void attack(GameObject&) = 0;
+    // virtual function for attack.
+    virtual void attack(GameObject&);
 
     // Virtual method for defense. This can be overridden by derived classes if needed.
     virtual void defend();

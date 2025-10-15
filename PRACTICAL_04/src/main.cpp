@@ -15,7 +15,6 @@ private:
 
 public:
     Game() : player("Orc (Player)"), npc("Troll (Boss)") {}
-
     void gameloop()
     {
         cout << "Let make a virtual ;-) Turn Based Console Game" << endl;

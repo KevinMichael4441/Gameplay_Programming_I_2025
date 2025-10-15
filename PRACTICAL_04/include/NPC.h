@@ -11,8 +11,6 @@ public:
 
     void taunt();                             // Method for NPC to taunt the player
     void walk() override;                     // Specific implementation of walk()
-    void attack(GameObject& target) override; // Implementation of pure virtual attack method
-    void defend() override;                   // Optionally override defend method
 };
 
 #endif // NPC_H
