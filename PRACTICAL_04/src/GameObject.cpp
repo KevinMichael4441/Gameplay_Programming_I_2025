@@ -15,20 +15,19 @@ int GameObject::getHealth() const
 }
 
 // Default defend implementation
-void GameObject::defend()
+void GameObject::setDefendState()
 {
     state = GameObject::States::DEFEND;
 }
 
-void GameObject::attack(GameObject& )
+void GameObject::setAttackState()
 {
     state = GameObject::States::ATTACK;
 }
 
-// Default walk implementation
-void GameObject::walk()
+void GameObject::defend()
 {
-    std::cout << name << " GameObject : Walking..." << std::endl;
+    std::cout << name << " GameObject : Defending..." << std::endl;
 }
 
 // Default takeDamage implementation

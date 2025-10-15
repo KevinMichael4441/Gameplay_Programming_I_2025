@@ -13,3 +13,18 @@ void NPC::walk()
 {
     std::cout << name << " walks forward." << std::endl;
 }
+
+void NPC::attack(GameObject& target) {
+    std::cout << name << " attacks " << target.getName() << "!" << std::endl;
+    // Add logic to modify the target's health
+    target.takeDamage(10); // Example: deal 10 damage to the target
+}
+
+void NPC::setTauntState()
+{
+	state = GameObject::States::TAUNT;
+}
+
+void NPC::defend() {
+    std::cout << name << " takes a defensive stance." << std::endl;
+}

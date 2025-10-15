@@ -3,8 +3,6 @@
 #include <./include/Player.h>
 #include <./include/NPC.h>
 
-using namespace std;
-
 class Game
 {
 private:
@@ -15,9 +13,52 @@ private:
 
 public:
     Game() : player("Orc (Player)"), npc("Troll (Boss)") {}
+
+
+	void setStates()
+	{
+		int playerAction  = 0;
+	
+		while(playerAction == 0)
+		{
+			std::cout << "Choose your Action:\n";
+			std::cout << "1 - Attack\n2 - Defend";
+			std::cin >> playerAction;
+			
+			if (playerAction == 1)
+			{
+				player.setAttackState();
+			}
+			else if (playerAction == 2) 
+			{
+				player.setDefendState();
+			}
+			else
+			{
+				std::cout << "Choose one of these options!\n";
+				playerAction = 0;
+			}	
+		}
+		
+		int aiState = rand() % 11;
+		
+		if (aiState < 5)
+		{
+			npc.setAttackState();
+		}
+		else if (aiState < 10)
+		{
+			npc.setDefendState();
+		}
+		else
+		{
+			npc.setTauntState();
+		}	
+	}	
+
     void gameloop()
     {
-        cout << "Let make a virtual ;-) Turn Based Console Game" << endl;
+        std::cout << "Let make a virtual ;-) Turn Based Console Game" << std::endl;
 
         // Uncomment and try to compile. Why are errors produced?
         // GameObject go; // Error: Cannot instantiate an abstract class (GameObject has pure virtual methods)
@@ -31,10 +72,10 @@ public:
         // NPC npc;
         // npc.getHealth(); // This is fine, but if getHealth() is not overridden, it uses the base class method
 
-        cout << "Let go create a Player" << endl;
+        std::cout << "Let go create a Player" << std::endl;
         player.walk(); // Method call walk() - Bound at compile time to Player's walk()
 
-        cout << "Let go create an NPC" << endl;
+        std::cout << "Let go create an NPC" << std::endl;
         npc.walk(); // Method call walk() - Bound at compile time to NPC's walk()
 
         // Uncomment to see the issue with calling the pure virtual method
@@ -43,28 +84,50 @@ public:
         // Main GameLoop
         while (player.getHealth() > 0 && npc.getHealth() > 0)
         {
-            // Player attacks NPC
-            player.attack(npc); // Player attacks NPC - Bound at runtime to Player's attack()
-            player.defend();    // Player defends - Bound at compile time to Player's defend()
 
-            // NPC attacks Player
-            npc.attack(player); // NPC attacks Player - Bound at runtime to NPC's attack()
-            npc.defend();       // NPC defends - Bound at compile time to NPC's defend()
+			setStates();
+			
+			if (npc.state == GameObject::States::TAUNT)
+			{
+				if (player.state == GameObject::States::ATTACK)
+				{
+					npc.taunt();
+					player.attack(npc);
+				}	
+				else if (player.state == GameObject::States::DEFEND)
+				{
+					player.defend();
+				}	
+			}
+			else if (npc.state == GameObject::States::DEFEND)
+			{
+				if (player.state == GameObject::States::ATTACK)
+				{
+					npc.defend();
+				}	
+				else if (player.state == GameObject::States::DEFEND)
+				{
+					player.defend();
+					npc.defend();
+				}	
+			}
+			else if (npc.state == GameObject::States::ATTACK)
+			{
+				if (player.state == GameObject::States::ATTACK)
+				{
+					//resolveAttack();
+					npc.attack(player);
+					player.attack(npc);
+				}	
+				else if (player.state == GameObject::States::DEFEND)
+				{
+					player.defend();
+				}	
+			}
 
-            // Assign NPC memory address to GameObject pointer
-            GameObject *ptr_go = &npc;
-            ptr_go->walk();         // Bound at runtime -> action based on pointer (NPC's walk())
-            ptr_go->attack(player); // NPC attacks Player through GameObject pointer - Bound at runtime to NPC's attack()
-            ptr_go->defend();       // NPC defends through GameObject pointer - Bound at runtime to NPC's defend()
-
-            // Assign Player memory address to GameObject pointer
-            ptr_go = &player;
-            ptr_go->walk();      // Bound at runtime -> action based on pointer (Player's walk())
-            ptr_go->attack(npc); // Player attacks NPC through GameObject pointer - Bound at runtime to Player's attack()
-            ptr_go->defend();    // Player defends through GameObject pointer - Bound at runtime to Player's defend()
-
+			
             // Check for winner
-            if (player.getHealth() <= 0)
+            if (player.getHealth() == 0)
             {
                 winner = &npc;
                 break; // End loop if winner is determined
@@ -88,5 +151,5 @@ int main()
 {
     Game game;
     game.gameloop();
-    cin.get();
+    std::cin.get();
 }
