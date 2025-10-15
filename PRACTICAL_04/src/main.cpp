@@ -22,16 +22,20 @@ public:
 		while(playerAction == 0)
 		{
 			std::cout << "Choose your Action:\n";
-			std::cout << "1 - Attack\n2 - Defend";
+			std::cout << "1 - Attack\n2 - Defend\n3 - Special";
 			std::cin >> playerAction;
 			
 			if (playerAction == 1)
 			{
-				player.setAttackState();
+				player.setAttackState(static_cast<GameObject::States>(1));
 			}
 			else if (playerAction == 2) 
 			{
 				player.setDefendState();
+			}
+			else if (playerAction == 3)
+			{
+				player.setAttackState(static_cast<GameObject::States>(3));
 			}
 			else
 			{
@@ -40,13 +44,17 @@ public:
 			}	
 		}
 		
-		int aiState = rand() % 11;
+		int aiState = rand() % 10;
 		
-		if (aiState < 5)
+		if (aiState < 3)
 		{
-			npc.setAttackState();
+			npc.setAttackState(static_cast<GameObject::States>(1));
 		}
-		else if (aiState < 10)
+		else if (aiState < 6)
+		{
+			npc.setAttackState(static_cast<GameObject::States>(3));
+		}
+		else if (aiState < 9)
 		{
 			npc.setDefendState();
 		}
@@ -89,15 +97,19 @@ public:
 			
 			if (npc.state == GameObject::States::TAUNT)
 			{
+				npc.taunt();
 				if (player.state == GameObject::States::ATTACK)
 				{
-					npc.taunt();
 					player.attack(npc);
 				}	
 				else if (player.state == GameObject::States::DEFEND)
 				{
 					player.defend();
-				}	
+				}
+				else if (player.state == GameObject::States::SPECIAL)
+				{
+					player.attack(npc);
+				}					
 			}
 			else if (npc.state == GameObject::States::DEFEND)
 			{
@@ -109,20 +121,44 @@ public:
 				{
 					player.defend();
 					npc.defend();
-				}	
+				}
+				else if (player.state == GameObject::States::SPECIAL)
+				{
+					npc.defend();
+					player.attack(npc);
+				}					
 			}
 			else if (npc.state == GameObject::States::ATTACK)
 			{
 				if (player.state == GameObject::States::ATTACK)
 				{
-					//resolveAttack();
 					npc.attack(player);
 					player.attack(npc);
 				}	
 				else if (player.state == GameObject::States::DEFEND)
 				{
 					player.defend();
+				}
+				else if (player.state == GameObject::States::SPECIAL)
+				{
+					npc.attack(player);
+				}					
+			}
+			else if (npc.state == GameObject::States::SPECIAL)
+			{
+				if (player.state == GameObject::States::ATTACK)
+				{
+					player.attack(npc);
 				}	
+				else if (player.state == GameObject::States::DEFEND)
+				{
+					npc.attack(player);
+				}
+				else if (player.state == GameObject::States::SPECIAL)
+				{
+					npc.attack(player);
+					player.attack(npc);
+				}					
 			}
 
 			
@@ -149,6 +185,7 @@ public:
 
 int main()
 {
+	srand(time(nullptr));
     Game game;
     game.gameloop();
     std::cin.get();

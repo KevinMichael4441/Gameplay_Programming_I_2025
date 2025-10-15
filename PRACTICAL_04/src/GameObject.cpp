@@ -20,9 +20,17 @@ void GameObject::setDefendState()
     state = GameObject::States::DEFEND;
 }
 
-void GameObject::setAttackState()
+void GameObject::setAttackState(GameObject::States t_state)
 {
-    state = GameObject::States::ATTACK;
+	if (t_state == GameObject::States::ATTACK)
+	{
+		state = GameObject::States::ATTACK;
+	}	
+	else if (t_state == GameObject::States::SPECIAL)
+	{
+		state = GameObject::States::SPECIAL;
+	}
+    
 }
 
 void GameObject::defend()

@@ -14,6 +14,13 @@ protected:
 
 
 public:
+	
+	// enum class with all go states
+	enum class States{TAUNT, ATTACK, DEFEND, SPECIAL};	// States in which go behave
+	
+	// initially initializing to Taunt
+	GameObject::States state = GameObject::States::TAUNT;
+
     // Constructor to initialize health (default is set to 100)
     GameObject(std::string name = "PlayerUnknown", int health = 100) : name(name), health(health) {}
 
@@ -27,7 +34,7 @@ public:
     // Marked as const as it does not modify member variable
     std::string getName() const;
 
-    void setAttackState();
+    void setAttackState(GameObject::States t_state);
     void setDefendState();
 	
 	
@@ -43,11 +50,7 @@ public:
     // Instance method takeDamage
     void takeDamage(int);
 	
-	// enum class with all go states
-	enum class States{TAUNT, ATTACK, DEFEND};	// States in which go 
-	
-	// initially initializing to Taunt
-	GameObject::States state = GameObject::States::TAUNT;
+
 };
 
 #endif // GAME_OBJECT_H
