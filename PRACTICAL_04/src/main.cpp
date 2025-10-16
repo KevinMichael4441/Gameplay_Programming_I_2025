@@ -8,7 +8,8 @@ class Game
 private:
     Player player;
     NPC npc;
-
+	
+    GameObject *currentlyMoving = nullptr;
     GameObject *winner = nullptr;
 
 public:
@@ -71,15 +72,18 @@ public:
 		npc.taunt();
 		if (player.state == GameObject::States::ATTACK)
 		{
-			player.attack(npc);
+			currentlyMoving = &player;
+			currentlyMoving->attack(npc);
 		}	
 		else if (player.state == GameObject::States::DEFEND)
 		{
-			player.defend();
+			currentlyMoving = &player;
+			currentlyMoving->defend();
 		}
 		else if (player.state == GameObject::States::SPECIAL)
 		{
-			player.attack(npc);
+			currentlyMoving = &player;
+			currentlyMoving->attack(npc);
 		}			
 	}
 	
@@ -88,17 +92,22 @@ public:
 	{
 		if (player.state == GameObject::States::ATTACK)
 		{
-			npc.defend();
+			currentlyMoving = &npc;
+			currentlyMoving->defend();
 		}	
 		else if (player.state == GameObject::States::DEFEND)
 		{
-			player.defend();
-			npc.defend();
+			currentlyMoving = &player;
+			currentlyMoving->defend();
+			currentlyMoving = &npc;
+			currentlyMoving->defend();
 		}
 		else if (player.state == GameObject::States::SPECIAL)
 		{
-			npc.defend();
-			player.attack(npc);
+			currentlyMoving = &npc;
+			currentlyMoving->defend();
+			currentlyMoving = &player;
+			currentlyMoving->attack(npc);
 		}		
 	}
 	
@@ -107,16 +116,20 @@ public:
 	{
 		if (player.state == GameObject::States::ATTACK)
 		{
-			npc.attack(player);
-			player.attack(npc);
+			currentlyMoving = &npc;
+			currentlyMoving->attack(player);
+			currentlyMoving = &player;
+			currentlyMoving->attack(npc);
 		}	
 		else if (player.state == GameObject::States::DEFEND)
 		{
-			player.defend();
+			currentlyMoving = &player;
+			currentlyMoving->defend();
 		}
 		else if (player.state == GameObject::States::SPECIAL)
 		{
-			npc.attack(player);
+			currentlyMoving = &npc;
+			currentlyMoving->attack(player);
 		}	
 	}
 	
@@ -125,16 +138,20 @@ public:
 	{
 		if (player.state == GameObject::States::ATTACK)
 		{
-			player.attack(npc);
+			currentlyMoving = &player;
+			currentlyMoving->attack(npc);
 		}	
 		else if (player.state == GameObject::States::DEFEND)
 		{
-			npc.attack(player);
+			currentlyMoving = &npc;
+			currentlyMoving->attack(player);
 		}
 		else if (player.state == GameObject::States::SPECIAL)
 		{
-			npc.attack(player);
-			player.attack(npc);
+			currentlyMoving = &npc;
+			currentlyMoving->attack(player);
+			currentlyMoving = &player;
+			currentlyMoving->attack(npc);
 		}	
 	}
 

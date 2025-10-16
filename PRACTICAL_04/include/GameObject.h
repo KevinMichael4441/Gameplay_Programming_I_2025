@@ -15,11 +15,11 @@ protected:
 
 public:
 	
-	// enum class with all go states
-	enum class States{TAUNT, ATTACK, DEFEND, SPECIAL};	// States in which go behave
+    // enum class with all go states
+    enum class States{TAUNT, ATTACK, DEFEND, SPECIAL};	// States in which go behave
 	
-	// initially initializing to Taunt
-	GameObject::States state = GameObject::States::TAUNT;
+    // initially initializing to Taunt
+    GameObject::States state = GameObject::States::TAUNT;
 
     // Constructor to initialize health (default is set to 100)
     GameObject(std::string name = "PlayerUnknown", int health = 100) : name(name), health(health) {}
@@ -38,11 +38,11 @@ public:
     void setDefendState();
 	
 	
-	virtual void defend();
+    virtual void defend();
 	
 	
-	// Pure virtual function for attack. This function must be implemented by derived classes.
-	virtual void attack(GameObject&) = 0;
+    // Pure virtual function for attack. This function must be implemented by derived classes.
+    virtual void attack(GameObject&) = 0;
 
     // Pure Virtual method for walking behavior. This function must be implemented by derived classes.
     virtual void walk() = 0;
