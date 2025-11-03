@@ -61,7 +61,7 @@ void GameLoop(void)
     // Update the counter message
     sprintf(message, "%d", counter);
     DrawText(message, 190, 240, 20, LIGHTGRAY);
-
+    
     // Draw the Game Objects
     DrawGame();
 
