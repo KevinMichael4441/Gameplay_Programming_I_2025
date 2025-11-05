@@ -15,7 +15,6 @@
 *.wmv
 
 # Bin dir
-/debug/
 /release/
 
 # Web dir
