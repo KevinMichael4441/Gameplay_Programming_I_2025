@@ -25,7 +25,16 @@ void UpdateGame() {
 void DrawGame() {
     
 	DrawChristmasTree();
-	DrawTexture(m_texture,m_position.x,m_position.y,WHITE);
+		
+	if (IsKeyDown(KEY_SPACE))
+	{
+		DrawTexture(m_texture,m_position.x,m_position.y,LIME);
+	}
+	else 
+	{
+		DrawTexture(m_texture,m_position.x,m_position.y,WHITE);
+	}
+	
 }
 
 void DrawChristmasTree()
