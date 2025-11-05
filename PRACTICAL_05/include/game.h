@@ -12,6 +12,7 @@ void BoundaryChecking();
 
 void DrawGame();
 void DrawChristmasTree();
+void DrawMessage();
 
 void CloseGame();
 

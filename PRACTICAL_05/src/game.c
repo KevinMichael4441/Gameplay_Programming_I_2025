@@ -31,6 +31,13 @@ void UpdateGame() {
 	
 }
 
+void DrawMessage()
+{
+    DrawText("Click mouse button to draw primitives", 100,30,30, BLACK);
+    DrawText("Press space to change colour", 100, 70, 30, BLACK);
+    DrawText("Use Arrows to move", 100, 150, 30, BLACK);
+}
+
 void DrawGame() {
 
     DrawTexture(background,0,0,WHITE);
@@ -48,6 +55,8 @@ void DrawGame() {
     {
 	DrawTexture(m_texture,m_position.x,m_position.y,WHITE);
     }
+
+    DrawMessage();
 	
 }
 
