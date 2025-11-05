@@ -3,7 +3,6 @@
 
 # Applications
 *.app
-*.exe
 *.war
 
 # Large media files
@@ -21,4 +20,3 @@
 /web/
 
 # Object files
-*.o
