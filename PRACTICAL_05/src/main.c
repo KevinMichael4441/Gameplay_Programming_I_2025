@@ -43,29 +43,16 @@ int main(void)
     return 0;
 }
 
-int counter = 0;
-char message[11];
-
 void GameLoop(void)
 {
-    BeginDrawing();
-
-    // Update Game Data
-    // Should be outside BeginDrawing(); and EndDrawing();
-    UpdateGame();
-
-    ClearBackground(RAYWHITE);
-    DrawText("Welcome to Raylib Template Starter", 190, 200, 20, LIGHTGRAY);
-    DrawText("Gameplay Programming I", 190, 220, 20, LIGHTGRAY);
-
-    // Update the counter message
-    sprintf(message, "%d", counter);
-    DrawText(message, 190, 240, 20, LIGHTGRAY);
+	
+	UpdateGame();
     
-    // Draw the Game Objects
-    DrawGame();
+	BeginDrawing();
 
-    counter++;
+		ClearBackground(RAYWHITE);
+		// Draw the Game Objects
+		DrawGame();
 
     EndDrawing();
 }
