@@ -3,6 +3,7 @@
 
 # Applications
 *.app
+*.exe
 *.war
 
 # Large media files
@@ -14,12 +15,14 @@
 *.wmv
 
 # Bin dir
+/debug/
 /release/
 
 # Web dir
 /web/
 
 # Object files
+*.o
 
 # Ignore raylib directory
 /raylib/
