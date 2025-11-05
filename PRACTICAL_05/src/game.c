@@ -3,7 +3,7 @@
 #include "../include/game.h"
 
 
-Texture2D m_texture, idle, walkA, walkB;
+Texture2D m_texture, idle, walkA, walkB, background;
 Vector2 m_direction, m_position;
 int m_velocity;
 
@@ -13,39 +13,41 @@ int m_walkTimer = 0;
 
 void InitGame() {
 
-	idle = LoadTexture("resources/player.png");
-	walkA = LoadTexture("resources/walkA.png");
-	walkB = LoadTexture("resources/walkB.png");
-	m_texture = idle;
+    background = LoadTexture("resources/background.png");
+    idle = LoadTexture("resources/player.png");
+    walkA = LoadTexture("resources/walkA.png");
+    walkB = LoadTexture("resources/walkB.png");
+    m_texture = idle;
 	
-	m_direction = (Vector2){0,0};
-	m_position = (Vector2){100,100};
-	m_velocity = 4;
+    m_direction = (Vector2){0,0};
+    m_position = (Vector2){100,100};
+    m_velocity = 4;
 	
-	printf("Game Initialized!\n");
+    printf("Game Initialized!\n");
 }
 
 void UpdateGame() {
-    
-	UpdatePlayer();
+    UpdatePlayer();
 	
 }
 
 void DrawGame() {
+
+    DrawTexture(background,0,0,WHITE);
     
-	if(IsMouseButtonDown(0) || IsMouseButtonDown(1) ||IsMouseButtonDown(2))
-	{
-		DrawChristmasTree();
-	}
+    if(IsMouseButtonDown(0) || IsMouseButtonDown(1) ||IsMouseButtonDown(2))
+    {
+	DrawChristmasTree();
+    }
 		
-	if (IsKeyDown(KEY_SPACE))
-	{
-		DrawTexture(m_texture,m_position.x,m_position.y,LIME);
-	}
-	else 
-	{
-		DrawTexture(m_texture,m_position.x,m_position.y,WHITE);
-	}
+    if (IsKeyDown(KEY_SPACE))
+    {
+	DrawTexture(m_texture,m_position.x,m_position.y,LIME);
+    }
+    else 
+    {
+	DrawTexture(m_texture,m_position.x,m_position.y,WHITE);
+    }
 	
 }
 
@@ -65,21 +67,27 @@ void DrawChristmasTree()
 
 
 void CloseGame() {
+    UnloadTexture(m_texture);
+    UnloadTexture(walkA);
+    UnloadTexture(walkB);
+    UnloadTexture(background);
+    UnloadTexture(idle);
+
     printf("Game Closed!\n");
 }
 
 
 void UpdatePlayer()
 {
-	m_direction.x = (int)(IsKeyDown(KEY_RIGHT)) - (int)(IsKeyDown(KEY_LEFT));
+    m_direction.x = (int)(IsKeyDown(KEY_RIGHT)) - (int)(IsKeyDown(KEY_LEFT));
     m_direction.y = (int)(IsKeyDown(KEY_DOWN)) - (int)(IsKeyDown(KEY_UP));
 
     m_direction = Vector2Normalize(m_direction);
 
-	if (m_direction.x == 0 && m_direction.y == 0)
-	{
-		m_texture = idle;
-	}
+    if (m_direction.x == 0 && m_direction.y == 0)
+    {
+	m_texture = idle;
+    }
     else if (m_currentWalk == 0 && m_walkTimer > m_walkDelay)
     {
         m_currentWalk = 1;
@@ -103,7 +111,7 @@ void UpdatePlayer()
 void MovePlayer()
 {   
     m_position.x += m_direction.x * m_velocity;
-	m_position.y += m_direction.y * m_velocity;
+    m_position.y += m_direction.y * m_velocity;
 }
 
 void BoundaryChecking()
