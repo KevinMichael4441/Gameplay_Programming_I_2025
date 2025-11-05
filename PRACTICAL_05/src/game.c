@@ -24,7 +24,10 @@ void UpdateGame() {
 
 void DrawGame() {
     
-	DrawChristmasTree();
+	if(IsMouseButtonDown(0) || IsMouseButtonDown(1) ||IsMouseButtonDown(2))
+	{
+		DrawChristmasTree();
+	}
 		
 	if (IsKeyDown(KEY_SPACE))
 	{
