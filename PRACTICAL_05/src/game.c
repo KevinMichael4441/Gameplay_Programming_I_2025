@@ -2,6 +2,15 @@
 #include "stdio.h"
 #include "../include/game.h"
 
+
+Texture2D m_texture, idle, walkA, walkB;
+Vector2 m_direction, m_position;
+int m_velocity;
+
+int m_currentWalk = 0;
+int m_walkDelay = 15;
+int m_walkTimer = 0;
+
 void InitGame() {
 
 	idle = LoadTexture("resources/player.png");
