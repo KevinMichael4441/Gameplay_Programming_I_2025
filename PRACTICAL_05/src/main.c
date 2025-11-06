@@ -47,12 +47,15 @@ void GameLoop(void)
 {
 	
 	UpdateGame();
+	// Player is updating in this function
+	
     
 	BeginDrawing();
 
 		ClearBackground(RAYWHITE);
 		// Draw the Game Objects
 		DrawGame();
+		// Player is being drawn in this function 
 
     EndDrawing();
 }
