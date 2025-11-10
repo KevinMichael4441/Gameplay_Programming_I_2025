@@ -6,17 +6,19 @@
 
 int main()
 {
-    Circle *c1;
-    c1->x = 5;
-    c1->y = 0;
-    c1->radius = 2;
+    Rectangle *r1;
+    r1->x = 2;
+    r1->y = 3;
+    r1->width = 6;
+    r1->height = 2;
  
-    Circle *c2;
-    c2->x = 0;
-    c2->y = -5;
-    c2->radius = 5;
+    Rectangle *r2;
+    r2->x = 7;
+    r2->y = 1;
+    r2->width = 3;
+    r2->height = 3;
     
-    std::cout << "\n\nIt is " + std::to_string(circleToCircle(c1, c2)) + " that the circles collide!\n\n";
+    std::cout << "\n\nIt is " + std::to_string(rectangleToRectangle(r1, r2)) + " that the rectangles collide!\n\n";
 
 
     return 0;
