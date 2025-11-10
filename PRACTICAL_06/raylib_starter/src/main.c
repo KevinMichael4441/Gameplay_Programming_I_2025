@@ -16,7 +16,7 @@ void GameLoop(void);
 int main(void)
 {
 
-    InitWindow(screenWidth, screenHeight, "Raylib Template StarterKit GPPI");
+    InitWindow(screenWidth, screenHeight, "Raylib StarterKit GPPI");
 
     // Initialise Game
     InitGame();
@@ -43,19 +43,29 @@ int main(void)
     return 0;
 }
 
+int counter = 0;
+char message[11];
+
 void GameLoop(void)
 {
-	
-	UpdateGame();
-	// Player is updating in this function
-	
-    
-	BeginDrawing();
+    BeginDrawing();
 
-		ClearBackground(RAYWHITE);
-		// Draw the Game Objects
-		DrawGame();
-		// Player is being drawn in this function 
+    // Update Game Data
+    // Should be outside BeginDrawing(); and EndDrawing();
+    UpdateGame();
+
+    ClearBackground(RAYWHITE);
+    DrawText("Welcome to Raylib", 190, 200, 20, LIGHTGRAY);
+    DrawText("Gameplay Programming I", 190, 220, 20, LIGHTGRAY);
+
+    // Update the counter message
+    sprintf(message, "%d", counter);
+    DrawText(message, 190, 240, 20, LIGHTGRAY);
+
+    // Draw the Game Objects
+    DrawGame();
+
+    counter++;
 
     EndDrawing();
 }

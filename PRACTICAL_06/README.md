@@ -1,231 +1,137 @@
-# Missile Defence (Mini Project)
+# Raylib Template Guide <a name="raylib-template-guide"></a>
 
-## Project Overview
-The **Missile Defence** mini project is a **console-based C game** simulating missile targeting and defence strategies.  
+A guide for creating new projects using the raylib_template repository, which includes raylib_starter as a submodule. This guide walks through the process of setting up a new project while maintaining the benefits of the starter kit's structure and build system.
 
-You'll use **structs**, **enums**, and **functions** to implement linear gameplay mechanics: from selecting a warhead to updating missile positions and checking if a target is hit.  
+## Table of Contents
 
-This project builds skills in:
+- [Overview](#overview)
+- [Initial Setup](#initial-setup)
+  - [Repository Setup](#repository-setup)
+  - [Remote Configuration](#remote-configuration)
+- [Project Structure](#project-structure)
+- [Build Configuration](#build-configuration)
+- [Maintenance](#maintenance)
+- [Resources](#resources)
+- [Support](#support)
 
-- **C programming fundamentals** (structs, enums, pointers, function pointers).
-- **Makefile build systems** for cross-platform compilation.
-- **Debugging with GDB**.
-- **Strategic game logic design**.
+## Overview <a name="overview"></a>
 
-By the end, you will have a working terminal-based game and a solid foundation for game development in C.
+This guide provides:
 
----
+- Step-by-step project initialization
+- Repository configuration instructions
+- Project structure organization
+- Build system customization
+- Maintenance procedures
 
-## Getting Started
+## Initial Setup <a name="initial-setup"></a>
 
-Getting up and running with Missile Defence
+### Repository Setup <a name="repository-setup"></a>
 
-### Windows Setup
+1. **Clone Template Repository**
+   ```bash
+   git clone https://bitbucket.org/MuddyGames/raylib_template.git new_project_name
+   cd new_project_name
+   ```
 
-#### 1. Install MSYS2
-Download and install: [https://www.msys2.org](https://www.msys2.org)
+2. **Create Remote Repository**
+   - Create a new repository on your Git hosting service
+   - Name it according to your project (e.g., `my_new_project`)
 
-#### 2. Install required tools
-In the MSYS2 terminal, run:
+### Remote Configuration <a name="remote-configuration"></a>
+
+1. **Update Remote URL**
+   ```bash
+   git remote set-url origin https://bitbucket.org/YourUsername/my_new_project.git
+   ```
+
+2. **Initialize Project**
+   ```bash
+   git push -u origin main
+   ```
+
+## Project Structure <a name="project-structure"></a>
+
+Organize your project files within the provided structure:
+
+- Place source files in the `src` directory
+- Keep project-specific headers in `include`
+- Maintain assets in `resources`
+- Configure builds in the root `Makefile`
+
+		```
+		new_project/
+		├── include/ 
+		│   └── game.h           # Game update methods
+		├── src/                 # Your project-specific source files
+		│   ├── game.c           # Game update implementation
+		│   └── main.c           # Main entry point
+		├── raylib_starter/      # Submodule containing the starter kit
+		├── template/
+		│   └── template.html    # Basic index HTML game page template
+		├── Makefile             # Project-specific build configuration
+		└── README.md            # Project documentation
+		```
+
+## Build Configuration <a name="build-configuration"></a>
+
+The template includes a preconfigured Makefile with the following targets:
+
 ```bash
-pacman -S make git mingw-w64-ucrt-x86_64-gcc
-```
+# Build all targets (desktop)
+make all
 
-### Linux Setup
+# Build desktop version
+make build
 
-#### 1. Installed by Default
-Most Linux distributions already have the required tools installed by default:
-- `gcc` (GNU Compiler Collection)
-- `make` (Build automation tool)
-- `git` (Version control)
+# Run desktop version
+make run
 
-If any are missing, install them using your distribution's package manager:
+# Build web version
+make build_web
 
-#### 2. Install required tools
-**Ubuntu/Debian:**
-```bash
-sudo apt update
-sudo apt install build-essential git
-```
+# Run web version (starts local server)
+make run_web
 
-**Fedora/RHEL:**
-```bash
-sudo dnf install gcc make git
-```
-
-**Arch Linux:**
-```bash
-sudo pacman -S gcc make git
-```
-
-### 3. Clone the StarterKit
-```bash
-git clone https://MuddyGames@bitbucket.org/MuddyGames/missiledefencegame.git
-cd missiledefencegame
-```
-
-### 4. Build & Run
-```bash
-make
-```
-This will:
-
-- Compile the project (`src/main.c`).
-- Output the binary into the `bin/` directory.
-- Run the executable automatically.
-
-To clean build artifacts:
-```bash
+# Clean build files
 make clean
+
+# Clean toolchain files
+make clean_toolchain
+
+# Build release (desktop)
+make CONFIG=release
 ```
 
----
+## Maintenance <a name="maintenance"></a>
 
-## 🕹️ Missile Defence Game Features
+### Updating Raylib Starter
 
-- **Menu System**: 
-    - Simple text menu to launch missiles or quit.
+To get the latest updates from the starter kit:
 
-- **Password Check**:
-    - A password must be entered to arm a missile. (Default: `DEFCON1`)
-
-- **Missile Mechanics**:
-    - Explosive Warhead: Hits only the direct grid square.
-    - Nuclear Warhead: Damages a 3x3 area.
-
-- **Targeting**:
-    - Enemy target coordinates stored in `Target`.
-    - Missile tracks its own position and updates with each move.
-
-- **Gameplay Loop**:
-    - Player chooses a warhead.
-    - Enters password to arm missile.
-    - Missile launches and updates its trajectory.
-    - Game checks for a hit based on warhead type.
-    - Results are displayed in the console.
-
----
-
-## 💥 Warhead Mechanics (Damage Spread)
-
-Different warheads have different impact radii:
-
-- **Explosive Warhead** → Affects 1×1 grid square (direct hit only).
-- **Nuclear Warhead** → Affects 3×3 grid area (impact square + all adjacent squares).
-
-[![](https://mermaid.ink/img/pako:eNp1ks1u4jAURl_FuuuAIAkxZDFVSzrQRbuhUtUSFlZ8SaxJbMZxZmAS3r2OCdMuWi8s_5z7-dhyC5niCDHsS_U3K5g25DlJJbHtdvso6lqUSB6qA8vMjoxGP8hd-1KIrCAvTBfI-M05lRf8rt_u7o-HUtXiD3ZkuV0WmP0iGyFzG7LSgpPN74Zp3F0qli4waZ-ZztEQZoaDBqqP7rHEBb9i3ZH77cAmWButTsh3n5kn1ZGfztptfPZ6arISme7IarAKjgG51chspxrJr3e81Kyc2fpqJqRDr0LrD6GH74TWXwmBBxXqigluH7ztwRRMgRWmENshxz1rSpNCKs8WZY1Rm5PMIDa6QQ-sZ15AvGdlbWfNgTODiWC5ZtX_1QOTb0pV15Jc90cN5Sg56qW9rIHYnzoW4haOdjYJx-GEziMaBtMonES-ByeIR_NxOF1EQUT9KKCLYDE7e_DPxU_Gc9-PfEqpP6NzOltEHiAXRunHy3dyv-r8DjTUvl4?type=png)](https://mermaid.live/edit#pako:eNp1ks1u4jAURl_FuuuAIAkxZDFVSzrQRbuhUtUSFlZ8SaxJbMZxZmAS3r2OCdMuWi8s_5z7-dhyC5niCDHsS_U3K5g25DlJJbHtdvso6lqUSB6qA8vMjoxGP8hd-1KIrCAvTBfI-M05lRf8rt_u7o-HUtXiD3ZkuV0WmP0iGyFzG7LSgpPN74Zp3F0qli4waZ-ZztEQZoaDBqqP7rHEBb9i3ZH77cAmWButTsh3n5kn1ZGfztptfPZ6arISme7IarAKjgG51chspxrJr3e81Kyc2fpqJqRDr0LrD6GH74TWXwmBBxXqigluH7ztwRRMgRWmENshxz1rSpNCKs8WZY1Rm5PMIDa6QQ-sZ15AvGdlbWfNgTODiWC5ZtX_1QOTb0pV15Jc90cN5Sg56qW9rIHYnzoW4haOdjYJx-GEziMaBtMonES-ByeIR_NxOF1EQUT9KKCLYDE7e_DPxU_Gc9-PfEqpP6NzOltEHiAXRunHy3dyv-r8DjTUvl4)
-
-### 🎯 Explosive Warhead (1×1 Impact)
-
-```
-. . . . .
-. . . . .
-. . X . .   ← Only the direct hit square is damaged
-. . . . .
-. . . . .
+```bash
+git submodule update --remote raylib_starter
 ```
 
-### ☢️ Nuclear Warhead (3×3 Impact)
+### Project Updates
 
+Maintain your project with regular commits:
+
+```bash
+git add .
+git commit -m "Update project files"
+git push origin main
 ```
-. . . . . .
-. . # # # .
-. . # X # .   ← Center hit + all adjacent squares
-. . # # # .
-. . . . . .
-```
 
-**Legend:**
-- `.` = Undamaged area
-- `X` = Impact point
-- `#` = Damage area
+## Resources <a name="resources"></a>
 
----
+- [Raylib Template Repository](https://bitbucket.org/MuddyGames/raylib_template)
+- [Raylib Starter Documentation](https://bitbucket.org/MuddyGames/raylib_starter)
+- [Git Submodule Documentation](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 
-## Code Structure
+## Support <a name="support"></a>
 
-### Main Components
-- **`Coordinates` struct** → Holds X/Y positions.  
-- **`WarHead` enum** → Defines `EXPLOSIVE` or `NUCLEAR`.  
-- **`Target` struct** → Stores enemy position.  
-- **`Missile` struct** → Stores payload, coordinates, target, armed status, and function pointers (`arm`, `update`).  
+For questions and support, contact:
+- MuddyGames
 
-### Functions
-- `armMissile(Missile *missile)` → Toggle armed status with password check.  
-- `updateMissile(Missile *missile)` → Move missile position forward.  
-- `printCoordinates(Coordinates c)` → Print position to console.  
-
-- Future functions (see specification):
-    - `initializeGame()`  
-    - `displayMenu()`  
-    - `selectWarhead()`  
-    - `updateMissilePosition()`  
-    - `checkHit()`  
-
----
-
-## Gameplay Flow (Flowchart)
-
-[![](https://mermaid.ink/img/pako:eNp1UEtPAjEQ_ivNHDwhIi9xDxrcRcCoMQFjtMuh2Q5s425L2m4UWf673S74SuxpvvkeM9MtJIojBLDM1FuSMm3JPIolcW9IZ7bCY5bjghwfX5ArOpXCCpaJD6zbtfLKsyGNhFlnbEPuUBZ7KqyocoYZJpY8MZ0i4yWJ6Eha1OSBGfOmNCdHZKhzcieMERn-so7ehS3JizPww8iajvzQEZ2hPRjJgzJuPyX3CSMvuaa3rJBJ-if-2pNj-rjmzOJ_EWOvmmzDFJNXMhH2clcTE7_dM5qSTOmc6ZVbI0JjtdogX_zU3KuS3NBDfqikFbJAc-IuMl_XTOsvrMFNDaABKy04BFYX2IAcdc4qCNtKFoNNMccYAldyXLIiszHEcudsayZflMoPTq2KVQrBkmXGocIfHAm20uxbgpKjDlUhLQQ9nwDBFt4h6PT7zXZ3cNofnHd7ndO2IzcQdAdNV7ZaZ_32eacidg348CNbzcFZb_cJCy-5Fw?type=png)](https://mermaid.live/edit#pako:eNp1UEtPAjEQ_ivNHDwhIi9xDxrcRcCoMQFjtMuh2Q5s425L2m4UWf673S74SuxpvvkeM9MtJIojBLDM1FuSMm3JPIolcW9IZ7bCY5bjghwfX5ArOpXCCpaJD6zbtfLKsyGNhFlnbEPuUBZ7KqyocoYZJpY8MZ0i4yWJ6Eha1OSBGfOmNCdHZKhzcieMERn-so7ehS3JizPww8iajvzQEZ2hPRjJgzJuPyX3CSMvuaa3rJBJ-if-2pNj-rjmzOJ_EWOvmmzDFJNXMhH2clcTE7_dM5qSTOmc6ZVbI0JjtdogX_zU3KuS3NBDfqikFbJAc-IuMl_XTOsvrMFNDaABKy04BFYX2IAcdc4qCNtKFoNNMccYAldyXLIiszHEcudsayZflMoPTq2KVQrBkmXGocIfHAm20uxbgpKjDlUhLQQ9nwDBFt4h6PT7zXZ3cNofnHd7ndO2IzcQdAdNV7ZaZ_32eacidg348CNbzcFZb_cJCy-5Fw)
-
----
-
-## Testing
-
-Compile with make (ensures code follows conventions, no syntax errors).
-
-Use GDB to debug:
-
-- `gdb ./bin/missiledefence.bin` Linux / MacOS | `gdb ./bin/missiledefence.exe` on Windows
-- Run (`r`), step through (`n`, `s`), set breakpoints (`b`).
-
-Confirm:
-
-- Missile only arms with correct password.
-- Missile positions update correctly.
-- Explosive and nuclear warheads apply correct damage radii.
-- Menu navigation works without crashes.
-
----
-
-## Future Enhancements
-
-Once the game is complete, you can extend it with additional features for more depth and challenge:
-
-### Multiple Targets
-
-- Place multiple enemy targets on the grid.
-- Game continues until all targets are destroyed.
-
-### Scoring System
-
-- Award points for each successful hit.
-- Deduct points for missed missiles.
-
-### Different Target Types
-
-- Small targets: only vulnerable to explosive warheads.
-- Large or shielded targets: require nuclear warheads.
-
-### Moving Targets
-
-- Enemy targets shift position after each turn.
-- Forces the player to anticipate movement.
-
----
-
-## GDB Commands
-
-| Command | Description |
-|---------|-------------|
-| `run` or `r` | Executes the program from start to end. |
-| `break` or `b` | Sets a breakpoint on a particular line. |
-| `disable` | Disables a breakpoint |
-| `enable` | Enables a disabled breakpoint. |
-| `next` or `n` | Executes the next line of code without diving into functions. |
-| `step` | Goes to the next instruction, diving into the function. |
-| `list` or `l` | Displays the code. |
-| `print` or `p` | Displays the value of a variable. |
-| `quit` or `q` | Exits out of GDB. |
-| `clear` | Clears all breakpoints. |
-| `continue` | Continues normal execution |
+[Back to top](#raylib-template-guide)
