@@ -34,7 +34,7 @@ void InitGame() {
     walkB = LoadTexture("resources/walkB.png");
     m_texture = idle;
     m_direction = (Vector2){0,0};
-    m_position = (Vector2){100,100};
+    m_position = (Vector2){100,400};
     m_velocity = 4;
 	
 	m_circle = (myCircle){410,120,110};
@@ -81,9 +81,10 @@ void CollisionDetection()
 
 void DrawMessage()
 {
-    DrawText("Click mouse button to draw primitives", 100,30,30, BLACK);
-    DrawText("Press space to change colour", 100, 70, 30, BLACK);
-    DrawText("Use Arrows to move", 100, 150, 30, BLACK);
+    DrawText("Click mouse button to draw primitives", 100,15,30, BLACK);
+    DrawText("Press 'Q' to change colour", 100, 65, 30, BLACK);
+	DrawText("Press 'E' to show hitboxes", 100, 90, 30, BLACK);
+    DrawText("Use 'WASD' to move", 100, 140, 30, BLACK);
 }
 
 void DrawGame() {
@@ -96,11 +97,15 @@ void DrawGame() {
 	    DrawChristmasTree();
     }
 		
-		
-	DrawRectangle(m_playerRectangle.x,m_playerRectangle.y,m_playerRectangle.width,m_playerRectangle.height, RAYWHITE);
-	DrawCircle(m_playerCircle.x,m_playerCircle.y,m_playerCircle.radius,GOLD);	
+	if (IsKeyDown(KEY_E))
+    {
+	// Changin color of player when E is pressed
+	    DrawRectangle(m_playerRectangle.x,m_playerRectangle.y,m_playerRectangle.width,m_playerRectangle.height, RAYWHITE);
+		DrawCircle(m_playerCircle.x,m_playerCircle.y,m_playerCircle.radius,GOLD);	
+    }
+
 	
-    if (IsKeyDown(KEY_SPACE))
+    if (IsKeyDown(KEY_Q))
     {
 	// Changin color of player when space is pressed
 	    DrawTexture(m_texture,m_position.x,m_position.y,LIME);
@@ -109,7 +114,10 @@ void DrawGame() {
     {
 	    DrawTexture(m_texture,m_position.x,m_position.y,WHITE);
     }
+	
 
+	
+	
     DrawMessage();
 	
 }
@@ -142,9 +150,9 @@ void CloseGame() {
 
 void UpdatePlayer()
 {
-    m_direction.x = (int)(IsKeyDown(KEY_RIGHT)) - (int)(IsKeyDown(KEY_LEFT));
+    m_direction.x = (int)(IsKeyDown(KEY_D)) - (int)(IsKeyDown(KEY_A));
 	// 1-0 = 1 if right key down; 0-1 = -1 if left key down
-    m_direction.y = (int)(IsKeyDown(KEY_DOWN)) - (int)(IsKeyDown(KEY_UP));
+    m_direction.y = (int)(IsKeyDown(KEY_S)) - (int)(IsKeyDown(KEY_W));
 
     m_direction = Vector2Normalize(m_direction);
 
