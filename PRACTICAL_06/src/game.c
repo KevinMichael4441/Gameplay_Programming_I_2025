@@ -17,7 +17,8 @@ int m_velocity;
 int m_currentWalk = 0;	// 0 or 1 for each animation frame
 const int m_walkDelay = 15;	
 int m_walkTimer = 0;
-const int m_playerSize = 128;
+const int m_playerHeight = 102;
+const int m_playerWidth = 84;
 
 
 void InitGame() {
@@ -28,7 +29,6 @@ void InitGame() {
     walkA = LoadTexture("resources/walkA.png");
     walkB = LoadTexture("resources/walkB.png");
     m_texture = idle;
-	
     m_direction = (Vector2){0,0};
     m_position = (Vector2){100,100};
     m_velocity = 4;
@@ -136,8 +136,8 @@ void UpdatePlayer()
     MovePlayer();
     BoundaryChecking();
 	
-	m_playerCircle = (myCircle){m_position.x + m_playerSize/2, m_position.y + m_playerSize/2, (int)(m_playerSize/2)};
-	m_playerRectangle = (myRectangle){m_position.x, m_position.y, m_playerSize, m_playerSize};
+	m_playerCircle = (myCircle){m_position.x + m_playerWidth/2, m_position.y + m_playerHeight/2, (int)(m_playerHeight/2)};
+	m_playerRectangle = (myRectangle){m_position.x, m_position.y, m_playerWidth, m_playerHeight};
 }
 
 void MovePlayer()
