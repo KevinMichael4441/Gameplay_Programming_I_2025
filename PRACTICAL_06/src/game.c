@@ -36,9 +36,6 @@ void InitGame() {
 	m_circle = (myCircle){410,120,110};
 	m_rect1 = (myRectangle){500,450,60,80};
 	m_rect2 = (myRectangle){260,310,50,90};
-	
-	m_playerCircle = (myCircle){m_position.x + m_playerSize/2, m_position.y + m_playerSize/2, (int)(m_playerSize/2)};
-	m_playerRectangle = (myRectangle){m_position.x, m_position.y, m_playerSize, m_playerSize};
 
     printf("Game Initialized!\n");
 }
@@ -138,6 +135,9 @@ void UpdatePlayer()
 
     MovePlayer();
     BoundaryChecking();
+	
+	m_playerCircle = (myCircle){m_position.x + m_playerSize/2, m_position.y + m_playerSize/2, (int)(m_playerSize/2)};
+	m_playerRectangle = (myRectangle){m_position.x, m_position.y, m_playerSize, m_playerSize};
 }
 
 void MovePlayer()
