@@ -20,6 +20,10 @@ int m_walkTimer = 0;
 const int m_playerHeight = 102;
 const int m_playerWidth = 84;
 
+Color rectangle1Color = RED;
+Color rectangle2Color = RED;
+Color circleColor = (Color){253,240,0,255};
+
 
 void InitGame() {
 	
@@ -42,7 +46,38 @@ void InitGame() {
 
 void UpdateGame() {
     UpdatePlayer();
+	CollisionDetection();
 }
+
+void CollisionDetection()
+{
+	if (circleToCircle(&m_playerCircle, &m_circle))
+	{
+		circleColor = BEIGE;
+	}
+	else
+	{
+		circleColor = (Color){253,240,0,255};
+	}
+	
+	if (rectangleToRectangle(&m_playerRectangle, &m_rect1))
+	{
+		rectangle1Color = PURPLE;
+	}	
+	else 
+	{
+		rectangle1Color = RED;
+	}
+	
+	if (rectangleToRectangle(&m_playerRectangle, &m_rect2))
+	{
+		rectangle2Color = PURPLE;
+	}	
+	else 
+	{
+		rectangle2Color = RED;
+	}
+}	
 
 void DrawMessage()
 {
@@ -81,14 +116,14 @@ void DrawGame() {
 
 void DrawChristmasTree()
 {
-	DrawCircle(m_circle.x,m_circle.y,m_circle.radius,(Color){253,240,0,255});	
+	DrawCircle(m_circle.x,m_circle.y,m_circle.radius, circleColor);	
 	
-    DrawRectangle(m_rect1.x,m_rect1.y,m_rect1.width,m_rect1.height,RED);
-    DrawRectangle(m_rect2.x,m_rect2.y,m_rect2.width,m_rect2.height, RED);
+    DrawRectangle(m_rect1.x,m_rect1.y,m_rect1.width,m_rect1.height, rectangle1Color);
+    DrawRectangle(m_rect2.x,m_rect2.y,m_rect2.width,m_rect2.height, rectangle2Color);
 		
     DrawTriangle((Vector2){410,200},(Vector2){290,330},(Vector2){530,330}, GREEN);
     DrawTriangle((Vector2){410,330},(Vector2){280,475},(Vector2){540,475}, GREEN);
-    DrawTriangle((Vector2){410,475},(Vector2){325,590},(Vector2){490,590},DARKBROWN);
+    DrawTriangle((Vector2){410,475},(Vector2){325,590},(Vector2){490,590}, DARKBROWN);
 	
     DrawLineEx((Vector2){300,120},(Vector2){520,120},5,BLACK);
 }

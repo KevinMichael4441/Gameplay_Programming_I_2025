@@ -10,6 +10,7 @@ void UpdateGame(); 		// Inclusive update
 void UpdatePlayer();	// Updating player specifically 
 void MovePlayer();		// Changing player position based on update
 void BoundaryChecking();	// Keeping player in bounds
+void CollisionDetection();	// Checking colllision of player with rects and circle in game
 
 
 
