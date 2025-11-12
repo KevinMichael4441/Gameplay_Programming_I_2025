@@ -4,20 +4,20 @@
 #include <math.h>
 
 
-struct Circle
+typedef struct myCircle
 {
     float x, y;
     float radius;
-};
+} myCircle;
 
-struct Rectangle
+typedef struct myRectangle
 {
     float x, y;
     float width, height;
-};
+} myRectangle;
 
 
-bool circleToCircle(Circle* t_c1, Circle* t_c2)
+bool circleToCircle(myCircle* t_c1, myCircle* t_c2)
 {
     // Distace b/w c1 and c2
     float deltaX = (t_c1->x) - (t_c2->x);
@@ -51,7 +51,7 @@ bool valueInRange(int value, int min, int max)
   return (value >= min) && (value <= max); 
 }
 
-bool rectangleToRectangle(Rectangle* t_r1, Rectangle* t_r2)
+bool rectangleToRectangle(myRectangle* t_r1, myRectangle* t_r2)
 {
     bool xAxisOverlap = valueInRange(t_r1->x, t_r2->x, t_r2->x + t_r2->width) ||
 			valueInRange(t_r2->x, t_r1->x, t_r1->x + t_r1->width);

@@ -1,15 +1,21 @@
 #include "raylib.h"
 #include "stdio.h"
 #include "../include/game.h"
+#include "../include/collisionLibrary.h"
 
 
 Texture2D m_texture, idle, walkA, walkB, background;
+myCircle m_circle;
+myRectangle m_rect1, m_rect2;
+
 Vector2 m_direction, m_position;
 int m_velocity;
 
 int m_currentWalk = 0;	// 0 or 1 for each animation frame
-int m_walkDelay = 15;	
+const int m_walkDelay = 15;	
 int m_walkTimer = 0;
+const int m_playerSize = 128;
+
 
 void InitGame() {
 	
@@ -24,6 +30,11 @@ void InitGame() {
     m_position = (Vector2){100,100};
     m_velocity = 4;
 	
+	m_circle = (myCircle){410,120,110};
+	m_rect1 = (myRectangle){500,450,60,80};
+	m_rect2 = (myRectangle){260,310,50,90};
+	
+
     printf("Game Initialized!\n");
 }
 
@@ -64,11 +75,10 @@ void DrawGame() {
 
 void DrawChristmasTree()
 {
-	DrawCircle(410,120,110,(Color){253,240,0,255});
+	DrawCircle(m_circle.x,m_circle.y,m_circle.radius,(Color){253,240,0,255});
 	
-    DrawRectangle(260,310,50,90,RED);
-    DrawRectangle(500,450,60,80, RED);
-    DrawRectangle(260,310,50,90,RED);
+    DrawRectangle(m_rect1.x,m_rect1.y,m_rect1.width,m_rect1.height,RED);
+    DrawRectangle(m_rect2.x,m_rect2.y,m_rect2.width,m_rect2.height, RED);
 		
     DrawTriangle((Vector2){410,200},(Vector2){290,330},(Vector2){530,330}, GREEN);
     DrawTriangle((Vector2){410,330},(Vector2){280,475},(Vector2){540,475}, GREEN);
