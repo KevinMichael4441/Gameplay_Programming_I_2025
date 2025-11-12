@@ -8,6 +8,9 @@ Texture2D m_texture, idle, walkA, walkB, background;
 myCircle m_circle;
 myRectangle m_rect1, m_rect2;
 
+myCircle m_playerCircle;
+myRectangle m_playerRectangle;
+
 Vector2 m_direction, m_position;
 int m_velocity;
 
@@ -34,6 +37,8 @@ void InitGame() {
 	m_rect1 = (myRectangle){500,450,60,80};
 	m_rect2 = (myRectangle){260,310,50,90};
 	
+	m_playerCircle = (myCircle){m_position.x + m_playerSize/2, m_position.y + m_playerSize/2, (int)(m_playerSize/2)};
+	m_playerRectangle = (myRectangle){m_position.x, m_position.y, m_playerSize, m_playerSize};
 
     printf("Game Initialized!\n");
 }
@@ -59,6 +64,10 @@ void DrawGame() {
 	    DrawChristmasTree();
     }
 		
+		
+	DrawRectangle(m_playerRectangle.x,m_playerRectangle.y,m_playerRectangle.width,m_playerRectangle.height, RAYWHITE);
+	DrawCircle(m_playerCircle.x,m_playerCircle.y,m_playerCircle.radius,GOLD);	
+	
     if (IsKeyDown(KEY_SPACE))
     {
 	// Changin color of player when space is pressed
@@ -75,7 +84,7 @@ void DrawGame() {
 
 void DrawChristmasTree()
 {
-	DrawCircle(m_circle.x,m_circle.y,m_circle.radius,(Color){253,240,0,255});
+	DrawCircle(m_circle.x,m_circle.y,m_circle.radius,(Color){253,240,0,255});	
 	
     DrawRectangle(m_rect1.x,m_rect1.y,m_rect1.width,m_rect1.height,RED);
     DrawRectangle(m_rect2.x,m_rect2.y,m_rect2.width,m_rect2.height, RED);
