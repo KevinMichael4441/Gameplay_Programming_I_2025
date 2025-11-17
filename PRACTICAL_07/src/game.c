@@ -113,13 +113,14 @@ void InitGame(GameData *data)
 	for (int i = 0; i < NUM_NPCS; i++)
 		NPCFactory(&data->npcs[i], i); // Create NPC based on index
 
-	// Initialise player circle
-	data->player.circle.p = c2V(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2); // c2v position cute_c2 vector
-	data->player.circle.r = 10.0f;									  // Player radius note float
-	data->player.color = GREEN;										  // Player color
+	// Initialise player Form
+
+	data->playerCircle.circle.p = c2V(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2); // c2v position cute_c2 vector
+	data->playerCircle.circle.r = 10.0f;									  // PlayerCircle radius note float
+	data->playerCircle.color = GREEN;										  // Player color
 
 	// Load player texture
-	data->player.texture = LoadTexture("resources/player.png");
+	data->playerCircle.texture = LoadTexture("resources/player.png");
 }
 
 // Update Game Data
@@ -133,7 +134,7 @@ void UpdateGame(GameData *data)
 		mousePosition.y >= 0 && mousePosition.y <= SCREEN_HEIGHT)
 	{
 		// Update player position based on mouse
-		data->player.circle.p = c2V(mousePosition.x, mousePosition.y);
+		data->playerCircle.circle.p = c2V(mousePosition.x, mousePosition.y);
 	}
 
 	// Flag to track if any collision occurs
@@ -151,14 +152,14 @@ void UpdateGame(GameData *data)
 		{
 		case CIRCLE:
 			// Circle vs Circle collision (cute_c2 built-in)
-			collision = c2CircletoCircle(npc->collider.circle, data->player.circle);
+			collision = c2CircletoCircle(npc->collider.circle, data->playerCircle.circle);
 			if (collision)
 			{
 				// Compute one or two points that represent the point of contact.
 				// Resolve and prevent shapes from overlapping (by pushing back player), below is where
 				// its used as a collision response
 				// If no collision occured the count member of the manifold struct is set to 0.
-				c2CircletoCircleManifold(data->player.circle, npc->collider.circle, &npc->manifold);
+				c2CircletoCircleManifold(data->playerCircle.circle, npc->collider.circle, &npc->manifold);
 
 				// Response to circle to circle collisions
 				if (npc->manifold.count > 0)
@@ -168,19 +169,19 @@ void UpdateGame(GameData *data)
 					// npc->manifold.depths[0] is the penetration depth
 					float depth = npc->manifold.depths[0];
 					// Does not allow the player to penetrate the circle
-					data->player.circle.p = c2Sub(data->player.circle.p, c2Mulvs(npc->manifold.n, depth + PUSHBACK_DISTANCE));
+					data->playerCircle.circle.p = c2Sub(data->playerCircle.circle.p, c2Mulvs(npc->manifold.n, depth + PUSHBACK_DISTANCE));
 				}
 			}
 			break;
 
 		case AABB:
 			// Circle vs AABB collision (cute_c2 built-in)
-			collision = c2CircletoAABB(data->player.circle, npc->collider.aabb);
+			collision = c2CircletoAABB(data->playerCircle.circle, npc->collider.aabb);
 			break;
 
 		case CAPSULE:
 			// Circle vs Capsule collision (cute_c2 built-in)
-			collision = c2CircletoCapsule(data->player.circle, npc->collider.capsule);
+			collision = c2CircletoCapsule(data->playerCircle.circle, npc->collider.capsule);
 			break;
 		}
 
@@ -205,7 +206,7 @@ void UpdateGame(GameData *data)
 	}
 
 	// Overall player color based on any collision
-	data->player.color = collisionDetected ? RED : GREEN;
+	data->playerCircle.color = collisionDetected ? RED : GREEN;
 
 	// Update collision status message after checking all NPCs
 	snprintf(data->message, sizeof(data->message),
@@ -225,23 +226,23 @@ void DrawGame(const GameData *data)
 		DrawNPC(&data->npcs[i]);
 
 	// Draw Player Texture (centred on circle)
-	Vector2 position = {data->player.circle.p.x, data->player.circle.p.y};
+	Vector2 position = {data->playerCircle.circle.p.x, data->playerCircle.circle.p.y};
 
 	// Calculate texture position to centre it on the player circle
 	Vector2 playerTexturePosition = {
-		position.x - data->player.texture.width / 2,
-		position.y - data->player.texture.height / 2};
+		position.x - data->playerCircle.texture.width / 2,
+		position.y - data->playerCircle.texture.height / 2};
 
 	// Draw Player Texture centred
-	DrawTextureV(data->player.texture,	// Player Texture
+	DrawTextureV(data->playerCircle.texture,	// Player Texture
 				 playerTexturePosition, // Position (centred)
 				 WHITE					// Tint color
 	);
 
 	// Player draw over NPCs note Draw Last | Draws on Top | Draw Order
 	DrawCircleV(position,			   // Position
-				data->player.circle.r, // Radius
-				data->player.color	   // Color
+				data->playerCircle.circle.r, // Radius
+				data->playerCircle.color	   // Color
 	);								   // Draw Player
 
 	// Draw Collision Message
@@ -256,6 +257,6 @@ void CloseGame(GameData *data)
 {
 	printf("Game Closed!\n");
 
-	UnloadTexture(data->player.texture); // Free texture memory
+	UnloadTexture(data->playerCircle.texture); // Free texture memory
 	free(data);							 // Free game data memory
 }

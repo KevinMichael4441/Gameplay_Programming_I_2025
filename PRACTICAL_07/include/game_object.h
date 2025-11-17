@@ -31,11 +31,11 @@ typedef struct
 
 } NPC;
 
-// Player structure
+// playerCircle structure
 typedef struct
 {
 	c2Circle circle;   // Player represented as a circle
-	Texture2D texture; // Player texture
+	Texture2D texture; // Player's Circle texture
 	Color color;	   // Color for rendering
 } Player;
 
