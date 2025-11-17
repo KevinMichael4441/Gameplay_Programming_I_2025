@@ -1,0 +1,109 @@
+{
+	"folders": [
+		// ----------------------------------------------------------
+		// Workspace folders
+		// ----------------------------------------------------------
+		{
+			"name": "Root",
+			"path": "."
+		},
+		{
+			"name": "Source Code",
+			"path": "src"
+		},
+		{
+			"name": "Header Files",
+			"path": "include"
+		},
+		{
+			"name": "Resource Files",
+			"path": "resources"
+		},
+		{
+			"name": "Debug Build",
+			"path": "debug"
+		},
+		{
+			"name": "Release Build",
+			"path": "release"
+		},
+		{
+			"name": "macOS Config",
+			"path": "macos"
+		}
+	],
+	"settings": {
+		// ----------------------------------------------------------
+		// Workspace exclusions
+		// ----------------------------------------------------------
+		"files.exclude": {
+			"**/linux": true,
+			"**/windows": true,
+			"**/.vscode": true,
+			"**/objects": true,
+			"**/linux.code-workspace": true,
+			"**/windows.code-workspace": true
+		},
+		// ----------------------------------------------------------
+		// C/C++ IntelliSense configuration (MATCHES LINUX)
+		// ----------------------------------------------------------
+		"C_Cpp.default.compilerPath": "/usr/bin/clang",
+		"C_Cpp.default.intelliSenseMode": "macos-clang-x64",
+		"C_Cpp.default.cStandard": "c17",
+		"C_Cpp.default.cppStandard": "c++17",
+		// make #include "x.h" work properly without ../include/
+		"C_Cpp.default.includePath": [
+			"${workspaceFolder:Header Files}"
+		],
+		"C_Cpp.default.browse.path": [
+			"${workspaceFolder:Header Files}"
+		],
+		"C_Cpp.default.browse.limitSymbolsToIncludedHeaders": true,
+	
+		// ----------------------------------------------------------
+		// Terminal configuration
+		// ----------------------------------------------------------
+		// Start terminals in the project root
+		"terminal.integrated.cwd": "${workspaceFolder:Root}",
+		// ----------------------------------------------------------
+		// Default = bash
+		// ----------------------------------------------------------
+		"terminal.integrated.defaultProfile.osx": "bash",
+		// Explicit profiles
+		"terminal.integrated.profiles.osx": {
+			"bash": {
+				"path": "/bin/bash",
+				"icon": "terminal-bash"
+			},
+			"zsh": {
+				"path": "/bin/zsh"
+			},
+			"fish": {
+				"path": "/usr/bin/fish"
+			},
+			"tmux": {
+				"path": "/usr/bin/tmux",
+				"icon": "terminal-tmux"
+			},
+			"pwsh": {
+				"path": "/usr/bin/pwsh",
+				"icon": "terminal-powershell"
+			}
+		},
+		// Use the same shell for automation/task terminals
+		"terminal.integrated.automationProfile.osx": {
+			"path": "/bin/bash",
+			"icon": "terminal-bash"
+		},
+		// ----------------------------------------------------------
+		// Build/CMake
+		// ----------------------------------------------------------
+		"cmake.ignoreCMakeListsMissing": true
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.cpptools",
+			"ms-vscode.cpptools-themes"
+		]
+	}
+}
