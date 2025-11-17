@@ -113,14 +113,26 @@ void InitGame(GameData *data)
 	for (int i = 0; i < NUM_NPCS; i++)
 		NPCFactory(&data->npcs[i], i); // Create NPC based on index
 
-	// Initialise player Form
+	InitPlayer(data);
+}
 
+void InitPlayer(GameData *data)
+{
+	data->playerType = myCircle;
+
+	// Initialise player Form as CIRCLE
 	data->playerCircle.circle.p = c2V(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2); // c2v position cute_c2 vector
 	data->playerCircle.circle.r = 10.0f;									  // PlayerCircle radius note float
 	data->playerCircle.color = GREEN;										  // Player color
-
 	// Load player texture
-	data->playerCircle.texture = LoadTexture("resources/player.png");
+	data->playerCircle.texture = LoadTexture("resources/playerCircle.png");
+
+	// Initialise player Form as AABB
+	data->playerAABB.aabb.min = c2V(SCREEN_WIDTH / 2 - 30, SCREEN_HEIGHT / 2 - 30);
+	data->playerAABB.aabb.max = c2V(SCREEN_WIDTH / 2 + 30, SCREEN_HEIGHT / 2 + 30);
+	data->playerAABB.color = GREEN;
+	data->playerAABB.texture = LoadTexture("resources/playerAABB.png");
+
 }
 
 // Update Game Data
@@ -135,6 +147,8 @@ void UpdateGame(GameData *data)
 	{
 		// Update player position based on mouse
 		data->playerCircle.circle.p = c2V(mousePosition.x, mousePosition.y);
+		data->playerAABB.aabb.min = c2V(mousePosition.x - 30, mousePosition.y - 30);
+		data->playerAABB.aabb.max = c2V(mousePosition.x + 30, mousePosition.y + 30);
 	}
 
 	// Flag to track if any collision occurs

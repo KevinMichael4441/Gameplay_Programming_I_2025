@@ -37,6 +37,16 @@ typedef struct
 	c2Circle circle;   // Player represented as a circle
 	Texture2D texture; // Player's Circle texture
 	Color color;	   // Color for rendering
-} Player;
+} PlayerCircle;
+
+
+// playerAABB structure
+typedef struct
+{
+	c2AABB aabb;   // Player represented as a circle
+	Texture2D texture; // Player's Circle texture
+	Color color;	   // Color for rendering
+} PlayerAABB;
+
 
 #endif // GAME_OBJECT_H
