@@ -135,9 +135,40 @@ void InitPlayer(GameData *data)
 
 }
 
+void changeType(GameData *data)
+{
+	int typeValue = 0;
+	if(IsKeyDown(KEY_Z))
+	{
+		typeValue -= 1;
+	} 
+	if(IsKeyDown(KEY_X))
+	{
+		typeValue += 0;
+	}
+	if(IsKeyDown(KEY_C))
+	{
+		typeValue += 1;
+	}
+
+	switch (typeValue)
+	{
+	case -1:
+		data->playerType = myAABB;
+		break;
+	case 0:
+		data->playerType = myCircle;
+		break;
+	case 1:
+		break;
+	}
+}
+
 // Update Game Data
 void UpdateGame(GameData *data)
-{
+{	
+	changeType(data);
+	
 	// Player follows mouse position
 	Vector2 mousePosition = GetMousePosition(); // raylib vector2
 
@@ -162,42 +193,68 @@ void UpdateGame(GameData *data)
 
 		bool collision = false; // Track collision for NPC
 
-		switch (npc->type)
+		switch (data->playerType)
 		{
-		case CIRCLE:
-			// Circle vs Circle collision (cute_c2 built-in)
-			collision = c2CircletoCircle(npc->collider.circle, data->playerCircle.circle);
-			if (collision)
+		case myCircle:
+			switch (npc->type)
 			{
-				// Compute one or two points that represent the point of contact.
-				// Resolve and prevent shapes from overlapping (by pushing back player), below is where
-				// its used as a collision response
-				// If no collision occured the count member of the manifold struct is set to 0.
-				c2CircletoCircleManifold(data->playerCircle.circle, npc->collider.circle, &npc->manifold);
-
-				// Response to circle to circle collisions
-				if (npc->manifold.count > 0)
+			case CIRCLE:
+				// Circle vs Circle collision (cute_c2 built-in)
+				collision = c2CircletoCircle(npc->collider.circle, data->playerCircle.circle);
+				if (collision)
 				{
-					// Simple collision response: push the player circle out of the NPC circle along the normal
-					// npc->manifold.n is the collision normal
-					// npc->manifold.depths[0] is the penetration depth
-					float depth = npc->manifold.depths[0];
-					// Does not allow the player to penetrate the circle
-					data->playerCircle.circle.p = c2Sub(data->playerCircle.circle.p, c2Mulvs(npc->manifold.n, depth + PUSHBACK_DISTANCE));
+					// Compute one or two points that represent the point of contact.
+					// Resolve and prevent shapes from overlapping (by pushing back player), below is where
+					// its used as a collision response
+					// If no collision occured the count member of the manifold struct is set to 0.
+					c2CircletoCircleManifold(data->playerCircle.circle, npc->collider.circle, &npc->manifold);
+
+					// Response to circle to circle collisions
+					if (npc->manifold.count > 0)
+					{
+						// Simple collision response: push the player circle out of the NPC circle along the normal
+						// npc->manifold.n is the collision normal
+						// npc->manifold.depths[0] is the penetration depth
+						float depth = npc->manifold.depths[0];
+						// Does not allow the player to penetrate the circle
+						data->playerCircle.circle.p = c2Sub(data->playerCircle.circle.p, c2Mulvs(npc->manifold.n, depth + PUSHBACK_DISTANCE));
+					}
 				}
+				break;
+
+			case AABB:
+				// Circle vs AABB collision (cute_c2 built-in)
+				collision = c2CircletoAABB(data->playerCircle.circle, npc->collider.aabb);
+				break;
+
+			case CAPSULE:
+				// Circle vs Capsule collision (cute_c2 built-in)
+				collision = c2CircletoCapsule(data->playerCircle.circle, npc->collider.capsule);
+				break;
 			}
 			break;
+		case myAABB:
+			switch (npc->type)
+			{
+			case CIRCLE:
+				// Circle vs Circle collision (cute_c2 built-in)
+				collision = c2CircletoAABB(npc->collider.circle, data->playerAABB.aabb);
+				break;
 
-		case AABB:
-			// Circle vs AABB collision (cute_c2 built-in)
-			collision = c2CircletoAABB(data->playerCircle.circle, npc->collider.aabb);
-			break;
+			case AABB:
+				// Circle vs AABB collision (cute_c2 built-in)
+				collision = c2AABBtoAABB(data->playerAABB.aabb, npc->collider.aabb);
+				break;
 
-		case CAPSULE:
-			// Circle vs Capsule collision (cute_c2 built-in)
-			collision = c2CircletoCapsule(data->playerCircle.circle, npc->collider.capsule);
+			case CAPSULE:
+				// Circle vs Capsule collision (cute_c2 built-in)
+				collision = c2AABBtoCapsule(data->playerAABB.aabb, npc->collider.capsule);
+				break;
+			}
 			break;
 		}
+		
+
 
 		// Set the NPC Color based on collision status
 		npc->color = (collision) ? RED : BLUE;
@@ -221,6 +278,7 @@ void UpdateGame(GameData *data)
 
 	// Overall player color based on any collision
 	data->playerCircle.color = collisionDetected ? RED : GREEN;
+	data->playerAABB.color = collisionDetected ? RED : GREEN;
 
 	// Update collision status message after checking all NPCs
 	snprintf(data->message, sizeof(data->message),
@@ -240,24 +298,47 @@ void DrawGame(const GameData *data)
 		DrawNPC(&data->npcs[i]);
 
 	// Draw Player Texture (centred on circle)
-	Vector2 position = {data->playerCircle.circle.p.x, data->playerCircle.circle.p.y};
+	if (data->playerType == myCircle)
+	{
+		Vector2 position = {data->playerCircle.circle.p.x, data->playerCircle.circle.p.y};
 
-	// Calculate texture position to centre it on the player circle
-	Vector2 playerTexturePosition = {
-		position.x - data->playerCircle.texture.width / 2,
-		position.y - data->playerCircle.texture.height / 2};
+		// Calculate texture position to centre it on the player circle
+		Vector2 playerTexturePosition = {
+			position.x - data->playerCircle.texture.width / 2,
+			position.y - data->playerCircle.texture.height / 2};
 
-	// Draw Player Texture centred
-	DrawTextureV(data->playerCircle.texture,	// Player Texture
-				 playerTexturePosition, // Position (centred)
-				 WHITE					// Tint color
-	);
+		// Draw Player Texture centred
+		DrawTextureV(data->playerCircle.texture,	// Player Texture
+					playerTexturePosition, // Position (centred)
+				 	WHITE					// Tint color
+		);
 
-	// Player draw over NPCs note Draw Last | Draws on Top | Draw Order
-	DrawCircleV(position,			   // Position
-				data->playerCircle.circle.r, // Radius
-				data->playerCircle.color	   // Color
-	);								   // Draw Player
+		// Player draw over NPCs note Draw Last | Draws on Top | Draw Order
+		DrawCircleV(position,			   // Position
+					data->playerCircle.circle.r, // Radius
+					data->playerCircle.color	   // Color
+		);								   // Draw Player
+	}
+	else if(data->playerType == myAABB)
+	{
+		Vector2 position = {data->playerAABB.aabb.min.x, data->playerAABB.aabb.min.y};
+
+		Vector2 size = {data->playerAABB.aabb.max.x - data->playerAABB.aabb.min.x, 
+						data->playerAABB.aabb.max.y - data->playerAABB.aabb.min.y};
+
+		// Draw Player Texture centred
+		DrawTextureV(data->playerAABB.texture,	// Player Texture
+					position, 					// Position
+				 	WHITE						// Tint color
+		);
+
+		// Player draw over NPCs note Draw Last | Draws on Top | Draw Order
+		DrawRectangleV(position,			   // Position
+					size, 						// Radius
+					data->playerAABB.color	   // Color
+		);								   // Draw Player
+	}
+
 
 	// Draw Collision Message
 	// Center the text at the bottom of the screen
