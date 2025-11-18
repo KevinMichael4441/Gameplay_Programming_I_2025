@@ -128,8 +128,8 @@ void InitPlayer(GameData *data)
 	data->playerCircle.texture = LoadTexture("resources/playerCircle.png");
 
 	// Initialise player Form as AABB
-	data->playerAABB.aabb.min = c2V(SCREEN_WIDTH / 2 - 30, SCREEN_HEIGHT / 2 - 30);
-	data->playerAABB.aabb.max = c2V(SCREEN_WIDTH / 2 + 30, SCREEN_HEIGHT / 2 + 30);
+	data->playerAABB.aabb.min = c2V(SCREEN_WIDTH / 2 - 25, SCREEN_HEIGHT / 2 - 25);
+	data->playerAABB.aabb.max = c2V(SCREEN_WIDTH / 2 + 25, SCREEN_HEIGHT / 2 + 25);
 	data->playerAABB.color = GREEN;
 	data->playerAABB.texture = LoadTexture("resources/playerAABB.png");
 
@@ -178,8 +178,8 @@ void UpdateGame(GameData *data)
 	{
 		// Update player position based on mouse
 		data->playerCircle.circle.p = c2V(mousePosition.x, mousePosition.y);
-		data->playerAABB.aabb.min = c2V(mousePosition.x - 30, mousePosition.y - 30);
-		data->playerAABB.aabb.max = c2V(mousePosition.x + 30, mousePosition.y + 30);
+		data->playerAABB.aabb.min = c2V(mousePosition.x - 25, mousePosition.y - 25);
+		data->playerAABB.aabb.max = c2V(mousePosition.x + 25, mousePosition.y + 25);
 	}
 
 	// Flag to track if any collision occurs
@@ -323,13 +323,16 @@ void DrawGame(const GameData *data)
 	{
 		Vector2 position = {data->playerAABB.aabb.min.x, data->playerAABB.aabb.min.y};
 
+		Vector2 positionTexture = {data->playerAABB.aabb.min.x - 5, data->playerAABB.aabb.min.y - 5};
+
 		Vector2 size = {data->playerAABB.aabb.max.x - data->playerAABB.aabb.min.x, 
 						data->playerAABB.aabb.max.y - data->playerAABB.aabb.min.y};
 
+
 		// Draw Player Texture centred
 		DrawTextureV(data->playerAABB.texture,	// Player Texture
-					position, 					// Position
-				 	WHITE						// Tint color
+					positionTexture, 		// Position 
+				 	WHITE					// Tint color
 		);
 
 		// Player draw over NPCs note Draw Last | Draws on Top | Draw Order
