@@ -123,7 +123,12 @@
 			"${workspaceFolder:Header Files}",
 			"C:/msys64/ucrt64/include/**"
 		],
-		"C_Cpp.default.browse.limitSymbolsToIncludedHeaders": true
+		"C_Cpp.default.browse.limitSymbolsToIncludedHeaders": true,
+		"files.associations": {
+			"stdlib.h": "c",
+			"game_object.h": "c",
+			"iostream": "c"
+		}
 	},
 	"extensions": {
 		"recommendations": [

@@ -11,7 +11,8 @@
 enum PlayerType
 {
 	myCircle,
-	myAABB
+	myAABB,
+	myCapsule
 };
 
 // Game data structure
@@ -19,6 +20,7 @@ typedef struct GameData
 {
 	PlayerCircle playerCircle; // Player as circle
 	PlayerAABB playerAABB;	   // Player as AABB
+	PlayerCapsule playerCapsule;	// Player as Capsule
 	NPC npcs[NUM_NPCS];		   // Array of NPCs (Non-Player Characters / could also be obstacles)
 
 	int points;			  // Game Points

@@ -40,6 +40,16 @@ typedef struct
 } PlayerCircle;
 
 
+// playerCapsule structure
+typedef struct
+{
+	c2Capsule capsule;   // Player represented as a circle
+	Texture2D texture; // Player's Circle texture
+	Color color;	   // Color for rendering
+} PlayerCapsule;
+
+
+
 // playerAABB structure
 typedef struct
 {

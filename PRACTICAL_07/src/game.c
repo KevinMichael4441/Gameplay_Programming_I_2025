@@ -133,6 +133,12 @@ void InitPlayer(GameData *data)
 	data->playerAABB.color = GREEN;
 	data->playerAABB.texture = LoadTexture("resources/playerAABB.png");
 
+
+	// Initialize player Form as Capsule
+	data->playerCapsule.capsule.a = c2V(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 10);
+	data->playerCapsule.capsule.b = c2V(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10);
+	data->playerCapsule.capsule.r = 5.0f;
+	data->playerCapsule.color = GREEN;
 }
 
 void changeType(GameData *data)
@@ -160,6 +166,7 @@ void changeType(GameData *data)
 		data->playerType = myCircle;
 		break;
 	case 1:
+		data->playerType = myCapsule;
 		break;
 	}
 }
@@ -178,8 +185,12 @@ void UpdateGame(GameData *data)
 	{
 		// Update player position based on mouse
 		data->playerCircle.circle.p = c2V(mousePosition.x, mousePosition.y);
+
 		data->playerAABB.aabb.min = c2V(mousePosition.x - 25, mousePosition.y - 25);
 		data->playerAABB.aabb.max = c2V(mousePosition.x + 25, mousePosition.y + 25);
+
+		data->playerCapsule.capsule.a = c2V(mousePosition.x, mousePosition.y - 10);
+		data->playerCapsule.capsule.b = c2V(mousePosition.x, mousePosition.y + 10);
 	}
 
 	// Flag to track if any collision occurs
@@ -252,7 +263,28 @@ void UpdateGame(GameData *data)
 				break;
 			}
 			break;
+		case myCapsule:
+			switch (npc->type)
+			{
+			case CIRCLE:
+				// Circle vs Capsule collision (cute_c2 built-in)
+				collision = c2CircletoCapsule(npc->collider.circle, data->playerCapsule.capsule);
+				break;
+
+			case AABB:
+				// AABB vs Capsule collision (cute_c2 built-in)
+				collision = c2AABBtoCapsule(npc->collider.aabb, data->playerCapsule.capsule);
+				break;
+
+			case CAPSULE:
+				// Capsule vs Capsule collision (cute_c2 built-in)
+				collision = c2CapsuletoCapsule(data->playerCapsule.capsule, npc->collider.capsule);
+				break;
+			}
+			break;
 		}
+		
+
 		
 
 
@@ -341,6 +373,33 @@ void DrawGame(const GameData *data)
 					data->playerAABB.color	   // Color
 		);								   // Draw Player
 	}
+	else if (data->playerType == myCapsule)
+	{
+		// Draw the line (Capsule)
+		Vector2 start = {data->playerCapsule.capsule.a.x, data->playerCapsule.capsule.a.y};
+		Vector2 end = {data->playerCapsule.capsule.b.x, data->playerCapsule.capsule.b.y};
+		float r = data->playerCapsule.capsule.r;
+
+		DrawLineEx(
+			start,	   // Start position
+			end,	   // End position
+			r,		   // Thickness
+			data->playerCapsule.color // Color
+		);
+		// Draw End Cap A
+		DrawCircleV(
+			start,	   // Center
+			r,		   // Radius
+			data->playerCapsule.color // Color
+		);
+
+		// Draw End Cap B
+		DrawCircleV(
+			end,	   // Center
+			r,		   // Radius
+			data->playerCapsule.color // Color
+		);
+	}
 
 
 	// Draw Collision Message
@@ -356,5 +415,7 @@ void CloseGame(GameData *data)
 	printf("Game Closed!\n");
 
 	UnloadTexture(data->playerCircle.texture); // Free texture memory
+	UnloadTexture(data->playerCapsule.texture); // Free texture memory
+	UnloadTexture(data->playerAABB.texture); // Free texture memory
 	free(data);							 // Free game data memory
 }
