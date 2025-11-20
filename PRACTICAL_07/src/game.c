@@ -26,6 +26,13 @@ static void NPCFactory(NPC *npc, int typeIndex)
 		npc->collider.capsule.r = 3.0f;				   // Set to 1.0f for a thin line
 		npc->color = BLUE;
 		break;
+	case 3:
+		npc->type = RAY;
+		npc->collider.ray.d = c2V(-1,0); 						// Direction Normalised
+		npc->collider.ray.p = c2V(SCREEN_WIDTH, SCREEN_HEIGHT / 2); // Endpoint B
+		npc->collider.ray.t = SCREEN_WIDTH;				   // Set to 1.0f for a thin line
+		npc->color = BLUE;
+		break;
 	}
 
 	npc->isColliding = false; // Initialise collision status
@@ -91,6 +98,22 @@ static void DrawNPC(const NPC *npc)
 		DrawCircleV(
 			end,	   // Center
 			r,		   // Radius
+			npc->color // Color
+		);
+
+		break;
+	}
+
+	case RAY:
+	{
+		// Draw the line (Capsule)
+		Vector2 start = {npc->collider.ray.p.x, npc->collider.ray.p.y};
+		Vector2 end = {SCREEN_WIDTH, npc->collider.capsule.b.y};
+
+		DrawLineEx(
+			start,	   			// Start position
+			end,	   			// End position
+			npc->collider.ray.t,		   // Thickness
 			npc->color // Color
 		);
 
@@ -242,13 +265,18 @@ void UpdateGame(GameData *data)
 				// Circle vs Capsule collision (cute_c2 built-in)
 				collision = c2CircletoCapsule(data->playerCircle.circle, npc->collider.capsule);
 				break;
+			case RAY:
+				// Circle vs Capsule collision (cute_c2 built-in)
+				c2Raycast out;
+				collision = c2RaytoCircle(npc->collider.ray, data->playerCircle.circle, &out);
+				break;
 			}
 			break;
 		case myAABB:
 			switch (npc->type)
 			{
 			case CIRCLE:
-				// Circle vs Circle collision (cute_c2 built-in)
+				// Circle vs Circle collision (cute_c2 built-in)s
 				collision = c2CircletoAABB(npc->collider.circle, data->playerAABB.aabb);
 				break;
 
@@ -261,7 +289,12 @@ void UpdateGame(GameData *data)
 				// Circle vs Capsule collision (cute_c2 built-in)
 				collision = c2AABBtoCapsule(data->playerAABB.aabb, npc->collider.capsule);
 				break;
+			case RAY:
+				// Circle vs Capsule collision (cute_c2 built-in)
+				collision = c2RaytoAABB(npc->collider.ray, data->playerAABB.aabb);
+				break;
 			}
+
 			break;
 		case myCapsule:
 			switch (npc->type)
@@ -279,6 +312,10 @@ void UpdateGame(GameData *data)
 			case CAPSULE:
 				// Capsule vs Capsule collision (cute_c2 built-in)
 				collision = c2CapsuletoCapsule(data->playerCapsule.capsule, npc->collider.capsule);
+				break;
+			case RAY:
+				// Circle vs Capsule collision (cute_c2 built-in)
+				collision = c2RaytoCapsule(npc->collider.ray, data->playerCapsule.capsule);
 				break;
 			}
 			break;

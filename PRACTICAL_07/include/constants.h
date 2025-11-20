@@ -9,7 +9,7 @@
 #define TARGET_FPS 60
 
 // Define the number of NPCs
-#define NUM_NPCS 3
+#define NUM_NPCS 4
 
 // Default Pushback Distance
 #define PUSHBACK_DISTANCE 0.5f

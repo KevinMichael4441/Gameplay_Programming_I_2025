@@ -9,7 +9,8 @@ typedef enum
 {
 	CIRCLE, // Circle shape
 	AABB,	// Axis-Aligned Bounding Box shape
-	CAPSULE // Capsule shape
+	CAPSULE, // Capsule shape
+	RAY
 } ColliderType;
 
 // NPC (Non-Player Character) structure
@@ -27,6 +28,7 @@ typedef struct
 		c2Circle circle;   // center+radius
 		c2AABB aabb;	   // min/max
 		c2Capsule capsule; // a,b endpoints + r
+		c2Ray ray;			// 
 	} collider;
 
 } NPC;
