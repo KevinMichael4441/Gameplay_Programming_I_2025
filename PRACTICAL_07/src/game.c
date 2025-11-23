@@ -347,6 +347,7 @@ void UpdateGame(GameData *data)
 	// Overall player color based on any collision
 	data->playerCircle.color = collisionDetected ? RED : GREEN;
 	data->playerAABB.color = collisionDetected ? RED : GREEN;
+	data->playerCapsule.color = collisionDetected ? RED : GREEN;
 
 	// Update collision status message after checking all NPCs
 	snprintf(data->message, sizeof(data->message),
@@ -359,7 +360,10 @@ void UpdateGame(GameData *data)
 void DrawGame(const GameData *data)
 {
 	// Points display
-	DrawText(TextFormat("Points : %d", data->points), 190, 40, 20, DARKBLUE);
+	DrawText("'Z' for AABB", 183, 40, 20, DARKBLUE);
+	DrawText("'C' for Capsule", 183, 60, 20, DARKBLUE);
+
+	DrawText(TextFormat("Points : %d", data->points), 190, 100, 20, DARKBLUE);
 
 	// Draw NPCs
 	for (int i = 0; i < NUM_NPCS; i++)
