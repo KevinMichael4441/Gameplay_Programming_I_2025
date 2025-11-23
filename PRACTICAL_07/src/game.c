@@ -161,6 +161,7 @@ void InitPlayer(GameData *data)
 	data->playerCapsule.capsule.b = c2V(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10);
 	data->playerCapsule.capsule.r = 5.0f;
 	data->playerCapsule.color = GREEN;
+	data->playerCapsule.texture = LoadTexture("resources/playerCapsule.png");
 }
 
 void changeType(GameData *data)
@@ -170,10 +171,6 @@ void changeType(GameData *data)
 	{
 		typeValue -= 1;
 	} 
-	if(IsKeyDown(KEY_X))
-	{
-		typeValue += 0;
-	}
 	if(IsKeyDown(KEY_C))
 	{
 		typeValue += 1;
@@ -417,6 +414,14 @@ void DrawGame(const GameData *data)
 		Vector2 start = {data->playerCapsule.capsule.a.x, data->playerCapsule.capsule.a.y};
 		Vector2 end = {data->playerCapsule.capsule.b.x, data->playerCapsule.capsule.b.y};
 		float r = data->playerCapsule.capsule.r;
+
+		Vector2 capsuleCenter = {data->playerCapsule.capsule.a.x, (data->playerCapsule.capsule.a.y + data->playerCapsule.capsule.b.y) / 2};
+		Vector2 positionTexture = {capsuleCenter.x - 24, capsuleCenter.y - 22.5};
+
+		DrawTextureV(data->playerCapsule.texture,	// Player Texture
+			positionTexture, 		// Position 
+			WHITE					// Tint color
+		);
 
 		DrawLineEx(
 			start,	   // Start position
