@@ -29,7 +29,7 @@ static void NPCFactory(NPC *npc, int typeIndex)
 	case 3:
 		npc->type = RAY;
 		npc->collider.ray.d = c2V(-1,0); 						// Direction Normalised
-		npc->collider.ray.p = c2V(SCREEN_WIDTH, SCREEN_HEIGHT / 2); // Endpoint B
+		npc->collider.ray.p = c2V(SCREEN_WIDTH, SCREEN_HEIGHT - 100); // Endpoint B
 		npc->collider.ray.t = SCREEN_WIDTH;				   // Set to 1.0f for a thin line
 		npc->color = BLUE;
 		break;
@@ -108,12 +108,11 @@ static void DrawNPC(const NPC *npc)
 	{
 		// Draw the line (Capsule)
 		Vector2 start = {npc->collider.ray.p.x, npc->collider.ray.p.y};
-		Vector2 end = {SCREEN_WIDTH, npc->collider.capsule.b.y};
+		Vector2 end = {SCREEN_WIDTH - npc->collider.ray.p.x, npc->collider.ray.p.y};
 
-		DrawLineEx(
+		DrawLineV(
 			start,	   			// Start position
 			end,	   			// End position
-			npc->collider.ray.t,		   // Thickness
 			npc->color // Color
 		);
 
@@ -291,7 +290,8 @@ void UpdateGame(GameData *data)
 				break;
 			case RAY:
 				// Circle vs Capsule collision (cute_c2 built-in)
-				collision = c2RaytoAABB(npc->collider.ray, data->playerAABB.aabb);
+				c2Raycast out;
+				collision = c2RaytoAABB(npc->collider.ray, data->playerAABB.aabb, &out);
 				break;
 			}
 
@@ -315,7 +315,8 @@ void UpdateGame(GameData *data)
 				break;
 			case RAY:
 				// Circle vs Capsule collision (cute_c2 built-in)
-				collision = c2RaytoCapsule(npc->collider.ray, data->playerCapsule.capsule);
+				c2Raycast out;
+				collision = c2RaytoCapsule(npc->collider.ray, data->playerCapsule.capsule, &out);
 				break;
 			}
 			break;
