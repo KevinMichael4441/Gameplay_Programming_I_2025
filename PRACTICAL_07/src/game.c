@@ -29,8 +29,8 @@ static void NPCFactory(NPC *npc, int typeIndex)
 	case 3:
 		npc->type = RAY;
 		npc->collider.ray.d = c2V(-1,0); 						// Direction Normalised
-		npc->collider.ray.p = c2V(SCREEN_WIDTH, SCREEN_HEIGHT - 100); // Endpoint B
-		npc->collider.ray.t = SCREEN_WIDTH;				   // Set to 1.0f for a thin line
+		npc->collider.ray.p = c2V(SCREEN_WIDTH, SCREEN_HEIGHT - 100); // Startpoint B
+		npc->collider.ray.t = SCREEN_WIDTH;				   		// How long ray will propogate
 		npc->color = BLUE;
 		break;
 	}
@@ -113,7 +113,7 @@ static void DrawNPC(const NPC *npc)
 		DrawLineV(
 			start,	   			// Start position
 			end,	   			// End position
-			npc->color // Color
+			npc->color 			// Color
 		);
 
 		break;
@@ -150,15 +150,15 @@ void InitPlayer(GameData *data)
 	data->playerCircle.texture = LoadTexture("resources/playerCircle.png");
 
 	// Initialise player Form as AABB
-	data->playerAABB.aabb.min = c2V(SCREEN_WIDTH / 2 - 25, SCREEN_HEIGHT / 2 - 25);
-	data->playerAABB.aabb.max = c2V(SCREEN_WIDTH / 2 + 25, SCREEN_HEIGHT / 2 + 25);
+	data->playerAABB.aabb.min = c2V(SCREEN_WIDTH / 2 - 25, SCREEN_HEIGHT / 2 - 25);	// Top left
+	data->playerAABB.aabb.max = c2V(SCREEN_WIDTH / 2 + 25, SCREEN_HEIGHT / 2 + 25);	// Bottom Right
 	data->playerAABB.color = GREEN;
 	data->playerAABB.texture = LoadTexture("resources/playerAABB.png");
 
 
 	// Initialize player Form as Capsule
-	data->playerCapsule.capsule.a = c2V(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 10);
-	data->playerCapsule.capsule.b = c2V(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10);
+	data->playerCapsule.capsule.a = c2V(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 10);	// Start Point
+	data->playerCapsule.capsule.b = c2V(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10);	// End Point
 	data->playerCapsule.capsule.r = 5.0f;
 	data->playerCapsule.color = GREEN;
 	data->playerCapsule.texture = LoadTexture("resources/playerCapsule.png");
@@ -167,6 +167,7 @@ void InitPlayer(GameData *data)
 void changeType(GameData *data)
 {
 	int typeValue = 0;
+	// Value will be set based on if Z or C buttons are down
 	if(IsKeyDown(KEY_Z))
 	{
 		typeValue -= 1;
@@ -262,7 +263,7 @@ void UpdateGame(GameData *data)
 				collision = c2CircletoCapsule(data->playerCircle.circle, npc->collider.capsule);
 				break;
 			case RAY:
-				// Circle vs Capsule collision (cute_c2 built-in)
+				// Circle vs Ray collision (cute_c2 built-in)
 				c2Raycast out;
 				collision = c2RaytoCircle(npc->collider.ray, data->playerCircle.circle, &out);
 				break;
@@ -272,21 +273,21 @@ void UpdateGame(GameData *data)
 			switch (npc->type)
 			{
 			case CIRCLE:
-				// Circle vs Circle collision (cute_c2 built-in)s
+				// Circle vs AABB collision (cute_c2 built-in)s
 				collision = c2CircletoAABB(npc->collider.circle, data->playerAABB.aabb);
 				break;
 
 			case AABB:
-				// Circle vs AABB collision (cute_c2 built-in)
+				// AABB vs AABB collision (cute_c2 built-in)
 				collision = c2AABBtoAABB(data->playerAABB.aabb, npc->collider.aabb);
 				break;
 
 			case CAPSULE:
-				// Circle vs Capsule collision (cute_c2 built-in)
+				// AABB vs Capsule collision (cute_c2 built-in)
 				collision = c2AABBtoCapsule(data->playerAABB.aabb, npc->collider.capsule);
 				break;
 			case RAY:
-				// Circle vs Capsule collision (cute_c2 built-in)
+				// Ray vs AABB collision (cute_c2 built-in)
 				c2Raycast out;
 				collision = c2RaytoAABB(npc->collider.ray, data->playerAABB.aabb, &out);
 				break;
@@ -311,7 +312,7 @@ void UpdateGame(GameData *data)
 				collision = c2CapsuletoCapsule(data->playerCapsule.capsule, npc->collider.capsule);
 				break;
 			case RAY:
-				// Circle vs Capsule collision (cute_c2 built-in)
+				// Ray vs Capsule collision (cute_c2 built-in)
 				c2Raycast out;
 				collision = c2RaytoCapsule(npc->collider.ray, data->playerCapsule.capsule, &out);
 				break;
