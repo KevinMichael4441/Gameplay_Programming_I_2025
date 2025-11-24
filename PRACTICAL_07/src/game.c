@@ -256,11 +256,51 @@ void UpdateGame(GameData *data)
 			case AABB:
 				// Circle vs AABB collision (cute_c2 built-in)
 				collision = c2CircletoAABB(data->playerCircle.circle, npc->collider.aabb);
+
+				if (collision)
+				{
+					// Compute one or two points that represent the point of contact.
+					// Resolve and prevent shapes from overlapping (by pushing back player), below is where
+					// its used as a collision response
+					// If no collision occured the count member of the manifold struct is set to 0.
+					c2CircletoAABBManifold(data->playerCircle.circle, npc->collider.aabb, &npc->manifold);
+
+					// Response to circle to circle collisions
+					if (npc->manifold.count > 0)
+					{
+						// Simple collision response: push the player circle out of the NPC circle along the normal
+						// npc->manifold.n is the collision normal
+						// npc->manifold.depths[0] is the penetration depth
+						float depth = npc->manifold.depths[0];
+						// Does not allow the player to penetrate the circle
+						data->playerCircle.circle.p = c2Sub(data->playerCircle.circle.p, c2Mulvs(npc->manifold.n, depth + PUSHBACK_DISTANCE));
+					}
+				}
 				break;
 
 			case CAPSULE:
 				// Circle vs Capsule collision (cute_c2 built-in)
 				collision = c2CircletoCapsule(data->playerCircle.circle, npc->collider.capsule);
+
+				if (collision)
+				{
+					// Compute one or two points that represent the point of contact.
+					// Resolve and prevent shapes from overlapping (by pushing back player), below is where
+					// its used as a collision response
+					// If no collision occured the count member of the manifold struct is set to 0.
+					c2CircletoCapsuleManifold(data->playerCircle.circle, npc->collider.capsule, &npc->manifold);
+
+					// Response to circle to circle collisions
+					if (npc->manifold.count > 0)
+					{
+						// Simple collision response: push the player circle out of the NPC circle along the normal
+						// npc->manifold.n is the collision normal
+						// npc->manifold.depths[0] is the penetration depth
+						float depth = npc->manifold.depths[0];
+						// Does not allow the player to penetrate the circle
+						data->playerCircle.circle.p = c2Sub(data->playerCircle.circle.p, c2Mulvs(npc->manifold.n, depth + PUSHBACK_DISTANCE));
+					}
+				}
 				break;
 			case RAY:
 				// Circle vs Ray collision (cute_c2 built-in)
