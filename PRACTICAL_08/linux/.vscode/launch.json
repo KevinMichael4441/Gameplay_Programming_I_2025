@@ -5,7 +5,7 @@
             "name": "Debug (Linux)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/../debug/game.bin",  // Move up one level to access the debug folder
+            "program": "${workspaceFolder}/../debug/game",  // Move up one level to access the debug folder
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/..",  // Set the working directory to the parent of the workspace
@@ -29,7 +29,7 @@
             "name": "Release (Linux)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/../release/game.bin",  // Move up one level to access the release folder
+            "program": "${workspaceFolder}/../release/game",  // Move up one level to access the release folder
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/..",  // Set the working directory to the parent of the workspace

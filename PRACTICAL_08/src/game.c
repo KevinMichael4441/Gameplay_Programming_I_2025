@@ -1,55 +1,67 @@
-#include <raylib.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "game.h"
 
-#include "../include/game.h"
-#include "../include/input_manager.h"
-#include "../include/command.h"
-
-#include "../include/constants.h"
-
-void InitGame(GameData *gameData)
+// Initialise Game Data
+void InitGame(GameData *data)
 {
-	// Initialize window
-	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Game Command Pattern Starter Kit");
+	// Initialise Player
+	Player player = {
+		SCREEN_WIDTH / 2,	   // Center X
+		SCREEN_HEIGHT / 2,	   // Center Y
+		DEFAULT_PLAYER_RADIUS, // Radius
+		100,				   // Health
+		0.0f,				   // Breath timer accumulator
+		GREEN				   // Color
+	};
 
-	// Initialize player and mediator
-	int screenWidth = GetScreenWidth();
-	int screenHeight = GetScreenHeight();
+	// Set player
+	data->player = player;
 
-	gameData->player = (Player){screenWidth / 2, screenHeight / 2, 100}; // Initialize player
-	gameData->mediator = create_mediator(&gameData->player);
+	// Create Mediator
+	data->mediator = CreateMediator(&data->player);
+	data->activeCommand = NONE;
 
 	// Initialise Input Manage
-	init_input_manager();
+	InitInputManager();
 }
 
-void UpdateGame(GameData *gameData)
+// Update Game Data
+void UpdateGame(GameData *data, float deltaTime)
 {
-	// Poll input and execute command
-	Command command = poll_input();
-	mediator_execute_command(gameData->mediator, command);
+	// Poll input and Handle Command
+	data->activeCommand = PollInput();
+	MediatorHandleCommand(data->mediator, data->activeCommand, deltaTime);
 }
 
-void DrawGame(GameData *gameData)
+// Helper function to DrawActiveCommand
+void DrawActiveCommand(Command activeCommand, Command filter, const char *commandText, int *yPositionOffset, Color color)
 {
+	if (IsCommandActive(activeCommand, filter))
+	{
+		DrawText(commandText, 10, *yPositionOffset, DEFAULT_FONT_SIZE, color);
+		*yPositionOffset += DEFAULT_TEXT_Y_OFFSET;
+	}
+}
 
-	BeginDrawing();
-
-	ClearBackground(RAYWHITE);
-
+// Draw Game Data
+void DrawGame(const GameData *data)
+{
 	// Drawing Player and Position Data
-	DrawCircle(gameData->player.x, gameData->player.y, 20, RED);
-	DrawText(TextFormat("(%d, %d)", gameData->player.x, gameData->player.y), gameData->player.x, gameData->player.y + 20, 20, DARKBLUE);
+	Vector2 position = {data->player.x, data->player.y};
 
-	EndDrawing();
+	DrawCircleV(position, data->player.r, data->player.color);
 }
 
-void ExitGame(GameData *gameData)
+// Close Game and free resources
+void CloseGame(GameData *data)
 {
-	// Free the mediator if needed
-	free(gameData->mediator);
+	printf("Game Closed!\n");
 
-	// Close the window
-	CloseWindow();
+	// Free Mediator
+	if (data->mediator)
+	{
+		free(data->mediator);
+		data->mediator = NULL;
+	}
+
+	free(data); // Free game data memory
 }

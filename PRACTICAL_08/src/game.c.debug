@@ -1,0 +1,109 @@
+#include "game.h"
+
+// Rename this file to game.c if you want debug output
+// Backup original game.c before renaming
+
+// Initialise Game Data
+void InitGame(GameData *data)
+{
+	// Initialise Player
+	Player player = {
+		SCREEN_WIDTH / 2,	   // Center X
+		SCREEN_HEIGHT / 2,	   // Center Y
+		DEFAULT_PLAYER_RADIUS, // Radius
+		100,				   // Health
+		0.0f,				   // Breath timer accumulator
+		GREEN				   // Color
+	};
+
+	// Set player
+	data->player = player;
+
+	// Create Mediator
+	data->mediator = CreateMediator(&data->player);
+	data->activeCommand = NONE;
+
+	// Initialise Input Manage
+	InitInputManager();
+}
+
+// Update Game Data
+void UpdateGame(GameData *data, float deltaTime)
+{
+	// Poll input and Handle Command
+	data->activeCommand = PollInput();
+	MediatorHandleCommand(data->mediator, data->activeCommand, deltaTime);
+}
+
+// Helper function to DrawActiveCommand
+void DrawActiveCommand(Command activeCommand, Command filter, const char *commandText, int *yPositionOffset, Color color)
+{
+	if (IsCommandActive(activeCommand, filter))
+	{
+		DrawText(commandText, 10, *yPositionOffset, DEFAULT_FONT_SIZE, color);
+		*yPositionOffset += DEFAULT_TEXT_Y_OFFSET;
+	}
+}
+
+// Draw Game Data
+void DrawGame(const GameData *data)
+{
+	// Drawing Player and Position Data
+	Vector2 position = {data->player.x, data->player.y};
+
+	DrawCircleV(position, data->player.r, data->player.color);
+
+	DrawText(TextFormat("(%d, %d)", position.x, position.y),
+			 position.x,
+			 position.y + 20,
+			 20,
+			 DARKBLUE);
+
+	// Display Active Commands
+	DrawText("Active Commands", 10, 10, DEFAULT_FONT_SIZE, BLACK);
+
+	// Offset for drawing commands
+	int yPositionOffset = DEFAULT_TEXT_Y_OFFSET;
+
+	DrawActiveCommand(data->activeCommand, MOVE_UP, "MOVE UP", &yPositionOffset, DARKGREEN);
+	DrawActiveCommand(data->activeCommand, MOVE_DOWN, "MOVE DOWN", &yPositionOffset, DARKGREEN);
+	DrawActiveCommand(data->activeCommand, MOVE_LEFT, "MOVE LEFT", &yPositionOffset, DARKGREEN);
+	DrawActiveCommand(data->activeCommand, MOVE_RIGHT, "MOVE RIGHT", &yPositionOffset, DARKGREEN);
+	DrawActiveCommand(data->activeCommand, JUMP, "JUMP", &yPositionOffset, ORANGE);
+	DrawActiveCommand(data->activeCommand, FIRE, "FIRE", &yPositionOffset, RED);
+	DrawActiveCommand(data->activeCommand, NONE, "NONE", &yPositionOffset, GRAY);
+
+	// Display Command Bits
+	char buffer[COUNT + 1]; // COUNT bits + null
+	GetCommandBits(data->activeCommand, buffer);
+
+	DrawText(TextFormat("Command Bits: %s", buffer), // Buffer Text
+			 10,									 // X Position
+			 yPositionOffset,						 // Y Position
+			 DEFAULT_FONT_SIZE,						 // Font size
+			 BLUE									 // Color
+	);
+
+	yPositionOffset += 30; // Increase Y Position
+
+	// Draw instructions
+	DrawText("Controls: WASD = Move, SPACE = Jump, Left Mouse Button = Fire",
+			 10,
+			 SCREEN_HEIGHT - 30, 20,
+			 DARKGRAY);
+}
+
+// Close Game and free resources
+void CloseGame(GameData *data)
+{
+	printf("Game Closed!\n");
+
+	// Free Mediator
+	if (data->mediator)
+	{
+		free(data->mediator);
+		data->mediator = NULL;
+	}
+
+	free(data); // Free game data memory
+}

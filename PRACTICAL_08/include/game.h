@@ -1,17 +1,30 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <raylib.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "constants.h"
+
 #include "player.h"
 #include "mediator.h"
 
-typedef struct {
+#include "input_manager.h"
+#include "command.h"
+
+// Define GameData struct
+typedef struct
+{
     Player player;
-    Mediator* mediator;
+    Mediator *mediator;
+    Command activeCommand;
 } GameData;
 
-void InitGame(GameData* gameData);
-void UpdateGame(GameData* gameData);
-void DrawGame(GameData* gameData);
-void ExitGame(GameData* gameData);
+// Function prototypes
+void InitGame(GameData *data);
+void UpdateGame(GameData *data, float deltaTime);
+void DrawGame(const GameData *data);
+void CloseGame(GameData *data);
 
 #endif // GAME_H

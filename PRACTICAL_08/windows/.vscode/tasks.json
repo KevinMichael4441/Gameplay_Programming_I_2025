@@ -67,50 +67,6 @@
 			"detail": "Run the desktop version of the application in Debug mode."
 		},
 		{
-			"label": "Build Web (Windows)",
-			"type": "process",
-			"command": "C:\\msys64\\msys2_shell.cmd",
-			"args": [
-				"-ucrt64",
-				"-defterm",
-				"-here",
-				"-no-start",
-				"-c",
-				"bash ./windows/.vscode/build.sh build_web"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}/.."
-			},
-			"group": {
-				"kind": "build",
-				"isDefault": false
-			},
-			"problemMatcher": [],
-			"detail": "Build the web application."
-		},
-		{
-			"label": "Run Web (Windows)",
-			"type": "process",
-			"command": "C:\\msys64\\msys2_shell.cmd",
-			"args": [
-				"-ucrt64",
-				"-defterm",
-				"-here",
-				"-no-start",
-				"-c",
-				"bash ./windows/.vscode/build.sh run_web"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}/.."
-			},
-			"group": {
-				"kind": "test",
-				"isDefault": false
-			},
-			"problemMatcher": [],
-			"detail": "Run the web application (starts local server)."
-		},
-		{
 			"label": "Clean (Windows)",
 			"type": "process",
 			"command": "C:\\msys64\\msys2_shell.cmd",
@@ -133,29 +89,7 @@
 			"detail": "Clean the project build files."
 		},
 		{
-			"label": "Clean Toolchain (Windows)",
-			"type": "process",
-			"command": "C:\\msys64\\msys2_shell.cmd",
-			"args": [
-				"-ucrt64",
-				"-defterm",
-				"-here",
-				"-no-start",
-				"-c",
-				"bash ./windows/.vscode/build.sh clean_toolchain"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}/.."
-			},
-			"group": {
-				"kind": "build",
-				"isDefault": false
-			},
-			"problemMatcher": [],
-			"detail": "Clean the toolchain files."
-		},
-		{
-			"label": "Build Release (Windows)",
+			"label": "Build (Windows - Release)",
 			"type": "process",
 			"command": "C:\\msys64\\msys2_shell.cmd",
 			"args": [

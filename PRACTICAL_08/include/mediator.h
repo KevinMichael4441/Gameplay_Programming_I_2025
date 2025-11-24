@@ -7,15 +7,15 @@
 #include "player.h"
 
 // Define the Mediator structure
-typedef struct Mediator {
-    Player* player;
+typedef struct Mediator
+{
+    Player *player;
 } Mediator;
 
 // Function to create a mediator instance
-Mediator* create_mediator(Player* player);
+Mediator *CreateMediator(Player *player);
 
-// Execute Command
-void mediator_execute_command(Mediator* mediator, Command command);
+// Handle Command
+void MediatorHandleCommand(Mediator *mediator, Command command, float deltaTime);
 
 #endif
-

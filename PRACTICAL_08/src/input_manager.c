@@ -1,31 +1,31 @@
 #include <raylib.h>
 
-#include "../include/input_manager.h"
+#include "input_manager.h"
 
 // Sample input initialization
-void init_input_manager()
+void InitInputManager()
 {
     // Initialize input sources (keyboard, controller, etc.)
 }
 
 // Sample input polling
-Command poll_input()
+Command PollInput()
 {
     // Check keyboard input
 
     Command command = NONE;
-    
-    if (IsKeyDown(KEY_W))
+
+    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))
         command |= MOVE_UP;
-    if (IsKeyDown(KEY_S))
+    if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))
         command |= MOVE_DOWN;
-    if (IsKeyDown(KEY_A))
+    if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
         command |= MOVE_LEFT;
-    if (IsKeyDown(KEY_D))
+    if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
         command |= MOVE_RIGHT;
     if (IsKeyPressed(KEY_SPACE))
         command |= JUMP;
-    if (IsKeyDown(KEY_F))
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
         command |= FIRE;
 
     TraceLog(LOG_INFO, "Keyboard Command %d", command);
@@ -53,7 +53,7 @@ Command poll_input()
     return command;
 }
 
-void exit_input_manager()
+void CloseInputManager()
 {
     // Cleanup resources if needed
 }

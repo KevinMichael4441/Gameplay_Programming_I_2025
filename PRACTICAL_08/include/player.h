@@ -1,20 +1,33 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-typedef struct {
+#include <raylib.h>
+#include "constants.h"
+
+// Player Structure Data
+typedef struct
+{
     int x;
     int y;
+    int r;
     int health;
+    float breathTimer;
+    Color color;
 } Player;
 
-void player_move_up(Player* player);
-void player_move_down(Player* player);
-void player_move_left(Player* player);
-void player_move_right(Player* player);
-void player_jump(Player* player);
-void player_fire(Player* player);
+// Player Behaviours
+void Idle(Player *player, float deltaTime);
+void MoveUp(Player *player);
+void MoveDown(Player *player);
+void MoveLeft(Player *player);
+void MoveRight(Player *player);
 
-void player_jump_fire(Player* player);
-void player_move_up_fire(Player* player);
+void Jump(Player *player);
+void Fire(Player *player);
+
+void JumpFire(Player *player);
+void MoveUpFire(Player *player);
+
+void ClampPlayerOnScreen(Player *player); // Player stays within screen bounds
 
 #endif

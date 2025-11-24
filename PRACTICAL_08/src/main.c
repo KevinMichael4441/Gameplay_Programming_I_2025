@@ -1,42 +1,60 @@
-#include <raylib.h>
 #include <stdio.h>
-#include <stdlib.h>
 
-#include "../include/game.h"
+#include "game.h"
+#include "constants.h"
 
-// Specific include for web build
-#if defined(WEB_BUILD)
-#include <emscripten/emscripten.h>
-#endif
+// Function Prototypes
+// Game Loop Function
+void GameLoop(GameData *data);
 
-// Function to wrap main gameloop
-void GameLoop(GameData *gameData);
-
-int main()
+// Main Entry Point
+int main(void)
 {
-    // Create and initialize Game Data
-    GameData gameData;
-    InitGame(&gameData);
+	// Init raylib window
+	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Raylib Command Pattern Starter Kit GPP I");
 
-    // Web-specific loop configuration
-#if defined(WEB_BUILD)
-    emscripten_set_main_loop_arg((void (*)(void *))GameLoop, &gameData, 0, 1);
-#else
-    SetTargetFPS(60);
-    while (!WindowShouldClose()) // Detect window close button or ESC key
-    {
-        GameLoop(&gameData);
-    }
-#endif
+	// Create GameData Pointer
+	GameData *data = (GameData *)(malloc(sizeof(GameData)));
 
-    // Cleanup
-    ExitGame(&gameData);
+	// Initialise Game
+	InitGame(data);
 
-    return 0;
+	// Set Target FPS
+	SetTargetFPS(TARGET_FPS);
+
+	// Raylib while loop
+	while (!WindowShouldClose()) // Detect window close button or ESC key
+	{
+		// Call GameLoop
+		GameLoop(data);
+	}
+
+	// Free resources
+	CloseGame(data);
+
+	// Close Raylib Window
+	CloseWindow();
+
+	return 0;
 }
 
-void GameLoop(GameData *gameData)
+void GameLoop(GameData *data)
 {
-    UpdateGame(gameData);
-    DrawGame(gameData);
+	// Update Game Data
+	// Should be outside BeginDrawing(); and EndDrawing();
+	float deltaTime = GetFrameTime(); // Get delta time frame time expressed in seconds
+
+	UpdateGame(data, deltaTime);
+
+	// Raylib function Draw
+	BeginDrawing();
+
+	// Clear the Frame
+	ClearBackground(RAYWHITE);
+
+	// Draw the Game Objects
+	DrawGame(data);
+
+	// Raylib End drawing to Frame Buffer
+	EndDrawing();
 }

@@ -2,7 +2,7 @@
 
 # Check for command argument
 if [ "$#" -lt 1 ]; then
-    echo "Usage: $0 {all|build|run|build_web|run_web|clean|clean_toolchain} [debug|release]"
+    echo "Usage: $0 {all|build|run|clean|} [CONFIG=debug|release]"
     exit 1
 fi
 

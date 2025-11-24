@@ -18,8 +18,8 @@
 /debug/
 /release/
 
-# Web dir
-/web/
-
 # Object files
 *.o
+
+# Raylib
+/raylib/
