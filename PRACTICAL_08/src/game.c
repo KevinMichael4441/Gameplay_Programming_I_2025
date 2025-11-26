@@ -10,7 +10,9 @@ void InitGame(GameData *data)
 		DEFAULT_PLAYER_RADIUS, // Radius
 		100,				   // Health
 		0.0f,				   // Breath timer accumulator
-		GREEN				   // Color
+		GREEN,				   // Color
+		NULL,
+		NULL
 	};
 
 	// Set player

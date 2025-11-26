@@ -123,7 +123,10 @@
 			"${workspaceFolder:Header Files}",
 			"C:/msys64/ucrt64/include/**"
 		],
-		"C_Cpp.default.browse.limitSymbolsToIncludedHeaders": true
+		"C_Cpp.default.browse.limitSymbolsToIncludedHeaders": true,
+		"files.associations": {
+			"player.h": "c"
+		}
 	},
 	"extensions": {
 		"recommendations": [
