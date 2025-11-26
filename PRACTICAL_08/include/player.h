@@ -33,6 +33,7 @@ typedef struct
     Color color;
     PlayerState *playerState;
     Memento *memento;
+    Memento *undoMemento;
 } Player;
 
 PlayerState *CreatePlayerState(Player *t_player);

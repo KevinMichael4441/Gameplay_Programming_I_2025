@@ -12,13 +12,14 @@ void InitGame(GameData *data)
 		0.0f,				   // Breath timer accumulator
 		GREEN,				   // Color
 		NULL,
-		NULL
+		NULL,
+		NULL 
 	};
 
 	// Set player
 	data->player = player;
 
-	// Create Mediator
+	// Create Mediator 
 	data->mediator = CreateMediator(&data->player);
 	data->activeCommand = NONE;
 

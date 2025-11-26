@@ -60,6 +60,7 @@ void saveState(Player *t_player)
 {
 	PlayerState *currentState = CreatePlayerState(t_player);
 	t_player->memento = CreateMemento(currentState);
+	t_player->undoMemento = NULL;
 }
 
 // Move player up
@@ -152,5 +153,15 @@ void JumpFire(Player *player)
 
 void undoAction(Player *t_player)
 {
+	t_player->undoMemento = CreateMemento(t_player->playerState);
 	t_player->playerState = getState(t_player->memento);
+}
+
+void redoAction(Player *t_player)
+{
+	saveState(t_player);
+	if (t_player->undoMemento != NULL)
+	{
+		t_player->playerState = getState(t_player->undoMemento);
+	}
 }
