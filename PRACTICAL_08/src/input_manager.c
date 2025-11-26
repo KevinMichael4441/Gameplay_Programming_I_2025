@@ -15,6 +15,19 @@ Command PollInput()
 
     Command command = NONE;
 
+    if (IsKeyPressed(KEY_Z))
+    {
+        command = 1 << 6;
+        TraceLog(LOG_INFO, "Keyboard Command %d", command);
+        return command;
+    }
+    else if (IsKeyPressed(KEY_X))
+    {
+        command = 1 << 7;
+        TraceLog(LOG_INFO, "Keyboard Command %d", command);
+        return command;
+    }
+
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))
         command |= MOVE_UP;
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))

@@ -14,13 +14,15 @@ typedef struct Mediator Mediator;
 typedef enum
 {
 	NONE		 	= 0,		// No command
-	MOVE_UP 		= 1 << 0,	// Binary: 000001
-	MOVE_DOWN 		= 1 << 1,	// Binary: 000010
-	MOVE_LEFT 		= 1 << 2,	// Binary: 000100
-	MOVE_RIGHT 		= 1 << 3,	// Binary: 001000
-	JUMP 			= 1 << 4,	// Binary: 010000
-	FIRE 			= 1 << 5,	// Binary: 100000
-	COUNT			= 6 // Total number of commands
+	MOVE_UP 		= 1 << 0,	// Binary: 00000001
+	MOVE_DOWN 		= 1 << 1,	// Binary: 00000010
+	MOVE_LEFT 		= 1 << 2,	// Binary: 00000100
+	MOVE_RIGHT 		= 1 << 3,	// Binary: 00001000
+	JUMP 			= 1 << 4,	// Binary: 00010000
+	FIRE 			= 1 << 5,	// Binary: 00100000
+	UNDO 			= 1 << 6,	// Binary: 01000000
+	REDO 			= 1 << 7,	// Binary: 10000000
+	COUNT			= 8 // Total number of commands
 } Command;
 
 // Function to execute a command

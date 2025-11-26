@@ -54,6 +54,9 @@ void MoveUpFire(Player *player);
 void ClampPlayerOnScreen(Player *player); // Player stays within screen bounds
 
 void saveState(Player *player);
+void saveUndoState(Player *t_player);
+void undoAction(Player *player);
+void redoAction(Player *player);
 
 
 #endif

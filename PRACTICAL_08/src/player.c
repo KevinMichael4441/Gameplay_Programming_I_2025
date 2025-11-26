@@ -56,13 +56,6 @@ void Idle(Player *player, float deltaTime)
 	player->r = (int)(DEFAULT_PLAYER_RADIUS * scale);
 }
 
-void saveState(Player *t_player)
-{
-	PlayerState *currentState = CreatePlayerState(t_player);
-	t_player->memento = CreateMemento(currentState);
-	t_player->undoMemento = NULL;
-}
-
 // Move player up
 void MoveUp(Player *player)
 {
@@ -153,15 +146,48 @@ void JumpFire(Player *player)
 
 void undoAction(Player *t_player)
 {
-	t_player->undoMemento = CreateMemento(t_player->playerState);
-	t_player->playerState = getState(t_player->memento);
+	if (t_player->memento != NULL)
+	{
+		printf("inside UNDO");
+		
+		PlayerState *currentState = CreatePlayerState(t_player);
+		t_player->undoMemento = CreateMemento(currentState);
+		t_player->playerState = getState(t_player->memento);
+		t_player->memento = NULL;
+
+		t_player->x = t_player->playerState->x;
+		t_player->y = t_player->playerState->y;
+		t_player->color = t_player->playerState->color;
+		t_player->health = t_player->playerState->health;
+	}
+
 }
 
 void redoAction(Player *t_player)
 {
-	saveState(t_player);
 	if (t_player->undoMemento != NULL)
 	{
+		saveUndoState(t_player);
+		printf("inside REDO");
 		t_player->playerState = getState(t_player->undoMemento);
+		t_player->undoMemento = NULL;
+
+		t_player->x = t_player->playerState->x;
+		t_player->y = t_player->playerState->y;
+		t_player->color = t_player->playerState->color;
+		t_player->health = t_player->playerState->health;
 	}
+}
+
+void saveUndoState(Player *t_player)
+{
+	PlayerState *currentState = CreatePlayerState(t_player);
+	t_player->memento = CreateMemento(currentState);
+}
+
+void saveState(Player *t_player)
+{
+	PlayerState *currentState = CreatePlayerState(t_player);
+	t_player->memento = CreateMemento(currentState);
+	t_player->undoMemento = NULL;
 }

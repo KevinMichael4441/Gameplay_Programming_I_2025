@@ -10,6 +10,16 @@ void ExecuteCommand(Command command, Player *player, float deltaTime)
         Idle(player, deltaTime);
         return; // Nothing to process
     }
+    else if (command == UNDO)
+    {
+        undoAction(player);
+        return;
+    }
+    else if (command == REDO)
+    {
+        redoAction(player);
+        return;
+    }
 
     // Handle basic movement
     // MOVE DOWN, LEFT, RIGHT are single commands (no combos)
