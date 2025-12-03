@@ -298,13 +298,7 @@ void NPCUpdateDead(GameObject *object, float deltaTime)
 	// This could be a place to check if the NPC should be removed or respawned.
 
 	npc->base.health = 100;
-	npc->base.timer += deltaTime;
-
-	if (npc->base.timer >= 1.00f)
-	{
-		ChangeState(object, STATE_IDLE, deltaTime);
-		return;
-	}
+	ChangeState(object, STATE_IDLE, deltaTime);
 }
 
 // Exit function for Dead state, executed once upon leaving Dead
@@ -316,8 +310,10 @@ void NPCExitDead(GameObject *object, float deltaTime)
 	printf("Aggression: %d\n\n", npc->aggression);
 	// Cleanup code for leaving Dead state, such as removing NPC from the active world, playing respawn animations, etc.
 
-	npc->base.color = GREEN;
+	npc->base.color = BLUE;
 	npc->base.r = DEFAULT_GAMEOBJECT_RADIUS;
 	npc->base.timer = 0.0f;
+	npc->base.x = rand() % (SCREEN_WIDTH - npc->base.r - npc->base.r + 1) + npc->base.r;
+	npc->base.y = rand() % (SCREEN_HEIGHT - npc->base.r - npc->base.r + 1) + npc->base.r;
 }
 
