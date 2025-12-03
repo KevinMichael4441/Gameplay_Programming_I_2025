@@ -205,6 +205,11 @@ void NPCUpdateIdle(GameObject *object, float deltaTime)
 	float wave = sinf(npc->base.timer * 2.0f);
 	float scale = 1.0f + wave * 0.02f;
 	npc->base.r = (int)(DEFAULT_GAMEOBJECT_RADIUS * scale);
+
+	if (npc->base.health == 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 // Exit function for Idle state, executed once upon leaving Idle
@@ -242,6 +247,12 @@ void NPCUpdateFiring(GameObject *object, float deltaTime)
 	if (npc->base.timer >= 1.00f)
 	{
 		ChangeState(object, STATE_IDLE, deltaTime);
+		return;
+	}
+
+	if (npc->base.health == 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
 		return;
 	}
 
@@ -285,6 +296,15 @@ void NPCUpdateDead(GameObject *object, float deltaTime)
 	printf("Aggression: %d\n\n", npc->aggression);
 	// During game loop and game ticks, execute Dead state behavior here, such as preventing any actions.
 	// This could be a place to check if the NPC should be removed or respawned.
+
+	npc->base.health = 100;
+	npc->base.timer += deltaTime;
+
+	if (npc->base.timer >= 1.00f)
+	{
+		ChangeState(object, STATE_IDLE, deltaTime);
+		return;
+	}
 }
 
 // Exit function for Dead state, executed once upon leaving Dead
@@ -295,4 +315,9 @@ void NPCExitDead(GameObject *object, float deltaTime)
 	printf("%s -> EXIT -> Dead\n", object->name);
 	printf("Aggression: %d\n\n", npc->aggression);
 	// Cleanup code for leaving Dead state, such as removing NPC from the active world, playing respawn animations, etc.
+
+	npc->base.color = GREEN;
+	npc->base.r = DEFAULT_GAMEOBJECT_RADIUS;
+	npc->base.timer = 0.0f;
 }
+
