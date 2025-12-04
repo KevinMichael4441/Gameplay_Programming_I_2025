@@ -501,7 +501,6 @@ void PlayerUpdateDie(GameObject *object, float deltaTime)
 {
 	Player *player = (Player *)object;
 	printf("\n%s -> UPDATE -> Die\n", object->name);
-	ChangeState(object, STATE_RESPAWN, deltaTime);
 	// Complete the remainder of the method
 
 	float duration = 0.25f; // jump lasts 0.25 seconds
@@ -541,8 +540,6 @@ void PlayerUpdateRespawn(GameObject *object, float deltaTime)
 {
 	Player *player = (Player *)object;
 	printf("\n%s -> UPDATE -> Respawn\n", object->name);
-	ChangeState(object, STATE_IDLE, deltaTime);
-	// Complete the remainder of the method
 
 	float duration = 2.0f; // respawn lasts 2 seconds
 
