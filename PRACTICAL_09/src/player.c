@@ -15,7 +15,7 @@ Player *InitPlayer(const char *name, float x, float y, int r)
 	player->base.x = x;
 	player->base.y = y;
 	player->base.r = r;
-	player->base.color = GRAY;
+	player->base.color = GREEN;
 
 	player->stamina = 100.0f;
 	player->mana = 100.0f;
@@ -283,6 +283,11 @@ void PlayerUpdateIdle(GameObject *object, float deltaTime)
 	float scale = 1.0f + (wave * 0.05f);
 
 	player->base.r = (int)(DEFAULT_GAMEOBJECT_RADIUS * scale);
+
+	if (player->base.health == 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 void PlayerExitIdle(GameObject *object, float deltaTime)
@@ -333,6 +338,12 @@ void PlayerUpdateMoving(GameObject *object, float deltaTime)
 
 	// Hold on screen
 	ClampGameObjectOnScreen(object);
+
+	
+	if (player->base.health == 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 void PlayerExitMoving(GameObject *object, float deltaTime)
@@ -392,6 +403,12 @@ void PlayerUpdateFiring(GameObject *object, float deltaTime)
 
 	// Hold on screen
 	ClampGameObjectOnScreen(object);
+
+	
+	if (player->base.health == 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 void PlayerExitFiring(GameObject *object, float deltaTime)
@@ -448,6 +465,12 @@ void PlayerUpdateJumping(GameObject *object, float deltaTime)
 
 	// Hold on screen
 	ClampGameObjectOnScreen(object);
+
+	
+	if (player->base.health == 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 void PlayerExitJumping(GameObject *object, float deltaTime)
@@ -476,9 +499,19 @@ void PlayerEnterDie(GameObject *object, float deltaTime)
 
 void PlayerUpdateDie(GameObject *object, float deltaTime)
 {
+	Player *player = (Player *)object;
 	printf("\n%s -> UPDATE -> Die\n", object->name);
 	ChangeState(object, STATE_RESPAWN, deltaTime);
 	// Complete the remainder of the method
+
+	float duration = 0.25f; // jump lasts 0.25 seconds
+
+	player->base.timer += deltaTime;
+
+	if (player->base.timer >= duration)
+	{
+		ChangeState(object, STATE_RESPAWN, deltaTime);
+	}
 }
 
 void PlayerExitDie(GameObject *object, float deltaTime)
@@ -498,15 +531,27 @@ void PlayerEnterRespawn(GameObject *object, float deltaTime)
 	printf("\n%s -> ENTER -> Respawn\n", object->name);
 	// Complete the remainder of the method
 	player->base.timer = 0.0f;
-	player->base.color = PURPLE;
+	player->base.color = GOLD;
+	player->base.x = SCREEN_WIDTH / 2;
+	player->base.y = SCREEN_HEIGHT / 2;
 	player->base.r = DEFAULT_GAMEOBJECT_RADIUS;
 }
 
 void PlayerUpdateRespawn(GameObject *object, float deltaTime)
 {
+	Player *player = (Player *)object;
 	printf("\n%s -> UPDATE -> Respawn\n", object->name);
 	ChangeState(object, STATE_IDLE, deltaTime);
 	// Complete the remainder of the method
+
+	float duration = 2.0f; // respawn lasts 2 seconds
+
+	player->base.timer += deltaTime;
+
+	if (player->base.timer >= duration)
+	{
+		ChangeState(object, STATE_IDLE, deltaTime);
+	}
 }
 
 void PlayerExitRespawn(GameObject *object, float deltaTime)
@@ -517,4 +562,6 @@ void PlayerExitRespawn(GameObject *object, float deltaTime)
 	// Complete the remainder of the method
 	player->base.timer = 0.0f;
 	player->base.r = DEFAULT_GAMEOBJECT_RADIUS;
+	player->base.color = GREEN;
+	player->base.health = 100;
 }
