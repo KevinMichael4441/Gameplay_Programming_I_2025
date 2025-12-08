@@ -1,0 +1,28 @@
+# Log files
+*.log
+
+# Applications
+*.app
+*.exe
+*.war
+
+# Large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
+
+# Bin dir
+/debug/
+/release/
+
+# Object files
+*.o
+
+# Raylib
+/raylib/
+
+# Output
+output.txt
