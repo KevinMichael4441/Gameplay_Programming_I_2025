@@ -169,7 +169,7 @@ void InitNPCFSM(GameObject *object)
 	// STATE_COLLISION
 	// For unimplemented states, set them to empty defaults
 	// Alternatively NPC has its own FSM with only the implemented states
-	
+
 	object->stateConfigs[STATE_RESPAWN] = UNIMPLEMENTED_STATE_CONFIG;
 	object->stateConfigs[STATE_COLLISION] = UNIMPLEMENTED_STATE_CONFIG;
 
@@ -192,6 +192,123 @@ void NPCMove(NPC *npc, Vector2 inputAxis, float deltaTime)
 	npc->base.collider.p.y = npc->base.position.y;
 }
 
+/**
+ * SelectRandomIdleAnimation - Picks a random idle from the sheet.
+ *
+ * Just to keep the lad from looking like a statue. Chooses one of several
+ * rows and wires it into the animation system.
+ */
+
+void NPCRandomIdleAnimation(GameObject *object, float deltaTime)
+{
+	(void)deltaTime;
+
+	// See grid_player_sprite_sheet.png for rows and columns
+	int randomChoice = rand() % 7 + 1;
+
+	Rectangle idle1[8] = {
+		{0, 320, 64, 64},	// Frame 1: Row 6, Column 1
+		{64, 320, 64, 64},	// Frame 2: Row 6, Column 2
+		{128, 320, 64, 64}, // Frame 3: Row 6, Column 3
+		{192, 320, 64, 64}, // Frame 4: Row 6, Column 4
+		{256, 320, 64, 64}, // Frame 5: Row 6, Column 5
+		{320, 320, 64, 64}, // Frame 6: Row 6, Column 6
+		{384, 320, 64, 64}, // Frame 7: Row 6, Column 7
+		{448, 320, 64, 64}	// Frame 8: Row 6, Column 8
+	};
+
+	Rectangle idle2[8] = {
+		{0, 384, 64, 64},	// Frame 1: Row 7, Column 1
+		{64, 384, 64, 64},	// Frame 2: Row 7, Column 2
+		{128, 384, 64, 64}, // Frame 3: Row 7, Column 3
+		{192, 384, 64, 64}, // Frame 4: Row 7, Column 4
+		{256, 384, 64, 64}, // Frame 5: Row 7, Column 5
+		{320, 384, 64, 64}, // Frame 6: Row 7, Column 6
+		{384, 384, 64, 64}, // Frame 7: Row 7, Column 7
+		{448, 384, 64, 64}	// Frame 8: Row 7, Column 8
+	};
+
+	Rectangle idle3[8] = {
+		{0, 448, 64, 64},	// Frame 1: Row 8, Column 1
+		{64, 448, 64, 64},	// Frame 2: Row 8, Column 2
+		{128, 448, 64, 64}, // Frame 3: Row 8, Column 3
+		{192, 448, 64, 64}, // Frame 4: Row 8, Column 4
+		{256, 448, 64, 64}, // Frame 5: Row 8, Column 5
+		{320, 448, 64, 64}, // Frame 6: Row 8, Column 6
+		{384, 448, 64, 64}, // Frame 7: Row 8, Column 7
+		{448, 448, 64, 64}	// Frame 8: Row 8, Column 8
+	};
+
+	Rectangle idle4[7] = {
+		{0, 0, 64, 64},	 	// Frame 1: Row 1, Column 1
+		{64, 0, 64, 64},	// Frame 2: Row 1, Column 2
+		{128, 0, 64, 64}, 	// Frame 3: Row 1, Column 3
+		{192, 0, 64, 64},	// Frame 4: Row 1, Column 4
+		{256, 0, 64, 64}, 	// Frame 5: Row 1, Column 5
+		{320, 0, 64, 64}, 	// Frame 6: Row 1, Column 6
+		{384, 0, 64, 64}, 	// Frame 7: Row 1, Column 7
+	};
+
+	Rectangle idle5[7] = {
+		{0, 64, 64, 64},	// Frame 1: Row 2, Column 1
+		{64, 64, 64, 64},	// Frame 2: Row 2, Column 2
+		{128, 64, 64, 64}, 	// Frame 3: Row 2, Column 3
+		{192, 64, 64, 64}, 	// Frame 4: Row 2, Column 4
+		{256, 64, 64, 64}, 	// Frame 5: Row 2, Column 5
+		{320, 64, 64, 64}, 	// Frame 6: Row 2, Column 6
+		{384, 64, 64, 64}, 	// Frame 7: Row 2, Column 7
+	};
+
+	Rectangle idle6[7] = {
+		{0, 128, 64, 64},	 // Frame 1: Row 3, Column 1
+		{64, 128, 64, 64},	 // Frame 2: Row 3, Column 2
+		{128, 128, 64, 64}, // Frame 3: Row 3, Column 3
+		{192, 128, 64, 64}, // Frame 4: Row 3, Column 4
+		{256, 128, 64, 64}, // Frame 5: Row 3, Column 5
+		{320, 128, 64, 64}, // Frame 6: Row 3, Column 6
+		{384, 128, 64, 64}, // Frame 7: Row 3, Column 7
+	};
+
+	Rectangle idle7[7] = {
+		{0, 192, 64, 64},	 // Frame 1: Row 4, Column 1
+		{64, 192, 64, 64},	 // Frame 2: Row 4, Column 2
+		{128, 192, 64, 64}, // Frame 3: Row 4, Column 3
+		{192, 192, 64, 64}, // Frame 4: Row 4, Column 4
+		{256, 192, 64, 64}, // Frame 5: Row 4, Column 5
+		{320, 192, 64, 64}, // Frame 6: Row 4, Column 6
+		{384, 192, 64, 64}, // Frame 7: Row 4, Column 7
+	};
+
+	switch (randomChoice)
+	{
+	case 1:
+		InitGameObjectAnimation(object, idle1, 8, 0.18f); // Animation 1
+		break;
+	case 2:
+		InitGameObjectAnimation(object, idle2, 8, 0.18f); // Animation 2
+		break;
+	case 3:
+		InitGameObjectAnimation(object, idle3, 8, 0.18f); // Animation 3
+		break;
+	case 4:
+		InitGameObjectAnimation(object, idle4, 8, 0.18f); // Animation 3
+		break;
+	case 5:
+		InitGameObjectAnimation(object, idle5, 8, 0.18f); // Animation 3
+		break;
+	case 6:
+		InitGameObjectAnimation(object, idle6, 8, 0.18f); // Animation 3
+		break;
+	case 7:
+		InitGameObjectAnimation(object, idle7, 8, 0.18f); // Animation 3
+		break;
+	default:
+		InitGameObjectAnimation(object, idle1, 8, 0.18f); // Default to Animation 1
+		break;
+	}
+}
+
+
 
 // Enter function for Idle state, executed once upon entering Idle
 void NPCEnterIdle(GameObject *object, float deltaTime)
@@ -204,19 +321,7 @@ void NPCEnterIdle(GameObject *object, float deltaTime)
 
 	if (npc->base.previousState != npc->base.currentState && npc->base.currentState == STATE_IDLE)
 	{
-		// Setup Idle Animations
-		Rectangle idle[7] = {
-			{0, 128, 64, 64},	// Frame 1: Row 3, Column 1
-			{64, 128, 64, 64},	// Frame 2: Row 3, Column 2
-			{128, 128, 64, 64}, // Frame 3: Row 3, Column 3
-			{192, 128, 64, 64}, // Frame 4: Row 3, Column 4
-			{256, 128, 64, 64}, // Frame 5: Row 3, Column 5
-			{320, 128, 64, 64}, // Frame 6: Row 3, Column 6
-			{384, 128, 64, 64}	// Frame 7: Row 3, Column 7
-		};
-
-		// Initialize the idle animation frames and play it
-		InitGameObjectAnimation(&npc->base, idle, 6, 0.1f);
+		NPCRandomIdleAnimation(&npc->base, deltaTime);
 	}
 }
 
@@ -230,6 +335,13 @@ void NPCUpdateIdle(GameObject *object, float deltaTime)
 	// printf("Aggression: %d\n\n", npc->aggression);
 	// During game loop and game ticks, execute Idle state behavior here, such as patrolling or observing.
 	UpdateAnimation(&object->animation, deltaTime);
+
+	// Check if the animation has finished
+	if (object->animation.currentFrame == object->animation.frameCount - 1)
+	{
+		// Transition to a another idle animation
+		NPCRandomIdleAnimation(object, deltaTime); // Trigger idle animation
+	}
 }
 
 // Exit function for Idle state, executed once upon leaving Idle

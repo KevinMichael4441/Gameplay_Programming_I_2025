@@ -196,7 +196,7 @@ void PlayerMove(Player *player, Vector2 inputAxis, float deltaTime)
  * rows and wires it into the animation system.
  */
 
-void SelectRandomIdleAnimation(GameObject *object, float deltaTime)
+void PlayerRandomIdleAnimation(GameObject *object, float deltaTime)
 {
 	(void)deltaTime;
 
@@ -337,7 +337,7 @@ void PlayerEnterIdle(GameObject *object, float deltaTime)
 
 	if (player->base.previousState != player->base.currentState && player->base.currentState == STATE_IDLE)
 	{
-		SelectRandomIdleAnimation(&player->base, deltaTime);
+		PlayerRandomIdleAnimation(&player->base, deltaTime);
 	}
 }
 
@@ -353,7 +353,7 @@ void PlayerUpdateIdle(GameObject *object, float deltaTime)
 	if (object->animation.currentFrame == object->animation.frameCount - 1)
 	{
 		// Transition to a another idle animation
-		SelectRandomIdleAnimation(object, deltaTime); // Trigger idle animation
+		PlayerRandomIdleAnimation(object, deltaTime); // Trigger idle animation
 	}
 
 	if (player->base.health <= 0)
