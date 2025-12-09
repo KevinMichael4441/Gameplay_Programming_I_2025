@@ -108,6 +108,7 @@ void InitNPCFSM(GameObject *object)
 	// Define valid transitions from STATE_IDLE
 	EventStateTransition idleValidTransitions[] = {
 		// EVENT -> STATE
+		{EVENT_MOVE, STATE_WALKING},
 		{EVENT_ATTACK, STATE_ATTACKING},
 		{EVENT_DEFEND, STATE_SHIELD},
 		{EVENT_DIE, STATE_DEAD}};
@@ -116,12 +117,24 @@ void InitNPCFSM(GameObject *object)
 	// Configure valid transitions for STATE_IDLE
 	StateTransitions(&object->stateConfigs[STATE_IDLE], idleValidTransitions, sizeof(idleValidTransitions) / sizeof(EventStateTransition));
 
+	// ---- STATE_WALKING state configuration ----
+	// Define valid transitions from STATE_WALKING
+	EventStateTransition walkingValidTransitions[] = {
+		// EVENT -> STATE
+		{EVENT_NONE, STATE_IDLE},
+		{EVENT_ATTACK, STATE_ATTACKING},
+		{EVENT_DIE, STATE_DEAD}};
+	// Set up the state configuration for STATE_WALKING
+	InitStateConfig(object, STATE_WALKING, "NPC_Walking", NPCEnterWalking, NPCUpdateWalking, NPCExitWalking);
+	// Configure valid transitions for STATE_WALKING
+	StateTransitions(&object->stateConfigs[STATE_WALKING], walkingValidTransitions, sizeof(walkingValidTransitions) / sizeof(EventStateTransition));
+
 	// ---- STATE_ATTACKING state configuration ----
 	// Define valid transitions from STATE_ATTACKING
 	EventStateTransition attackValidTransitions[] = {
 		// EVENT -> STATE
 		{EVENT_NONE, STATE_IDLE},
-		{EVENT_DEFEND, STATE_SHIELD},
+		{EVENT_MOVE, STATE_WALKING},
 		{EVENT_DIE, STATE_DEAD}};
 	// Set up the state configuration for STATE_ATTACKING
 	InitStateConfig(object, STATE_ATTACKING, "NPC_Attacking", NPCEnterAttacking, NPCUpdateAttacking, NPCExitAttacking);
@@ -156,13 +169,29 @@ void InitNPCFSM(GameObject *object)
 	// STATE_COLLISION
 	// For unimplemented states, set them to empty defaults
 	// Alternatively NPC has its own FSM with only the implemented states
-	object->stateConfigs[STATE_WALKING] = UNIMPLEMENTED_STATE_CONFIG;
+	
 	object->stateConfigs[STATE_RESPAWN] = UNIMPLEMENTED_STATE_CONFIG;
 	object->stateConfigs[STATE_COLLISION] = UNIMPLEMENTED_STATE_CONFIG;
 
 	// Print out Configs
 	PrintStateConfigs(object->stateConfigs, STATE_COUNT);
 }
+
+void NPCMove(NPC *npc, Vector2 inputAxis, float deltaTime)
+{
+	float speed = 130.0f;
+
+	npc->base.position.x += inputAxis.x * speed * deltaTime;
+	npc->base.position.y += inputAxis.y * speed * deltaTime;
+
+	// Hold on screen
+	ClampGameObjectOnScreen(&npc->base);
+
+	// Update Collider
+	npc->base.collider.p.x = npc->base.position.x;
+	npc->base.collider.p.y = npc->base.position.y;
+}
+
 
 // Enter function for Idle state, executed once upon entering Idle
 void NPCEnterIdle(GameObject *object, float deltaTime)
@@ -212,6 +241,133 @@ void NPCExitIdle(GameObject *object, float deltaTime)
 	// printf("%s <- EXIT <- Idle\n", object->name);
 	// printf("Aggression: %d\n\n", npc->aggression);
 	// Cleanup code for leaving Idle state, if any.
+}
+
+/**
+ * InitWalkAnimation - Picks the right walk row based on direction.
+ *
+ * Uses currentDirection on the GameObject and points the animation
+ * at the matching sprites in the sheet.
+ */
+
+static void InitWalkAnimation(NPC *npc)
+{
+	// WALK UP (Row 9)
+	static Rectangle walk_UP[9] = {
+		{0, 512, 64, 64},	// Frame 1: Row 9, Column 1
+		{64, 512, 64, 64},	// Frame 2: Row 9, Column 2
+		{128, 512, 64, 64}, // Frame 3: Row 9, Column 3
+		{192, 512, 64, 64}, // Frame 4: Row 9, Column 4
+		{256, 512, 64, 64}, // Frame 5: Row 9, Column 5
+		{320, 512, 64, 64}, // Frame 6: Row 9, Column 6
+		{384, 512, 64, 64}, // Frame 7: Row 9, Column 7
+		{448, 512, 64, 64}, // Frame 8: Row 9, Column 8
+		{512, 512, 64, 64}	// Frame 9: Row 9, Column 9
+	};
+
+	// WALK DOWN (Row 10)
+	static Rectangle walk_DOWN[9] = {
+		{0, 640, 64, 64},	// Frame 1: Row 10, Column 1
+		{64, 640, 64, 64},	// Frame 2: Row 10, Column 2
+		{128, 640, 64, 64}, // Frame 3: Row 10, Column 3
+		{192, 640, 64, 64}, // Frame 4: Row 10, Column 4
+		{256, 640, 64, 64}, // Frame 5: Row 10, Column 5
+		{320, 640, 64, 64}, // Frame 6: Row 10, Column 6
+		{384, 640, 64, 64}, // Frame 7: Row 10, Column 7
+		{448, 640, 64, 64}, // Frame 8: Row 10, Column 8
+		{512, 640, 64, 64}	// Frame 9: Row 10, Column 9
+	};
+
+	// WALK LEFT (Row 11)
+	static Rectangle walk_LEFT[9] = {
+		{0, 576, 64, 64},	// Frame 1: Row 11, Column 1
+		{64, 576, 64, 64},	// Frame 2: Row 11, Column 2
+		{128, 576, 64, 64}, // Frame 3: Row 11, Column 3
+		{192, 576, 64, 64}, // Frame 4: Row 11, Column 4
+		{256, 576, 64, 64}, // Frame 5: Row 11, Column 5
+		{320, 576, 64, 64}, // Frame 6: Row 11, Column 6
+		{384, 576, 64, 64}, // Frame 7: Row 11, Column 7
+		{448, 576, 64, 64}, // Frame 8: Row 11, Column 8
+		{512, 576, 64, 64}	// Frame 9: Row 11, Column 9
+	};
+
+	// WALK RIGHT (Row 12)
+	static Rectangle walk_RIGHT[9] = {
+		{0, 704, 64, 64},	// Frame 1: Row 12, Column 1
+		{64, 704, 64, 64},	// Frame 2: Row 12, Column 2
+		{128, 704, 64, 64}, // Frame 3: Row 12, Column 3
+		{192, 704, 64, 64}, // Frame 4: Row 12, Column 4
+		{256, 704, 64, 64}, // Frame 5: Row 12, Column 5
+		{320, 704, 64, 64}, // Frame 6: Row 12, Column 6
+		{384, 704, 64, 64}, // Frame 7: Row 12, Column 7
+		{448, 704, 64, 64}, // Frame 8: Row 12, Column 8
+		{512, 704, 64, 64}	// Frame 9: Row 12, Column 9
+	};
+
+	GameObject *object = &npc->base;
+
+	switch (object->currentDirection)
+	{
+	case UP:
+		InitGameObjectAnimation(object, walk_UP, 9, 0.055f);
+		break;
+	case DOWN:
+		InitGameObjectAnimation(object, walk_DOWN, 9, 0.055f);
+		break;
+	case LEFT:
+		InitGameObjectAnimation(object, walk_LEFT, 9, 0.055f);
+		break;
+	case RIGHT:
+		InitGameObjectAnimation(object, walk_RIGHT, 9, 0.055f);
+		break;
+	}
+}
+
+void NPCEnterWalking(GameObject *object, float deltaTime)
+{
+	(void)deltaTime;
+	NPC *npc = (NPC *)object;
+	printf("\n%s -> ENTER -> Walking\n", object->name);
+	printf("Aggression: %d\n\n", npc->aggression);
+	// Complete the remainder of the method
+	InitWalkAnimation(npc);
+}
+
+void NPCUpdateWalking(GameObject *object, float deltaTime)
+{
+	NPC *npc = (NPC *)object;
+	printf("\n%s -> UPDATE -> Walking\n", object->name);
+	printf("Aggression: %d\n\n", npc->aggression);
+	// Complete the remainder of the method
+
+	// Move according to inputAxis
+	NPCMove(npc, object->inputAxis, deltaTime);
+
+	// Check if moving and direction changed since last frame
+	if (Vector2Length(object->inputAxis) > 0.0f &&
+		object->currentDirection != object->previousDirection)
+	{
+		InitWalkAnimation(npc);
+		object->previousDirection = object->currentDirection;
+	}
+
+	// Update the Animation
+	UpdateAnimation(&object->animation, deltaTime);
+
+
+	//if (npc->base.health <= 0)
+	//{
+	//	ChangeState(object, STATE_DEAD, deltaTime);
+	//}
+}
+
+void NPCExitWalking(GameObject *object, float deltaTime)
+{
+	(void)deltaTime;
+	NPC *npc = (NPC *)object;
+	printf("\n%s <- EXIT <- Walking\n", object->name);
+	printf("Aggression: %d\n\n", npc->aggression);
+	// Complete the remainder of the method
 }
 
 // Enter function for Attacking state, executed once upon entering Attacking

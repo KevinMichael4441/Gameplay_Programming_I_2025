@@ -32,6 +32,10 @@ void NPCEnterIdle(GameObject *object, float deltaTime);
 void NPCUpdateIdle(GameObject *object, float deltaTime);
 void NPCExitIdle(GameObject *object, float deltaTime);
 
+// State functions for walking state
+void NPCEnterWalking(GameObject *object, float deltaTime);  // Called when entering the walking state
+void NPCUpdateWalking(GameObject *object, float deltaTime); // Called to update the NPC's behavior while walking
+void NPCExitWalking(GameObject *object, float deltaTime);   // Called when exiting the walking state
 
 // State functions for attacking state
 void NPCEnterAttacking(GameObject *object, float deltaTime);
