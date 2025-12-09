@@ -343,7 +343,7 @@ void PlayerEnterIdle(GameObject *object, float deltaTime)
 
 void PlayerUpdateIdle(GameObject *object, float deltaTime)
 {
-	// Player *player = (Player *)object;
+	Player *player = (Player *)object;
 	// printf("\n%s -> UPDATE -> Idle\n", object->name);
 	// printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
 	//  Complete the remainder of the method
@@ -354,6 +354,11 @@ void PlayerUpdateIdle(GameObject *object, float deltaTime)
 	{
 		// Transition to a another idle animation
 		SelectRandomIdleAnimation(object, deltaTime); // Trigger idle animation
+	}
+
+	if (player->base.health <= 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
 	}
 }
 
@@ -477,6 +482,12 @@ void PlayerUpdateWalking(GameObject *object, float deltaTime)
 
 	// Update the Animation
 	UpdateAnimation(&object->animation, deltaTime);
+
+
+	if (player->base.health <= 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 void PlayerExitWalking(GameObject *object, float deltaTime)
@@ -587,6 +598,11 @@ void PlayerUpdateAttacking(GameObject *object, float deltaTime)
 
 	// Update the Animation
 	UpdateAnimation(&object->animation, deltaTime);
+
+	if (player->base.health <= 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 void PlayerExitAttacking(GameObject *object, float deltaTime)
@@ -617,6 +633,11 @@ void PlayerUpdateShielding(GameObject *object, float deltaTime)
 	// Complete the remainder of the method
 	// Example: Check if the shielding duration is over or if stamina is depleted
 	UpdateAnimation(&object->animation, deltaTime);
+
+	if (player->base.health <= 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 void PlayerExitShielding(GameObject *object, float deltaTime)
@@ -631,19 +652,33 @@ void PlayerExitShielding(GameObject *object, float deltaTime)
 
 void PlayerEnterDie(GameObject *object, float deltaTime)
 {
+	Player *player = (Player *)object;
 	// TODO : Not Currently Implemented
 	(void)deltaTime;
 	printf("\n%s -> ENTER -> Die\n", object->name);
 	// Complete the remainder of the method
+
+	object->timer = 0.0f;
+	player->mana = 0.0f;
+	player->stamina = 0.0f;
 }
 
 void PlayerUpdateDie(GameObject *object, float deltaTime)
 {
 	(void)deltaTime;
 	printf("\n%s -> UPDATE -> Die\n", object->name);
-	ChangeState(object, STATE_RESPAWN, deltaTime);
+	
 	// Complete the remainder of the method
 	UpdateAnimation(&object->animation, deltaTime);
+
+	float duration = 2.0f;
+	object->timer += deltaTime;
+
+	if (object->timer >= duration)
+	{
+		ChangeState(object, STATE_RESPAWN, deltaTime);
+	}
+
 }
 
 void PlayerExitDie(GameObject *object, float deltaTime)
@@ -651,6 +686,10 @@ void PlayerExitDie(GameObject *object, float deltaTime)
 	(void)deltaTime;
 	printf("\n%s <- EXIT <- Die\n", object->name);
 	// Complete the remainder of the method
+
+	object->timer = 0.0f;
+	object->position.x = -1000.0f;
+	object->position.y = -1000.0f;
 }
 
 void PlayerEnterRespawn(GameObject *object, float deltaTime)
@@ -659,20 +698,36 @@ void PlayerEnterRespawn(GameObject *object, float deltaTime)
 	(void)deltaTime;
 	printf("\n%s -> ENTER -> Respawn\n", object->name);
 	// Complete the remainder of the method
+	object->timer = 0.0f;
 }
 
 void PlayerUpdateRespawn(GameObject *object, float deltaTime)
 {
 	(void)deltaTime;
 	printf("\n%s -> UPDATE -> Respawn\n", object->name);
-	ChangeState(object, STATE_IDLE, deltaTime);
 	// Complete the remainder of the method
 	UpdateAnimation(&object->animation, deltaTime);
+
+	float duration = 2.0f;
+	object->timer += deltaTime;
+
+	if (object->timer >= duration)
+	{
+		ChangeState(object, STATE_IDLE, deltaTime);
+	}
 }
 
 void PlayerExitRespawn(GameObject *object, float deltaTime)
 {
+	Player *player = (Player*)object;
 	(void)deltaTime;
 	printf("\n%s <- EXIT <- Respawn\n", object->name);
 	// Complete the remainder of the method
+
+	object->timer = 0.0f;
+	player->mana = 0.0f;
+	player->stamina = 0.0f;
+	object->position.x = SCREEN_WIDTH/2;
+	object->position.y = SCREEN_HEIGHT/2;
+	object->health = 100.0f;
 }
