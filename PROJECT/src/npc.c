@@ -157,20 +157,28 @@ void InitNPCFSM(GameObject *object)
 	// Define valid transitions from STATE_DEAD
 	EventStateTransition deadValidTransitions[] = {
 		// EVENT -> STATE
-		{EVENT_RESPAWN, STATE_IDLE}}; // Should go to STATE_RESPAWN to keep kit small goes to IDLE
+		{EVENT_RESPAWN, STATE_RESPAWN}}; // Should go to STATE_RESPAWN to keep kit small goes to IDLE
 	// Set up the state configuration for STATE_DEAD
 	InitStateConfig(object, STATE_DEAD, "NPC_Dead", NPCEnterDead, NPCUpdateDead, NPCExitDead);
 	// Configure valid transitions for STATE_DEAD
 	StateTransitions(&object->stateConfigs[STATE_DEAD], deadValidTransitions, sizeof(deadValidTransitions) / sizeof(EventStateTransition));
 
+	// ---- STATE_RESPAWN state configuration ----
+	// Define valid transitions from STATE_RESPAWN
+	EventStateTransition respawnValidTransitions[] = {
+		// EVENT -> STATE
+		{EVENT_RESPAWN, STATE_IDLE}};
+	// Set up the state configuration for STATE_RESPAWN
+	InitStateConfig(object, STATE_RESPAWN, "NPC_Respawn", NPCEnterRespawn, NPCUpdateRespawn, NPCExitRespawn);
+	// Configure valid transitions for STATE_RESPAWN
+	StateTransitions(&object->stateConfigs[STATE_RESPAWN], respawnValidTransitions, sizeof(respawnValidTransitions) / sizeof(EventStateTransition));
+
+
 	// Empty config for unimplemented STATEs
-	// STATE_WALKING
-	// STATE_RESPAWN
 	// STATE_COLLISION
 	// For unimplemented states, set them to empty defaults
 	// Alternatively NPC has its own FSM with only the implemented states
 
-	object->stateConfigs[STATE_RESPAWN] = UNIMPLEMENTED_STATE_CONFIG;
 	object->stateConfigs[STATE_COLLISION] = UNIMPLEMENTED_STATE_CONFIG;
 
 	// Print out Configs
@@ -342,6 +350,11 @@ void NPCUpdateIdle(GameObject *object, float deltaTime)
 		// Transition to a another idle animation
 		NPCRandomIdleAnimation(object, deltaTime); // Trigger idle animation
 	}
+
+	if (npc->base.health <= 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 // Exit function for Idle state, executed once upon leaving Idle
@@ -467,10 +480,10 @@ void NPCUpdateWalking(GameObject *object, float deltaTime)
 	UpdateAnimation(&object->animation, deltaTime);
 
 
-	//if (npc->base.health <= 0)
-	//{
-	//	ChangeState(object, STATE_DEAD, deltaTime);
-	//}
+	if (npc->base.health <= 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 void NPCExitWalking(GameObject *object, float deltaTime)
@@ -512,6 +525,11 @@ void NPCUpdateAttacking(GameObject *object, float deltaTime)
 	printf("Aggression: %d\n\n", npc->aggression);
 	// During game loop and game ticks, execute Attacking state behavior here, such as dealing damage.
 	UpdateAnimation(&object->animation, deltaTime);
+
+	if (npc->base.health <= 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 // Exit function for Attacking state, executed once upon leaving Attacking
@@ -558,6 +576,11 @@ void NPCUpdateShielding(GameObject *object, float deltaTime)
 	printf("Aggression: %d\n\n", npc->aggression);
 	// During game loop and game ticks, execute Shielding state behavior here, such as reducing incoming damage.
 	UpdateAnimation(&object->animation, deltaTime);
+
+	if (npc->base.health <= 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
 }
 
 // Exit function for Shielding state, executed once upon leaving Shielding
@@ -570,6 +593,10 @@ void NPCExitShielding(GameObject *object, float deltaTime)
 	// Cleanup code for leaving Shielding state, if any.
 }
 
+
+
+
+
 // Enter function for Dead state, executed once upon entering Dead
 void NPCEnterDead(GameObject *object, float deltaTime)
 {
@@ -578,16 +605,19 @@ void NPCEnterDead(GameObject *object, float deltaTime)
 	printf("%s -> ENTER -> Dead\n", object->name);
 	printf("Aggression: %d\n\n", npc->aggression);
 	// Initialization code for entering Dead state, such as playing death animation or disabling further actions.
-	Rectangle dead[6] = {
+	Rectangle dead[9] = {
 		{0, 1280, 64, 64},	 // Frame 1: Row 21, Column 1
-		{64, 1280, 64, 64},	 // Frame 1: Row 21, Column 2
-		{128, 1280, 64, 64}, // Frame 1: Row 21, Column 3
-		{192, 1280, 64, 64}, // Frame 1: Row 21, Column 4
-		{256, 1280, 64, 64}, // Frame 1: Row 21, Column 5
-		{320, 1280, 64, 64}	 // Frame 1: Row 21, Column 6
+		{64, 1280, 64, 64},	 // Frame 2: Row 21, Column 2
+		{128, 1280, 64, 64}, // Frame 3: Row 21, Column 3
+		{192, 1280, 64, 64}, // Frame 4: Row 21, Column 4
+		{256, 1280, 64, 64}, // Frame 5: Row 21, Column 5
+		{320, 1280, 64, 64}, // Frame 6: Row 21, Column 6
+		{320, 1280, 64, 64}, // Frame 7: Row 21, Column 6
+		{320, 1280, 64, 64}, // Frame 8: Row 21, Column 6
+		{320, 1280, 64, 64}, // Frame 8: Row 21, Column 6
 	};
 	// Initialize dead animation
-	InitGameObjectAnimation(&npc->base, dead, 6, 0.2f);
+	InitGameObjectAnimation(&npc->base, dead, 8, 0.25f);
 }
 
 // Update function for Dead state, called repeatedly during game ticks while in Dead
@@ -599,6 +629,14 @@ void NPCUpdateDead(GameObject *object, float deltaTime)
 	// During game loop and game ticks, execute Dead state behavior here, such as preventing any actions.
 	// This could be a place to check if the NPC should be removed or respawned.
 	UpdateAnimation(&object->animation, deltaTime);
+
+	float duration = 2.0f;
+	object->timer += deltaTime;
+
+	if (object->timer >= duration)
+	{
+		ChangeState(object, STATE_RESPAWN, deltaTime);
+	}
 }
 
 // Exit function for Dead state, executed once upon leaving Dead
@@ -609,4 +647,44 @@ void NPCExitDead(GameObject *object, float deltaTime)
 	printf("%s -> EXIT -> Dead\n", object->name);
 	printf("Aggression: %d\n\n", npc->aggression);
 	// Cleanup code for leaving Dead state, such as removing NPC from the active world, playing respawn animations, etc.
+
+	object->timer = 0.0f;
+	object->position.x = -1000.0f;
+	object->position.y = -1000.0f;
+}
+
+void NPCEnterRespawn(GameObject *object, float deltaTime)
+{
+	// TODO : Not Currently Implemented
+	(void)deltaTime;
+	printf("\n%s -> ENTER -> Respawn\n", object->name);
+	// Complete the remainder of the method
+	object->timer = 0.0f;
+}
+
+void NPCUpdateRespawn(GameObject *object, float deltaTime)
+{
+	(void)deltaTime;
+	printf("\n%s -> UPDATE -> Respawn\n", object->name);
+	// Complete the remainder of the method
+	UpdateAnimation(&object->animation, deltaTime);
+
+	float duration = 2.0f;
+	object->timer += deltaTime;
+
+	if (object->timer >= duration)
+	{
+		ChangeState(object, STATE_IDLE, deltaTime);
+	}
+}
+
+void NPCExitRespawn(GameObject *object, float deltaTime)
+{
+	(void)deltaTime;
+	printf("\n%s <- EXIT <- Respawn\n", object->name);
+	// Complete the remainder of the method
+
+	object->timer = 0.0f;
+	object->position = (Vector2){GetScreenWidth() / 2.0f, 100.0f};
+	object->health = 100.0f;
 }

@@ -52,4 +52,9 @@ void NPCEnterDead(GameObject *object, float deltaTime);
 void NPCUpdateDead(GameObject *object, float deltaTime);
 void NPCExitDead(GameObject *object, float deltaTime);
 
+// State functions for respawn state
+void NPCEnterRespawn(GameObject *object, float deltaTime);  // Called when entering the respawn state
+void NPCUpdateRespawn(GameObject *object, float deltaTime); // Called to update the NPC's behavior while respawning
+void NPCExitRespawn(GameObject *object, float deltaTime);   // Called when exiting the respawn
+
 #endif // NPC_H

@@ -650,26 +650,6 @@ void PlayerExitShielding(GameObject *object, float deltaTime)
 	// Reset any temporary shielding effects if necessary
 }
 
-static void InitDeadAnimation(Player *player)
-{
-	// DIE
-	static Rectangle die[8] = {
-		{0, 1280, 64, 64},	// Frame 1: Row 20, Column 1
-		{64, 1280, 64, 64},	// Frame 2: Row 20, Column 2
-		{128, 1280, 64, 64}, // Frame 3: Row 20, Column 3
-		{192, 1280, 64, 64}, // Frame 4: Row 20, Column 4
-		{256, 1280, 64, 64}, // Frame 5: Row 20, Column 5
-		{320, 1280, 64, 64}, // Frame 6: Row 20, Column 6
-		{320, 1280, 64, 64}, // Frame 7: Row 20, Column 6
-		{320, 1280, 64, 64}, // Frame 8: Row 20, Column 6
-	};
-
-	GameObject *object = &player->base;
-
-	InitGameObjectAnimation(object, die, 9, 0.25f);
-}
-
-
 void PlayerEnterDie(GameObject *object, float deltaTime)
 {
 	Player *player = (Player *)object;
@@ -682,7 +662,18 @@ void PlayerEnterDie(GameObject *object, float deltaTime)
 	player->mana = 0.0f;
 	player->stamina = 0.0f;
 
-	InitDeadAnimation(player);
+		static Rectangle die[8] = {
+		{0, 1280, 64, 64},	// Frame 1: Row 20, Column 1
+		{64, 1280, 64, 64},	// Frame 2: Row 20, Column 2
+		{128, 1280, 64, 64}, // Frame 3: Row 20, Column 3
+		{192, 1280, 64, 64}, // Frame 4: Row 20, Column 4
+		{256, 1280, 64, 64}, // Frame 5: Row 20, Column 5
+		{320, 1280, 64, 64}, // Frame 6: Row 20, Column 6
+		{320, 1280, 64, 64}, // Frame 7: Row 20, Column 6
+		{320, 1280, 64, 64}, // Frame 8: Row 20, Column 6
+	};
+
+	InitGameObjectAnimation(object, die, 8, 0.25f);
 }
 
 void PlayerUpdateDie(GameObject *object, float deltaTime)
