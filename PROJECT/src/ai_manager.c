@@ -3,8 +3,6 @@
 
 #include "./command/command.h"
 #include "./utils/ai_manager.h"
-#include "./gameobjects/npc.h"
-
 /**
  * InitAIManager : Sets up the AI manager....or at least pretends to. It does 
  * not a thing at the moment.
@@ -32,10 +30,10 @@ void InitAIManager()
  * @return: A random Command somewhere between 0 and COMMAND_COUNT-1.
  */
 
-Command PollAI(NPC *npc)
+Command PollAI(const GameObject *object)
 {
-	Vector2 targetCenter = npc->base.target;
-	Vector2 AICenter = npc->base.position;
+	Vector2 targetCenter = object->target;
+	Vector2 AICenter = object->position;
 
 	float distance = Vector2Distance(targetCenter, AICenter);
 
@@ -90,7 +88,23 @@ Command getMoveCommand(Vector2 t_AICenter, Vector2 t_targetCenter)
 	Vector2 directionToMove = {futureAICenter.x - t_AICenter.x, futureAICenter.y - t_AICenter.y};
 	Command command = NONE;
 
-	if (directionToMove.x >= 0 && directionToMove.y >= 0)
+	if (directionToMove.x >=0 && directionToMove.y == 0)
+	{
+		command |= MOVE_RIGHT;
+	}
+	else if (directionToMove.x >=0 && directionToMove.y == 0)
+	{
+		command |= MOVE_LEFT;
+	}
+	else if (directionToMove.x == 0 && directionToMove.y >= 0)
+	{
+		command |= MOVE_DOWN;
+	}
+	else if (directionToMove.x == 0 && directionToMove.y <= 0)
+	{
+		command |= MOVE_UP;
+	}
+	else if (directionToMove.x >= 0 && directionToMove.y >= 0)
 	{
 		command |= MOVE_RIGHT;
 		command |= MOVE_DOWN;

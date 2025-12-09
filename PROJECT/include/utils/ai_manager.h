@@ -4,9 +4,11 @@
 #include "./command/command.h"
 #include <raylib.h>
 #include <raymath.h>
+#include "./gameobjects/gameobject.h"
+
 
 void InitAIManager();
-//Command PollAI(NPC *npc);
+Command PollAI(const GameObject *object);
 Command getMoveCommand(Vector2 t_AICenter, Vector2 t_targetCenter);
 void ExitInputManager();
 

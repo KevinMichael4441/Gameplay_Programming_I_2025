@@ -171,8 +171,8 @@ void MediatorUpdateNPC(Mediator *mediator, float deltaTime)
 		printf("\n#######################################\n");
 
 		// Randomly select a command for the NPC
-		const NPC *npc = (NPC*)mediator->object;
-		Command command = PollAI(npc);
+		const GameObject *object = (GameObject*)mediator->object;
+		Command command = PollAI(object);
 		MediatorHandleCommand(mediator, command, deltaTime); // Execute the command via the mediator
 
 		// Update the last AI execution time

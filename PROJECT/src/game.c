@@ -199,6 +199,7 @@ void UpdateGame(GameData *data, float deltaTime)
 
 		// Rstart Game (R key)
 		// Put in input manager so you can handle Keyboard/Controller
+		//MediatorUpdatePlayer(data->playerMediator, STATE_GAMELOST, deltaTime); // Execute the command via the mediator
 		if (IsKeyPressed(KEY_R))
 		{
 			InitGame(data);
