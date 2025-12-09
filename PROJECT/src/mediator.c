@@ -180,6 +180,17 @@ void MediatorUpdateNPC(Mediator *mediator, float deltaTime)
 	}
 }
 
+bool MediatorUpdateGame()
+{
+	Command command = PollInput();
+	if (IsCommandActive(command, RESTART))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 /**
  * DeleteMediator - Frees a mediator from memory.
  *

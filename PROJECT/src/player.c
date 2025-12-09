@@ -38,10 +38,6 @@ Player *InitPlayer(const char *name, Vector2 position, int radius)
 				   3			// Lives
 	);
 
-	// Player Specific Data
-	player->stamina = 100.0f;
-	player->mana = 100.0f;
-
 	// Init the Player FSM
 	InitPlayerFSM(&player->base);
 
@@ -333,8 +329,8 @@ void PlayerRandomIdleAnimation(GameObject *object, float deltaTime)
 void PlayerEnterIdle(GameObject *object, float deltaTime)
 {
 	Player *player = (Player *)object;
-	// printf("\n%s -> ENTER -> Idle\n", object->name);
-	// printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("\n%s -> ENTER -> Idle\n", object->name);
+	printf("Lives: %d\n\n", player->base.lives);
 
 	if (player->base.previousState != player->base.currentState && player->base.currentState == STATE_IDLE)
 	{
@@ -345,8 +341,8 @@ void PlayerEnterIdle(GameObject *object, float deltaTime)
 void PlayerUpdateIdle(GameObject *object, float deltaTime)
 {
 	Player *player = (Player *)object;
-	// printf("\n%s -> UPDATE -> Idle\n", object->name);
-	// printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("\n%s -> UPDATE -> Idle\n", object->name);
+	printf("Lives: %d\n\n", player->base.lives);
 	//  Complete the remainder of the method
 	UpdateAnimation(&object->animation, deltaTime);
 
@@ -368,8 +364,8 @@ void PlayerExitIdle(GameObject *object, float deltaTime)
 	(void)deltaTime;
 	Player *player = (Player *)object;
 	(void)player;
-	// printf("\n%s <- EXIT <- Idle\n", object->name);
-	// printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("\n%s <- EXIT <- Idle\n", object->name);
+	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 }
 
@@ -458,7 +454,7 @@ void PlayerEnterWalking(GameObject *object, float deltaTime)
 	(void)deltaTime;
 	Player *player = (Player *)object;
 	printf("\n%s -> ENTER -> Walking\n", object->name);
-	printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	InitWalkAnimation(player);
 }
@@ -467,7 +463,7 @@ void PlayerUpdateWalking(GameObject *object, float deltaTime)
 {
 	Player *player = (Player *)object;
 	printf("\n%s -> UPDATE -> Walking\n", object->name);
-	printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 
 	// Move according to inputAxis
@@ -496,7 +492,7 @@ void PlayerExitWalking(GameObject *object, float deltaTime)
 	(void)deltaTime;
 	Player *player = (Player *)object;
 	printf("\n%s <- EXIT <- Walking\n", object->name);
-	printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 }
 
@@ -572,7 +568,7 @@ void PlayerEnterAttacking(GameObject *object, float deltaTime)
 	(void)deltaTime;
 	Player *player = (Player *)object;
 	printf("\n%s -> ENTER -> Attacking\n", object->name);
-	printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	// Example: Deduct some stamina when attacking
 	InitAttackAnimation(player);
@@ -582,7 +578,7 @@ void PlayerUpdateAttacking(GameObject *object, float deltaTime)
 {
 	Player *player = (Player *)object;
 	printf("\n%s -> UPDATE -> Attacking\n", object->name);
-	printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	// Check if the attack should end or be interrupted (e.g., stamina depletion)
 
@@ -611,7 +607,7 @@ void PlayerExitAttacking(GameObject *object, float deltaTime)
 	(void)deltaTime;
 	Player *player = (Player *)object;
 	printf("\n%s <- EXIT <- Attacking\n", object->name);
-	printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	// Reset or adjust any temporary changes during attack, if needed
 }
@@ -622,7 +618,7 @@ void PlayerEnterShielding(GameObject *object, float deltaTime)
 	(void)deltaTime;
 	Player *player = (Player *)object;
 	printf("\n%s -> ENTER -> Sheilding\n", object->name);
-	printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	// Example: Deduct some stamina for shielding
 }
@@ -630,7 +626,7 @@ void PlayerUpdateShielding(GameObject *object, float deltaTime)
 {
 	Player *player = (Player *)object;
 	printf("\n%s -> UPDATE -> Sheilding\n", object->name);
-	printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	// Example: Check if the shielding duration is over or if stamina is depleted
 	UpdateAnimation(&object->animation, deltaTime);
@@ -646,22 +642,19 @@ void PlayerExitShielding(GameObject *object, float deltaTime)
 	(void)deltaTime;
 	Player *player = (Player *)object;
 	printf("\n%s <- EXIT <- Sheilding\n", object->name);
-	printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	// Reset any temporary shielding effects if necessary
 }
 
 void PlayerEnterDie(GameObject *object, float deltaTime)
 {
-	Player *player = (Player *)object;
 	// TODO : Not Currently Implemented
 	(void)deltaTime;
 	printf("\n%s -> ENTER -> Die\n", object->name);
 	// Complete the remainder of the method
 
 	object->timer = 0.0f;
-	player->mana = 0.0f;
-	player->stamina = 0.0f;
 
 		static Rectangle die[8] = {
 		{0, 1280, 64, 64},	// Frame 1: Row 20, Column 1
@@ -736,14 +729,11 @@ void PlayerUpdateRespawn(GameObject *object, float deltaTime)
 
 void PlayerExitRespawn(GameObject *object, float deltaTime)
 {
-	Player *player = (Player*)object;
 	(void)deltaTime;
 	printf("\n%s <- EXIT <- Respawn\n", object->name);
 	// Complete the remainder of the method
 
 	object->timer = 0.0f;
-	player->mana = 0.0f;
-	player->stamina = 0.0f;
 	
 	object->position.x = SCREEN_WIDTH/2;
 	object->position.y = SCREEN_HEIGHT/2;

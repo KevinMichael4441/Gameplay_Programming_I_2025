@@ -13,8 +13,6 @@
 typedef struct
 {
 	GameObject base; // The base game object (inherits from GameObject)
-	float stamina;	 // The player's stamina (could affect actions like running, attacking)
-	float mana;		 // The player's mana (could affect magic abilities or special moves)
 } Player;
 
 // Initialise a new Player with a given name (returns a pointer to the Player)

@@ -197,10 +197,7 @@ void UpdateGame(GameData *data, float deltaTime)
 		// YA Lost
 		printf("Game over %s won\n", data->npc->base.name);
 
-		// Rstart Game (R key)
-		// Put in input manager so you can handle Keyboard/Controller
-		//MediatorUpdatePlayer(data->playerMediator, STATE_GAMELOST, deltaTime); // Execute the command via the mediator
-		if (IsKeyPressed(KEY_R))
+		if (MediatorUpdateGame())
 		{
 			InitGame(data);
 		}
@@ -211,10 +208,7 @@ void UpdateGame(GameData *data, float deltaTime)
 		// YA WON
 		printf("Congratulations %s defeated %s\n", data->player->base.name, data->npc->base.name);
 
-			
-		// Rstart Game (R key)
-		// Put in input manager so you can handle Keyboard/Controller
-		if (IsKeyPressed(KEY_R))
+		if (MediatorUpdateGame())
 		{
 			InitGame(data);
 		}

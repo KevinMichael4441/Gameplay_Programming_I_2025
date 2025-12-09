@@ -87,6 +87,11 @@ Command PollInput()
 		}
 	}
 
+	if (IsKeyPressed(KEY_R))
+	{
+		command |= RESTART;
+	}
+
 	// If no gamepad input check keyboard
 	if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))
 		command |= MOVE_UP;
