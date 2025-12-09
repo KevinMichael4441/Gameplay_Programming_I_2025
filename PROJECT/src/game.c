@@ -108,6 +108,9 @@ void InitGame(GameData *data)
 
 	// Blended grass set as background
 	data->background = LoadTextureFromImage(grass);
+	data->heart = LoadTexture("./assets/heart.png");
+
+
 	UnloadImage(grass); // Free up as Texture was produced
 	UnloadImage(dirt);	// Free up as Texture was produced
 	UnloadImage(rocks); // Free up as Texture was produced
@@ -137,7 +140,7 @@ void UpdateGame(GameData *data, float deltaTime)
 
 
 	// Sending the player position to NPC object	
-	data->npc->target = data->player->base.position;
+	data->npc->base.target = data->player->base.position;
 	
 	// Update NPC
 	MediatorUpdateNPC(data->npcMediator, deltaTime);
@@ -250,6 +253,29 @@ static void DrawGameObjectPositionInfo(const GameObject *object)
 		20, DARKGRAY);
 }
 
+// Draws heart for how much health is there
+static void DrawHeartsForGameObject(const GameObject *object, const Texture t_heart)
+{
+	const int OFFSET = 40;
+	switch(object->lives)
+	{
+		case 0:
+			break;
+		case 1:
+			DrawTexture(t_heart, object->position.x, object->position.y + OFFSET, WHITE);
+			break;
+		case 2:
+			DrawTexture(t_heart, object->position.x - 30, object->position.y + OFFSET, WHITE);
+			DrawTexture(t_heart, object->position.x + 30, object->position.y + OFFSET, WHITE);
+			break;
+		case 3:
+			DrawTexture(t_heart, object->position.x - 30, object->position.y + OFFSET, WHITE);
+			DrawTexture(t_heart, object->position.x, object->position.y + OFFSET, WHITE);
+			DrawTexture(t_heart, object->position.x + 30, object->position.y + OFFSET, WHITE);
+			break;
+	}
+}
+
 /**
  * DrawGame : Draws all the craic on screen.
  *
@@ -281,6 +307,7 @@ void DrawGame(const GameData *data)
 
 	// Drawing Health Bar for the npc
 	DrawGameObjectHealthBar(&data->npc->base);
+	DrawHeartsForGameObject(&data->npc->base, data->heart);
 
 	//---------------------------------------------------------
 	// Drawing Player and Position Data
@@ -296,6 +323,7 @@ void DrawGame(const GameData *data)
 
 	// Drawing Health Bar for the player
 	DrawGameObjectHealthBar(&data->player->base);
+	DrawHeartsForGameObject(&data->player->base, data->heart);
 }
 
 /**
@@ -355,6 +383,7 @@ void DeleteGameData(GameData *data)
 
 		// Free the background
 		UnloadTexture(data->background);
+		UnloadTexture(data->heart);
 	}
 
 	// Free GameData

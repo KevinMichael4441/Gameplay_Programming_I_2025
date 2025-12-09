@@ -24,7 +24,8 @@ void InitGameObject(GameObject *object,
                     Color color,
                     c2Circle collider,
                     Texture2D keyframes,
-                    int health)
+                    int health, 
+                    int t_lives)
 {
     // Set the GameObject's name
     object->name = name;
@@ -39,6 +40,7 @@ void InitGameObject(GameObject *object,
     object->collider = collider;
     object->keyframes = keyframes;
     object->health = health;
+    object->lives = t_lives;
 }
 
 /**

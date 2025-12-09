@@ -17,6 +17,7 @@ typedef struct
 
     // Simple Background image (Perlin noise)
     Texture background;
+    Texture heart;
 
 } GameData;
 

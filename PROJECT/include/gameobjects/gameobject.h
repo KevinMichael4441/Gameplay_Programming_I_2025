@@ -54,6 +54,8 @@ typedef struct GameObject
 	// Gameplay Components
 	int health;	 // The health of the game object
 	float timer; // Can be used during updates
+	int lives;	// Number of remaining Lives
+	Vector2 target;		// Target for GameObject
 
 } GameObject;
 
@@ -65,7 +67,8 @@ void InitGameObject(GameObject *object,
 					Color color,
 					c2Circle collider,
 					Texture2D keyframes,
-					int health);
+					int health,
+					int t_lives);
 
 // Helper function to initialize animation
 void InitGameObjectAnimation(GameObject *object, Rectangle *frames, int frameCount, float speed);

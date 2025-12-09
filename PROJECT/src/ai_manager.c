@@ -34,7 +34,7 @@ void InitAIManager()
 
 Command PollAI(NPC *npc)
 {
-	Vector2 targetCenter = npc->target;
+	Vector2 targetCenter = npc->base.target;
 	Vector2 AICenter = npc->base.position;
 
 	float distance = Vector2Distance(targetCenter, AICenter);

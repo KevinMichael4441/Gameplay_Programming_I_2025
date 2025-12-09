@@ -41,7 +41,8 @@ NPC *InitNPC(const char *name, Vector2 position, int radius)
 				   DARKGREEN,  // Player Color
 				   collider,   // cute_c2 Circle Collider
 				   npcTexture,
-				   100 // Initial Health
+				   100,	 // Initial Health
+				   2
 	);
 
 	// Set the default aggression level for the NPC
@@ -662,6 +663,7 @@ void NPCEnterRespawn(GameObject *object, float deltaTime)
 	printf("\n%s -> ENTER -> Respawn\n", object->name);
 	// Complete the remainder of the method
 	object->timer = 0.0f;
+	object->lives--;
 }
 
 void NPCUpdateRespawn(GameObject *object, float deltaTime)

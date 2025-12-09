@@ -34,7 +34,8 @@ Player *InitPlayer(const char *name, Vector2 position, int radius)
 				   DARKGREEN,  // Player Color
 				   collider,   // cute_c2 Circle Collider
 				   texture,	   // Player spritesheet
-				   100		   // Initial Health
+				   100,		   // Initial Health
+				   3
 	);
 
 	// Player Specific Data
@@ -714,6 +715,7 @@ void PlayerEnterRespawn(GameObject *object, float deltaTime)
 	printf("\n%s -> ENTER -> Respawn\n", object->name);
 	// Complete the remainder of the method
 	object->timer = 0.0f;
+	object->lives--;
 }
 
 void PlayerUpdateRespawn(GameObject *object, float deltaTime)

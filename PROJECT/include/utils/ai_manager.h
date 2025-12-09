@@ -6,7 +6,7 @@
 #include <raymath.h>
 
 void InitAIManager();
-Command PollAI();
+//Command PollAI(NPC *npc);
 Command getMoveCommand(Vector2 t_AICenter, Vector2 t_targetCenter);
 void ExitInputManager();
 
