@@ -589,7 +589,7 @@ void PlayerUpdateAttacking(GameObject *object, float deltaTime)
 	PlayerMove(player, object->inputAxis, deltaTime);
 
 	// Check if moving and direction changed since last frame
-	if (Vector2Length(object->inputAxis) > 0.0f &&
+	if (Vector2Length(object->inputAxis) != 0.0f &&
 		object->currentDirection != object->previousDirection)
 	{
 		InitAttackAnimation(player);

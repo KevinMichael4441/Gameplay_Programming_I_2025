@@ -152,8 +152,8 @@ void UpdateGame(GameData *data, float deltaTime)
 	if (isColliding && !data->player->base.isColliding)
 	{
 		// Notify FSMs
-		HandleEvent(&data->player->base, EVENT_COLLISION_START, deltaTime);
-		HandleEvent(&data->npc->base, EVENT_COLLISION_START, deltaTime);
+		//HandleEvent(&data->player->base, EVENT_COLLISION_START, deltaTime);
+		//HandleEvent(&data->npc->base, EVENT_COLLISION_START, deltaTime);
 
 		// Respond to Collision
 		CollisionEntry(&data->player->base, &data->npc->base);

@@ -70,19 +70,34 @@ void HandleCollision(GameObject *lhs, GameObject *rhs)
 void CollisionEntry(GameObject *lhs, GameObject *rhs)
 {
 	// Simple Damage System
-	if (lhs->currentState == STATE_ATTACKING)
+	if (lhs->currentState == STATE_ATTACKING && rhs->currentState == STATE_SHIELD)
+	{
+		lhs->health -= DAMAGE_DEFAULT; // Example: Reduce lhs's (Players's) health on collision
+		printf("Player Damage [ %d ] Health[ %d ]\n", DAMAGE_DEFAULT, lhs->health);				
+	}
+	else if (lhs->currentState == STATE_SHIELD && rhs->currentState == STATE_ATTACKING)
 	{
 		rhs->health -= DAMAGE_DEFAULT; // Example: Reduce rhs's (NPC's) health on collision
-		printf("NPC Damage [ %d ] Health[ %d ]\n", DAMAGE_DEFAULT, rhs->health);		
+		printf("NPC Damage [ %d ] Health[ %d ]\n", DAMAGE_DEFAULT, rhs->health);	
 	}
-	else
+	else if (lhs->currentState == STATE_ATTACKING && rhs->currentState == STATE_ATTACKING)
 	{
-		if (rhs->currentState == STATE_ATTACKING)
-		{
-			lhs->health -= DAMAGE_DEFAULT; // Example: Reduce Players health on collision
-			printf("Player Damage [ %d ] Health[ %d ]\n", DAMAGE_DEFAULT, lhs->health);
-		}
+		lhs->health -= DAMAGE_DEFAULT; // Example: Reduce lhs's (Players's) health on collision
+		printf("Player Damage [ %d ] Health[ %d ]\n", DAMAGE_DEFAULT, lhs->health);
+		rhs->health -= DAMAGE_DEFAULT; // Example: Reduce rhs's (NPC's) health on collision
+		printf("NPC Damage [ %d ] Health[ %d ]\n", DAMAGE_DEFAULT, rhs->health);	
 	}
+	else if (lhs->currentState == STATE_ATTACKING && rhs->currentState != STATE_SHIELD && rhs->currentState != STATE_ATTACKING)
+	{
+		rhs->health -= DAMAGE_DEFAULT; // Example: Reduce rhs's (NPC's) health on collision
+		printf("NPC Damage [ %d ] Health[ %d ]\n", DAMAGE_DEFAULT, rhs->health);	
+	}
+	else if (rhs->currentState == STATE_ATTACKING && lhs->currentState != STATE_SHIELD && lhs->currentState != STATE_ATTACKING)
+	{
+		lhs->health -= DAMAGE_DEFAULT; // Example: Reduce lhs's (Players's) health on collision
+		printf("Player Damage [ %d ] Health[ %d ]\n", DAMAGE_DEFAULT, lhs->health);
+	}
+	
 }
 
 /**
