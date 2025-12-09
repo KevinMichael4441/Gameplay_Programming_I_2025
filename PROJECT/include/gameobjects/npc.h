@@ -12,8 +12,9 @@
 // Define the NPC structure that extends GameObject with an additional aggression property
 typedef struct
 {
-	GameObject base; // The base game object (inherits from GameObject)
-	int aggression;	 // The aggression level of the NPC (could affect behavior)
+	GameObject base; 	// The base game object (inherits from GameObject)
+	int aggression;	 	// The aggression level of the NPC (could affect behavior)
+	Vector2 target;		// The target that AI Logic depends on 
 } NPC;
 
 // Initialize a new NPC with a given name (returns a pointer to the NPC)

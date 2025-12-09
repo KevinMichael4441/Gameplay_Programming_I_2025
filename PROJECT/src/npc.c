@@ -651,6 +651,8 @@ void NPCExitDead(GameObject *object, float deltaTime)
 	object->timer = 0.0f;
 	object->position.x = -1000.0f;
 	object->position.y = -1000.0f;
+	object->collider.p.x = object->position.x;
+	object->collider.p.y = object->position.y;
 }
 
 void NPCEnterRespawn(GameObject *object, float deltaTime)
@@ -686,5 +688,8 @@ void NPCExitRespawn(GameObject *object, float deltaTime)
 
 	object->timer = 0.0f;
 	object->position = (Vector2){GetScreenWidth() / 2.0f, 100.0f};
+	object->collider.p.x = object->position.x;
+	object->collider.p.y = object->position.y;
+	
 	object->health = 100.0f;
 }

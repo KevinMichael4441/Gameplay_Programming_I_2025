@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "./utils/mediator.h"
+#include "./gameobjects/npc.h"
 
 #include "./utils/input_manager.h"
 #include "./utils/ai_manager.h"
@@ -162,7 +163,7 @@ void MediatorUpdateNPC(Mediator *mediator, float deltaTime)
 	static float lastAITime = 0.0f;
 
 	// Check if 1 second has passed since the last AI action
-	if (GetTime() - lastAITime >= 1.0f)
+	if (GetTime() - lastAITime >= 0.6f)
 	{
 		// Poll and execute random commands for the NPC (simulate AI actions)
 		printf("\n#######################################\n");
@@ -170,7 +171,8 @@ void MediatorUpdateNPC(Mediator *mediator, float deltaTime)
 		printf("\n#######################################\n");
 
 		// Randomly select a command for the NPC
-		Command command = PollAI();
+		const NPC *npc = (NPC*)mediator->object;
+		Command command = PollAI(npc);
 		MediatorHandleCommand(mediator, command, deltaTime); // Execute the command via the mediator
 
 		// Update the last AI execution time

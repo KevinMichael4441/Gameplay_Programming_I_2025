@@ -703,6 +703,8 @@ void PlayerExitDie(GameObject *object, float deltaTime)
 	object->timer = 0.0f;
 	object->position.x = -1000.0f;
 	object->position.y = -1000.0f;
+	object->collider.p.x = object->position.x;
+	object->collider.p.y = object->position.y;
 }
 
 void PlayerEnterRespawn(GameObject *object, float deltaTime)
@@ -740,7 +742,11 @@ void PlayerExitRespawn(GameObject *object, float deltaTime)
 	object->timer = 0.0f;
 	player->mana = 0.0f;
 	player->stamina = 0.0f;
+	
 	object->position.x = SCREEN_WIDTH/2;
 	object->position.y = SCREEN_HEIGHT/2;
+	object->collider.p.x = object->position.x;
+	object->collider.p.y = object->position.y;
+	
 	object->health = 100.0f;
 }

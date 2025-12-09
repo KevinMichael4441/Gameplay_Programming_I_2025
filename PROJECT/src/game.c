@@ -135,6 +135,10 @@ void UpdateGame(GameData *data, float deltaTime)
 	// Update the player's state based on its current configuration
 	UpdateState(&data->player->base, deltaTime);
 
+
+	// Sending the player position to NPC object	
+	data->npc->target = data->player->base.position;
+	
 	// Update NPC
 	MediatorUpdateNPC(data->npcMediator, deltaTime);
 
