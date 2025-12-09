@@ -6,6 +6,12 @@
 #include "./gameobjects/npc.h"
 #include "./utils/collision.h"
 
+typedef enum
+{
+	STATE_PLAY,
+	STATE_GAMEOVER
+} GameState;
+
 // Define the GameData struct to store the main game components (player, npc, and mediator)
 typedef struct
 {
@@ -18,6 +24,9 @@ typedef struct
     // Simple Background image (Perlin noise)
     Texture background;
     Texture heart;
+
+    // Game State Manager
+	GameState gsm;
 
 } GameData;
 

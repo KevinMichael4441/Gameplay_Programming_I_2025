@@ -18,7 +18,8 @@
 
 void InitGame(GameData *data)
 {
-	// printf("Game Initialised!\n");
+	printf("Game Initialised!\n");
+	data->gsm = STATE_PLAY;
 
 	// Initialize the player and NPC with their respective names
 	// Setup position
@@ -132,53 +133,80 @@ void InitGame(GameData *data)
 
 void UpdateGame(GameData *data, float deltaTime)
 {
-	// Poll input from the player and execute the corresponding command
-	MediatorUpdatePlayer(data->playerMediator, deltaTime); // Execute the command via the mediator
+	if (data->gsm == STATE_PLAY)
+	{
+		// Poll input from the player and execute the corresponding command
+		MediatorUpdatePlayer(data->playerMediator, deltaTime); // Execute the command via the mediator
 
-	// Update the player's state based on its current configuration
-	UpdateState(&data->player->base, deltaTime);
+		// Update the player's state based on its current configuration
+		UpdateState(&data->player->base, deltaTime);
 
 
-	// Sending the player position to NPC object	
-	data->npc->base.target = data->player->base.position;
+		// Sending the player position to NPC object	
+		data->npc->base.target = data->player->base.position;
 	
-	// Update NPC
-	MediatorUpdateNPC(data->npcMediator, deltaTime);
+		// Update NPC
+		MediatorUpdateNPC(data->npcMediator, deltaTime);
 
-	// Update the NPC's state after handling the event
-	UpdateState(&data->npc->base, deltaTime);
+		// Update the NPC's state after handling the event
+		UpdateState(&data->npc->base, deltaTime);
 
-	// Check for Collisions
-	bool isColliding = CheckCollision(&data->player->base, &data->npc->base);
+		// Check for Collisions
+		bool isColliding = CheckCollision(&data->player->base, &data->npc->base);
 
-	// ENTER Collision
-	if (isColliding && !data->player->base.isColliding)
-	{
-		// Notify FSMs
-		//HandleEvent(&data->player->base, EVENT_COLLISION_START, deltaTime);
-		//HandleEvent(&data->npc->base, EVENT_COLLISION_START, deltaTime);
+		// ENTER Collision
+		if (isColliding && !data->player->base.isColliding)
+		{
+			// Notify FSMs
+			//HandleEvent(&data->player->base, EVENT_COLLISION_START, deltaTime);
+			//HandleEvent(&data->npc->base, EVENT_COLLISION_START, deltaTime);
 
-		// Respond to Collision
-		CollisionEntry(&data->player->base, &data->npc->base);
-		HandleCollision(&data->player->base, &data->npc->base);
+			// Respond to Collision
+			CollisionEntry(&data->player->base, &data->npc->base);
+			HandleCollision(&data->player->base, &data->npc->base);
+		}
+		else if (!isColliding && data->player->base.isColliding)
+		{
+			// EXIT Collision
+			HandleEvent(&data->player->base, EVENT_COLLISION_END, deltaTime);
+			HandleEvent(&data->npc->base, EVENT_COLLISION_END, deltaTime);
+
+			CollisionExit(&data->player->base, &data->npc->base);
+		}
+		else if (isColliding && data->player->base.isColliding)
+		{
+			// ONGOING Collision
+			HandleCollision(&data->player->base, &data->npc->base);
+		}
+
+		// Update isColliding for GameObjects
+		data->player->base.isColliding = isColliding;
+		data->npc->base.isColliding = isColliding;
+
+		if (data->player->base.lives == 0 || data->npc->base.lives == 0)
+		{
+			data->gsm = STATE_GAMEOVER;
+		}
 	}
-	else if (!isColliding && data->player->base.isColliding)
+	else if (data->gsm == STATE_GAMEOVER)
 	{
-		// EXIT Collision
-		HandleEvent(&data->player->base, EVENT_COLLISION_END, deltaTime);
-		HandleEvent(&data->npc->base, EVENT_COLLISION_END, deltaTime);
+		if (data->player->base.lives == 0)
+		{
+			printf("Game over %s won\n", data->npc->base.name);
+		}
+		else if (data->npc->base.lives == 0)
+		{
+			// NPC Lost
+			printf("Congratulations %s defeated %s\n", data->player->base.name, data->npc->base.name);
+		}
 
-		CollisionExit(&data->player->base, &data->npc->base);
+		// Rstart Game (R key)
+		// Put in input manager so you can handle Keyboard/Controller
+		if (IsKeyPressed(KEY_R))
+		{
+			InitGame(data);
+		}
 	}
-	else if (isColliding && data->player->base.isColliding)
-	{
-		// ONGOING Collision
-		HandleCollision(&data->player->base, &data->npc->base);
-	}
-
-	// Update isColliding for GameObjects
-	data->player->base.isColliding = isColliding;
-	data->npc->base.isColliding = isColliding;
 }
 
 // Draw GameObject HealthBar

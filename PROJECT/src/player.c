@@ -35,7 +35,7 @@ Player *InitPlayer(const char *name, Vector2 position, int radius)
 				   collider,   // cute_c2 Circle Collider
 				   texture,	   // Player spritesheet
 				   100,		   // Initial Health
-				   3
+				   3			// Lives
 	);
 
 	// Player Specific Data
