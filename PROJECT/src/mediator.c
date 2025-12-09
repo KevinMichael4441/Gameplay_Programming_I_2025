@@ -100,8 +100,8 @@ void MediatorHandleCommand(Mediator *mediator, Command command, float deltaTime)
 	bool attacking = IsCommandActive(command, ATTACK);
 	bool defending = IsCommandActive(command, DEFEND);
 
-	// EVENT_MOVE only of not EVENT_ATTACK
-	if (!attacking && moving)
+	// EVENT_MOVE only of not EVENT_ATTACK and NOT EVENT_DEFEND
+	if (!attacking && !defending && moving)
 	{
 		axis = Vector2Normalize(axis);
 		object->inputAxis = axis;
@@ -117,10 +117,12 @@ void MediatorHandleCommand(Mediator *mediator, Command command, float deltaTime)
 	}
 
 	// ATTACK / DEFEND Send last
-	if (attacking)
+	if (attacking && !defending)
 		HandleEvent(object, EVENT_ATTACK, deltaTime);
-
-	if (defending)
+		// ATTACK / DEFEND Send last
+	else if (!attacking && defending)
+		HandleEvent(object, EVENT_DEFEND, deltaTime);
+	else if (attacking && defending)
 		HandleEvent(object, EVENT_DEFEND, deltaTime);
 }
 

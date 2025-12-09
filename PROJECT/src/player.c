@@ -233,68 +233,44 @@ void PlayerRandomIdleAnimation(GameObject *object, float deltaTime)
 		{448, 448, 64, 64}	// Frame 8: Row 8, Column 8
 	};
 
-	Rectangle idle4[13] = {
-		{0, 1024, 64, 64},	 // Frame 1: Row 17, Column 1
-		{64, 1024, 64, 64},	 // Frame 2: Row 17, Column 2
-		{128, 1024, 64, 64}, // Frame 3: Row 17, Column 3
-		{192, 1024, 64, 64}, // Frame 4: Row 17, Column 4
-		{256, 1024, 64, 64}, // Frame 5: Row 17, Column 5
-		{320, 1024, 64, 64}, // Frame 6: Row 17, Column 6
-		{384, 1024, 64, 64}, // Frame 7: Row 17, Column 7
-		{448, 1024, 64, 64}, // Frame 8: Row 17, Column 8
-		{512, 1024, 64, 64}, // Frame 9: Row 17, Column 9
-		{576, 1024, 64, 64}, // Frame 10: Row 17, Column 10
-		{640, 1024, 64, 64}, // Frame 11: Row 17, Column 11
-		{704, 1024, 64, 64}, // Frame 12: Row 17, Column 12
-		{768, 1024, 64, 64}	 // Frame 13: Row 17, Column 13
+	Rectangle idle4[7] = {
+		{0, 0, 64, 64},	 	// Frame 1: Row 1, Column 1
+		{64, 0, 64, 64},	// Frame 2: Row 1, Column 2
+		{128, 0, 64, 64}, 	// Frame 3: Row 1, Column 3
+		{192, 0, 64, 64},	// Frame 4: Row 1, Column 4
+		{256, 0, 64, 64}, 	// Frame 5: Row 1, Column 5
+		{320, 0, 64, 64}, 	// Frame 6: Row 1, Column 6
+		{384, 0, 64, 64}, 	// Frame 7: Row 1, Column 7
 	};
 
-	Rectangle idle5[13] = {
-		{0, 1088, 64, 64},	 // Frame 1: Row 18, Column 1
-		{64, 1088, 64, 64},	 // Frame 2: Row 18, Column 2
-		{128, 1088, 64, 64}, // Frame 3: Row 18, Column 3
-		{192, 1088, 64, 64}, // Frame 4: Row 18, Column 4
-		{256, 1088, 64, 64}, // Frame 5: Row 18, Column 5
-		{320, 1088, 64, 64}, // Frame 6: Row 18, Column 6
-		{384, 1088, 64, 64}, // Frame 7: Row 18, Column 7
-		{448, 1088, 64, 64}, // Frame 8: Row 18, Column 8
-		{512, 1088, 64, 64}, // Frame 9: Row 18, Column 9
-		{576, 1088, 64, 64}, // Frame 10: Row 18, Column 10
-		{640, 1088, 64, 64}, // Frame 11: Row 18, Column 11
-		{704, 1088, 64, 64}, // Frame 12: Row 18, Column 12
-		{768, 1088, 64, 64}	 // Frame 13: Row 18, Column 13
+	Rectangle idle5[7] = {
+		{0, 64, 64, 64},	// Frame 1: Row 2, Column 1
+		{64, 64, 64, 64},	// Frame 2: Row 2, Column 2
+		{128, 64, 64, 64}, 	// Frame 3: Row 2, Column 3
+		{192, 64, 64, 64}, 	// Frame 4: Row 2, Column 4
+		{256, 64, 64, 64}, 	// Frame 5: Row 2, Column 5
+		{320, 64, 64, 64}, 	// Frame 6: Row 2, Column 6
+		{384, 64, 64, 64}, 	// Frame 7: Row 2, Column 7
 	};
 
-	Rectangle idle6[13] = {
-		{0, 1152, 64, 64},	 // Frame 1: Row 19, Column 1
-		{64, 1152, 64, 64},	 // Frame 2: Row 19, Column 2
-		{128, 1152, 64, 64}, // Frame 3: Row 19, Column 3
-		{192, 1152, 64, 64}, // Frame 4: Row 19, Column 4
-		{256, 1152, 64, 64}, // Frame 5: Row 19, Column 5
-		{320, 1152, 64, 64}, // Frame 6: Row 19, Column 6
-		{384, 1152, 64, 64}, // Frame 7: Row 19, Column 7
-		{448, 1152, 64, 64}, // Frame 8: Row 19, Column 8
-		{512, 1152, 64, 64}, // Frame 9: Row 19, Column 9
-		{576, 1152, 64, 64}, // Frame 10: Row 19, Column 10
-		{640, 1152, 64, 64}, // Frame 11: Row 19, Column 11
-		{704, 1152, 64, 64}, // Frame 12: Row 19, Column 12
-		{768, 1152, 64, 64}	 // Frame 13: Row 19, Column 13
+	Rectangle idle6[7] = {
+		{0, 128, 64, 64},	 // Frame 1: Row 3, Column 1
+		{64, 128, 64, 64},	 // Frame 2: Row 3, Column 2
+		{128, 128, 64, 64}, // Frame 3: Row 3, Column 3
+		{192, 128, 64, 64}, // Frame 4: Row 3, Column 4
+		{256, 128, 64, 64}, // Frame 5: Row 3, Column 5
+		{320, 128, 64, 64}, // Frame 6: Row 3, Column 6
+		{384, 128, 64, 64}, // Frame 7: Row 3, Column 7
 	};
 
-	Rectangle idle7[13] = {
-		{0, 1216, 64, 64},	 // Frame 1: Row 20, Column 1
-		{64, 1216, 64, 64},	 // Frame 2: Row 20, Column 2
-		{128, 1216, 64, 64}, // Frame 3: Row 20, Column 3
-		{192, 1216, 64, 64}, // Frame 4: Row 20, Column 4
-		{256, 1216, 64, 64}, // Frame 5: Row 20, Column 5
-		{320, 1216, 64, 64}, // Frame 6: Row 20, Column 6
-		{384, 1216, 64, 64}, // Frame 7: Row 20, Column 7
-		{448, 1216, 64, 64}, // Frame 8: Row 20, Column 8
-		{512, 1216, 64, 64}, // Frame 9: Row 20, Column 9
-		{576, 1216, 64, 64}, // Frame 10: Row 20, Column 10
-		{640, 1216, 64, 64}, // Frame 11: Row 20, Column 11
-		{704, 1216, 64, 64}, // Frame 12: Row 20, Column 12
-		{768, 1216, 64, 64}	 // Frame 13: Row 20, Column 13
+	Rectangle idle7[7] = {
+		{0, 192, 64, 64},	 // Frame 1: Row 4, Column 1
+		{64, 192, 64, 64},	 // Frame 2: Row 4, Column 2
+		{128, 192, 64, 64}, // Frame 3: Row 4, Column 3
+		{192, 192, 64, 64}, // Frame 4: Row 4, Column 4
+		{256, 192, 64, 64}, // Frame 5: Row 4, Column 5
+		{320, 192, 64, 64}, // Frame 6: Row 4, Column 6
+		{384, 192, 64, 64}, // Frame 7: Row 4, Column 7
 	};
 
 	switch (randomChoice)
@@ -612,6 +588,80 @@ void PlayerExitAttacking(GameObject *object, float deltaTime)
 	// Reset or adjust any temporary changes during attack, if needed
 }
 
+static void InitShieldAnimation(Player *player)
+{
+	// ATTACK UP (Row 48)
+	static Rectangle shield_UP[8] = {
+		{0, 256, 64, 64},   // Frame 1: Row 5, Column 1
+		{64, 256, 64, 64}, // Frame 2: Row 5, Column 2
+		{128, 256, 64, 64}, // Frame 3: Row 5, Column 3
+		{192, 256, 64, 64}, // Frame 4: Row 5, Column 4
+		{256, 256, 64, 64}, // Frame 5: Row 5, Column 5
+		{320, 256, 64, 64},  // Frame 6: Row 5, Column 6
+		{384, 256, 64, 64}, // Frame 7: Row 5, Column 7
+		{448, 256, 64, 64}  // Frame 8: Row 5, Column 8
+	};
+
+	// ATTACK LEFT (Row 51)
+	static Rectangle shield_LEFT[8] = {
+		{0, 320, 64, 64},   // Frame 1: Row 5, Column 1
+		{64, 320, 64, 64}, // Frame 2: Row 5, Column 2
+		{128, 320, 64, 64}, // Frame 3: Row 5, Column 3
+		{192, 320, 64, 64}, // Frame 4: Row 5, Column 4
+		{256, 320, 64, 64}, // Frame 5: Row 5, Column 5
+		{320, 320, 64, 64},  // Frame 6: Row 5, Column 6
+		{384, 320, 64, 64}, // Frame 7: Row 5, Column 7
+		{448, 320, 64, 64}  // Frame 8: Row 5, Column 8
+	};
+
+
+
+	// ATTACK DOWN (Row 54)
+	static Rectangle shield_DOWN[8] = {
+		{0, 384, 64, 64},   // Frame 1: Row 5, Column 1
+		{64, 384, 64, 64}, // Frame 2: Row 5, Column 2
+		{128, 384, 64, 64}, // Frame 3: Row 5, Column 3
+		{192, 384, 64, 64}, // Frame 4: Row 5, Column 4
+		{256, 384, 64, 64}, // Frame 5: Row 5, Column 5
+		{320, 384, 64, 64},  // Frame 6: Row 5, Column 6
+		{384, 384, 64, 64}, // Frame 7: Row 5, Column 7
+		{448, 384, 64, 64}  // Frame 8: Row 5, Column 8
+	};
+
+
+	// ATTACK RIGHT (Row 57)
+	static Rectangle SHIELD_RIGHT[8] = {
+		{0, 448, 64, 64},   // Frame 1: Row 5, Column 1
+		{64, 448, 64, 64}, // Frame 2: Row 5, Column 2
+		{128, 448, 64, 64}, // Frame 3: Row 5, Column 3
+		{192, 448, 64, 64}, // Frame 4: Row 5, Column 4
+		{256, 448, 64, 64}, // Frame 5: Row 5, Column 5
+		{320, 448, 64, 64},  // Frame 6: Row 5, Column 6
+		{384, 448, 64, 64}, // Frame 7: Row 5, Column 7
+		{448, 448, 64, 64}  // Frame 8: Row 5, Column 8
+	};
+
+
+	GameObject *object = &player->base;
+
+	switch (object->currentDirection)
+	{
+	case UP:
+		InitGameObjectAnimation(object, shield_UP, 8, 0.035f);
+		break;
+	case DOWN:
+		InitGameObjectAnimation(object, shield_DOWN, 8, 0.035f);
+		break;
+	case LEFT:
+		InitGameObjectAnimation(object, shield_LEFT, 8, 0.035f);
+		break;
+	case RIGHT:
+		InitGameObjectAnimation(object, SHIELD_RIGHT, 8, 0.035f);
+		break;
+	}
+}
+
+
 void PlayerEnterShielding(GameObject *object, float deltaTime)
 {
 	// TODO : Not Currently Implemented
@@ -621,6 +671,7 @@ void PlayerEnterShielding(GameObject *object, float deltaTime)
 	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	// Example: Deduct some stamina for shielding
+	InitShieldAnimation(player);
 }
 void PlayerUpdateShielding(GameObject *object, float deltaTime)
 {
@@ -630,11 +681,6 @@ void PlayerUpdateShielding(GameObject *object, float deltaTime)
 	// Complete the remainder of the method
 	// Example: Check if the shielding duration is over or if stamina is depleted
 	UpdateAnimation(&object->animation, deltaTime);
-
-	if (player->base.health <= 0)
-	{
-		ChangeState(object, STATE_DEAD, deltaTime);
-	}
 }
 
 void PlayerExitShielding(GameObject *object, float deltaTime)

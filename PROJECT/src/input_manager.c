@@ -102,8 +102,13 @@ Command PollInput()
 	if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
 		command |= MOVE_RIGHT;
 
-	if (IsKeyPressed(KEY_SPACE) || IsKeyDown(KEY_SPACE))
+	if (IsKeyPressed(KEY_Z) || IsKeyDown(KEY_Z))
 		command |= ATTACK;
+	
+	if (IsKeyPressed(KEY_X) || IsKeyDown(KEY_X))
+	{
+		command |= DEFEND;
+	}
 
 	if (!command == NONE)
 	{
