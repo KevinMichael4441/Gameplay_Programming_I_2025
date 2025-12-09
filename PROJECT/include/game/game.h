@@ -9,7 +9,8 @@
 typedef enum
 {
 	STATE_PLAY,
-	STATE_GAMEOVER
+	STATE_GAMELOST,
+    STATE_GAMEWON
 } GameState;
 
 // Define the GameData struct to store the main game components (player, npc, and mediator)

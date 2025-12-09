@@ -183,23 +183,34 @@ void UpdateGame(GameData *data, float deltaTime)
 		data->player->base.isColliding = isColliding;
 		data->npc->base.isColliding = isColliding;
 
-		if (data->player->base.lives == 0 || data->npc->base.lives == 0)
-		{
-			data->gsm = STATE_GAMEOVER;
-		}
-	}
-	else if (data->gsm == STATE_GAMEOVER)
-	{
 		if (data->player->base.lives == 0)
 		{
-			printf("Game over %s won\n", data->npc->base.name);
+			data->gsm = STATE_GAMELOST;
 		}
 		else if (data->npc->base.lives == 0)
 		{
-			// NPC Lost
-			printf("Congratulations %s defeated %s\n", data->player->base.name, data->npc->base.name);
+			data->gsm = STATE_GAMEWON;
+		}
+	}
+	else if (data->gsm == STATE_GAMELOST)
+	{
+		// YA Lost
+		printf("Game over %s won\n", data->npc->base.name);
+
+		// Rstart Game (R key)
+		// Put in input manager so you can handle Keyboard/Controller
+		if (IsKeyPressed(KEY_R))
+		{
+			InitGame(data);
 		}
 
+	}
+	else if (data->gsm == STATE_GAMEWON)
+	{
+		// YA WON
+		printf("Congratulations %s defeated %s\n", data->player->base.name, data->npc->base.name);
+
+			
 		// Rstart Game (R key)
 		// Put in input manager so you can handle Keyboard/Controller
 		if (IsKeyPressed(KEY_R))
@@ -276,9 +287,9 @@ static void DrawGameObjectPositionInfo(const GameObject *object)
 										 object->position.y);
 	DrawText(
 		information,
-		object->position.x - (MeasureText(information, 20) / 2), // Measure the text with with MeasureText
+		object->position.x - (MeasureText(information, DEFAULT_FONT_SIZE) / 2), // Measure the text with with MeasureText
 		object->position.y + 30,								 // Place it below the GameObject
-		20, DARKGRAY);
+		DEFAULT_FONT_SIZE, DARKGRAY);
 }
 
 // Draws heart for how much health is there
@@ -352,6 +363,28 @@ void DrawGame(const GameData *data)
 	// Drawing Health Bar for the player
 	DrawGameObjectHealthBar(&data->player->base);
 	DrawHeartsForGameObject(&data->player->base, data->heart);
+
+
+	if (data->gsm == STATE_GAMELOST || data->gsm == STATE_GAMEWON)
+	{
+		char *gameOverText;
+
+		if (data->gsm == STATE_GAMELOST)
+		{
+			gameOverText = "Ya Lost !!! (R to Restart)";
+		}
+		else if (data->gsm == STATE_GAMEWON)
+		{
+			gameOverText = "Ya WON!!! (R to Restart)";
+		}
+		// Game Over Text
+		
+		DrawText(
+			gameOverText,
+			SCREEN_WIDTH / 2 - (MeasureText(gameOverText, DEFAULT_FONT_SIZE) / 2), // Measure the text with with MeasureText
+			SCREEN_HEIGHT / 2,
+			DEFAULT_FONT_SIZE, RED);
+	}
 }
 
 /**
