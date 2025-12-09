@@ -366,11 +366,11 @@ void DrawGame(const GameData *data)
 
 		if (data->gsm == STATE_GAMELOST)
 		{
-			gameOverText = "Ya Lost !!! (R to Restart)";
+			gameOverText = "Ya Lost !!! 'R' in Keyboard, 'Y' in XBOX or Triangle in PS to restart";
 		}
 		else if (data->gsm == STATE_GAMEWON)
 		{
-			gameOverText = "Ya WON!!! (R to Restart)";
+			gameOverText = "Ya WON!!! 'R' in Keyboard, 'Y' in XBOX or Triangle in PS to restart";
 		}
 		// Game Over Text
 		
@@ -378,7 +378,7 @@ void DrawGame(const GameData *data)
 			gameOverText,
 			SCREEN_WIDTH / 2 - (MeasureText(gameOverText, DEFAULT_FONT_SIZE) / 2), // Measure the text with with MeasureText
 			SCREEN_HEIGHT / 2,
-			DEFAULT_FONT_SIZE, RED);
+			DEFAULT_FONT_SIZE, GOLD);
 	}
 }
 

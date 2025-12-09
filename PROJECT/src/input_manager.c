@@ -43,12 +43,15 @@ Command PollInput()
 		// Get values for left thumbstick and right trigger
 		float leftStickX = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
 		float leftStickY = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
-		float rightTrigger = GetGamepadAxisMovement(0, GAMEPAD_AXIS_RIGHT_TRIGGER);
 
 		// Determine if any gamepad input exceeds threshold levels
 		bool gamepadActive = (fabs(leftStickX) > TUMBSTICK_DEADZONE_THRESHOLD ||
 							  fabs(leftStickY) > TUMBSTICK_DEADZONE_THRESHOLD ||
-							  rightTrigger > FIRING_TRIGGER_TRESHOLD ||
+
+							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
+							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
+							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_UP) ||
+
 							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_UP) ||
 							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) ||
 							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ||
@@ -82,8 +85,15 @@ Command PollInput()
 			}
 
 			// Check right trigger for firing command
-			if (rightTrigger > FIRING_TRIGGER_TRESHOLD)
+			if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN))
 				command |= ATTACK;
+
+			// Check left trigger for shield command
+			if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT))
+				command |= DEFEND;
+
+			if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_UP))
+				command |= RESTART;
 		}
 	}
 
