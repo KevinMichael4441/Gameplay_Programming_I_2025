@@ -41,8 +41,8 @@ NPC *InitNPC(const char *name, Vector2 position, int radius)
 				   DARKGREEN,  // Player Color
 				   collider,   // cute_c2 Circle Collider
 				   npcTexture,
-				   100,	 // Initial Health
-				   2
+				   200,	 // Initial Health
+				   3	// Number of lives
 	);
 
 	// Set the default aggression level for the NPC
@@ -765,5 +765,5 @@ void NPCExitRespawn(GameObject *object, float deltaTime)
 	object->collider.p.x = object->position.x;
 	object->collider.p.y = object->position.y;
 	
-	object->health = 100.0f;
+	object->health = 200.0f;
 }

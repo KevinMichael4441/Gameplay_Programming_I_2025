@@ -257,7 +257,7 @@ static void DrawGameObjectManaBar(const GameObject *object)
 }
 
 // Draw GameObject HealthBar
-static void DrawGameObjectHealthBar(const GameObject *object)
+static void DrawGamePlayerHealthBar(const GameObject *object)
 {
 	// Healthbar Dimensions
 	const int healthBarWidth = 100;
@@ -294,6 +294,46 @@ static void DrawGameObjectHealthBar(const GameObject *object)
 	// Lost health (red)
 	DrawRectangle(healthBarX + currentHealth, healthBarY, lostHealth, healthBarHeight, lostHealthColor);
 }
+
+// Draw GameObject HealthBar
+static void DrawGameNPCHealthBar(const GameObject *object)
+{
+	// Healthbar Dimensions
+	const int healthBarWidth = 100;
+	const int healthBarHeight = 10;
+
+	// Center above GameObject
+	const int healthBarX = object->position.x - (healthBarWidth / 2);
+	const int healthBarY = object->position.y - 40;
+
+	// Make sure health is between 0 and 100
+	int health = object->health;
+	if (health < 0)
+		health = 0;
+	if (health > 200)
+		health = 200;
+
+	// Bar width
+	float healthPercentage = health / 200.0f;
+	int currentHealth = (int)(healthBarWidth * healthPercentage);
+	int lostHealth = healthBarWidth - currentHealth;
+	lostHealth = Clamp(lostHealth, 0, healthBarWidth);
+
+	// Colours
+	Color background = ColorAlpha(GRAY, 0.5f);
+	Color currentHealthColor = ColorAlpha(GREEN, 0.5f);
+	Color lostHealthColor = ColorAlpha(RED, 0.5f);
+
+	// Background (gray)
+	DrawRectangle(healthBarX, healthBarY, healthBarWidth, healthBarHeight, background);
+
+	// Current health (green)
+	DrawRectangle(healthBarX, healthBarY, currentHealth, healthBarHeight, currentHealthColor);
+
+	// Lost health (red)
+	DrawRectangle(healthBarX + currentHealth, healthBarY, lostHealth, healthBarHeight, lostHealthColor);
+}
+
 
 // Draw the GameObject in this example a simple Circle which is a collider
 static void DrawGameObjectColliderCircle(const GameObject *object)
@@ -381,7 +421,7 @@ void DrawGame(const GameData *data)
 	DrawGameObjectPositionInfo(&data->npc->base);
 
 	// Drawing Health Bar for the npc
-	DrawGameObjectHealthBar(&data->npc->base);
+	DrawGameNPCHealthBar(&data->npc->base);
 	DrawHeartsForGameObject(&data->npc->base, data->heart);
 
 	//---------------------------------------------------------
@@ -397,7 +437,7 @@ void DrawGame(const GameData *data)
 	DrawGameObjectPositionInfo(&data->player->base);
 
 	// Drawing Health Bar for the player
-	DrawGameObjectHealthBar(&data->player->base);
+	DrawGamePlayerHealthBar(&data->player->base);
 	DrawGameObjectManaBar(&data->player->base);
 	DrawHeartsForGameObject(&data->player->base, data->heart);
 

@@ -46,7 +46,7 @@ Player *InitPlayer(const char *name, Vector2 position, int radius)
 				   collider,   // cute_c2 Circle Collider
 				   defaultTexture,	   // Player spritesheet
 				   100,		   // Initial Health
-				   3			// Lives
+				   2			// Lives
 	);
 
 	player->mana = 100;
@@ -902,6 +902,8 @@ void PlayerExitRespawn(GameObject *object, float deltaTime)
 	
 	object->health = 100.0f;
 	player->mana = 100.0f;
+	player->hasRegenBuff = false;
+	player->hasSpeedBuff = false;
 }
 
 void AllStatePlayerUpdate(GameObject *object, float deltaTime)
