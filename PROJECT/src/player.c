@@ -38,6 +38,8 @@ Player *InitPlayer(const char *name, Vector2 position, int radius)
 				   3			// Lives
 	);
 
+	player->mana = 100;
+
 	// Init the Player FSM
 	InitPlayerFSM(&player->base);
 
@@ -312,6 +314,7 @@ void PlayerEnterIdle(GameObject *object, float deltaTime)
 	{
 		PlayerRandomIdleAnimation(&player->base, deltaTime);
 	}
+	object->timer = 0.0f;
 }
 
 void PlayerUpdateIdle(GameObject *object, float deltaTime)
@@ -329,10 +332,7 @@ void PlayerUpdateIdle(GameObject *object, float deltaTime)
 		PlayerRandomIdleAnimation(object, deltaTime); // Trigger idle animation
 	}
 
-	if (player->base.health <= 0)
-	{
-		ChangeState(object, STATE_DEAD, deltaTime);
-	}
+	AllStateUpdate(object, deltaTime);
 }
 
 void PlayerExitIdle(GameObject *object, float deltaTime)
@@ -343,6 +343,7 @@ void PlayerExitIdle(GameObject *object, float deltaTime)
 	printf("\n%s <- EXIT <- Idle\n", object->name);
 	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
+	object->timer = 0.0f;
 }
 
 /**
@@ -433,6 +434,7 @@ void PlayerEnterWalking(GameObject *object, float deltaTime)
 	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	InitWalkAnimation(player);
+	object->timer = 0.0f;
 }
 
 void PlayerUpdateWalking(GameObject *object, float deltaTime)
@@ -457,10 +459,7 @@ void PlayerUpdateWalking(GameObject *object, float deltaTime)
 	UpdateAnimation(&object->animation, deltaTime);
 
 
-	if (player->base.health <= 0)
-	{
-		ChangeState(object, STATE_DEAD, deltaTime);
-	}
+	AllStateUpdate(object, deltaTime);
 }
 
 void PlayerExitWalking(GameObject *object, float deltaTime)
@@ -470,6 +469,7 @@ void PlayerExitWalking(GameObject *object, float deltaTime)
 	printf("\n%s <- EXIT <- Walking\n", object->name);
 	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
+	object->timer = 0.0f;
 }
 
 /**
@@ -548,6 +548,8 @@ void PlayerEnterAttacking(GameObject *object, float deltaTime)
 	// Complete the remainder of the method
 	// Example: Deduct some stamina when attacking
 	InitAttackAnimation(player);
+
+	object->timer = 0;
 }
 
 void PlayerUpdateAttacking(GameObject *object, float deltaTime)
@@ -572,9 +574,27 @@ void PlayerUpdateAttacking(GameObject *object, float deltaTime)
 	// Update the Animation
 	UpdateAnimation(&object->animation, deltaTime);
 
+
+	AllStateUpdate(object, deltaTime);
+
+}
+
+void AllStateUpdate(GameObject *object, float deltaTime)
+{
+	Player *player = (Player *)object;
+
 	if (player->base.health <= 0)
 	{
 		ChangeState(object, STATE_DEAD, deltaTime);
+	}
+
+	object->timer += deltaTime;
+
+	if (object->timer >= 0.5f)
+	{
+		player->mana += 2;
+		player->mana = Clamp(player->mana, 0, 100);
+		object->timer = 0.0f;
 	}
 }
 
@@ -586,6 +606,8 @@ void PlayerExitAttacking(GameObject *object, float deltaTime)
 	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	// Reset or adjust any temporary changes during attack, if needed
+
+	object->timer = 0.0f;
 }
 
 static void InitShieldAnimation(Player *player)
@@ -669,9 +691,18 @@ void PlayerEnterShielding(GameObject *object, float deltaTime)
 	Player *player = (Player *)object;
 	printf("\n%s -> ENTER -> Sheilding\n", object->name);
 	printf("Lives: %d\n\n", player->base.lives);
-	// Complete the remainder of the method
-	// Example: Deduct some stamina for shielding
+
+
 	InitShieldAnimation(player);
+
+	player->mana -= 5 ;
+	if (player->mana <= 0)
+	{
+		ChangeState(object, player->base.previousState, deltaTime);
+	}
+	player->mana = Clamp(player->mana,0,100);
+
+	object->timer = 0.0f;
 }
 void PlayerUpdateShielding(GameObject *object, float deltaTime)
 {
@@ -681,6 +712,8 @@ void PlayerUpdateShielding(GameObject *object, float deltaTime)
 	// Complete the remainder of the method
 	// Example: Check if the shielding duration is over or if stamina is depleted
 	UpdateAnimation(&object->animation, deltaTime);
+
+	AllStateUpdate(object, deltaTime);
 }
 
 void PlayerExitShielding(GameObject *object, float deltaTime)
@@ -691,6 +724,8 @@ void PlayerExitShielding(GameObject *object, float deltaTime)
 	printf("Lives: %d\n\n", player->base.lives);
 	// Complete the remainder of the method
 	// Reset any temporary shielding effects if necessary
+
+	object->timer = 0.0f;
 }
 
 void PlayerEnterDie(GameObject *object, float deltaTime)
