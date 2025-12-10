@@ -93,10 +93,10 @@ Command PollInput()
 			if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT))
 				command |= DEFEND;
 
-			if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_UP))
+			if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_UP))
 				command |= RESTART;
 
-			if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT))
+			if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT))
 				command |= SPECIAL;
 		}
 	}

@@ -191,6 +191,11 @@ void UpdateGame(GameData *data, float deltaTime)
 		{
 			data->gsm = STATE_GAMEWON;
 		}
+
+		if (MediatorUpdateGame())
+		{
+			InitGame(data);
+		}
 	}
 	else if (data->gsm == STATE_GAMELOST)
 	{
