@@ -26,7 +26,7 @@ void DeletePlayer(GameObject *object);
 void InitPlayerFSM(GameObject *object);
 
 // Player-specific behaviors for different states
-void AllStateUpdate(GameObject *object, float deltaTime);
+void AllStatePlayerUpdate(GameObject *object, float deltaTime);
 
 // State functions for idle state
 void PlayerEnterIdle(GameObject *object, float deltaTime);	// Called when entering the idle state

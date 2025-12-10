@@ -332,7 +332,7 @@ void PlayerUpdateIdle(GameObject *object, float deltaTime)
 		PlayerRandomIdleAnimation(object, deltaTime); // Trigger idle animation
 	}
 
-	AllStateUpdate(object, deltaTime);
+	AllStatePlayerUpdate(object, deltaTime);
 }
 
 void PlayerExitIdle(GameObject *object, float deltaTime)
@@ -459,7 +459,7 @@ void PlayerUpdateWalking(GameObject *object, float deltaTime)
 	UpdateAnimation(&object->animation, deltaTime);
 
 
-	AllStateUpdate(object, deltaTime);
+	AllStatePlayerUpdate(object, deltaTime);
 }
 
 void PlayerExitWalking(GameObject *object, float deltaTime)
@@ -575,11 +575,11 @@ void PlayerUpdateAttacking(GameObject *object, float deltaTime)
 	UpdateAnimation(&object->animation, deltaTime);
 
 
-	AllStateUpdate(object, deltaTime);
+	AllStatePlayerUpdate(object, deltaTime);
 
 }
 
-void AllStateUpdate(GameObject *object, float deltaTime)
+void AllStatePlayerUpdate(GameObject *object, float deltaTime)
 {
 	Player *player = (Player *)object;
 
@@ -713,7 +713,7 @@ void PlayerUpdateShielding(GameObject *object, float deltaTime)
 	// Example: Check if the shielding duration is over or if stamina is depleted
 	UpdateAnimation(&object->animation, deltaTime);
 
-	AllStateUpdate(object, deltaTime);
+	AllStatePlayerUpdate(object, deltaTime);
 }
 
 void PlayerExitShielding(GameObject *object, float deltaTime)

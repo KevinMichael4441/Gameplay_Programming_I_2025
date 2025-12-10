@@ -496,6 +496,67 @@ void NPCExitWalking(GameObject *object, float deltaTime)
 	// Complete the remainder of the method
 }
 
+static void InitAttackAnimation(NPC *npc)
+{
+	// ATTACK UP (Row 48)
+	static Rectangle sword_attack_UP[6] = {
+		{0, 2952, 192, 192},   // Frame 1: Row 44, Column 1
+		{192, 2952, 192, 192}, // Frame 2: Row 44, Column 2
+		{384, 2952, 192, 192}, // Frame 3: Row 44, Column 3
+		{576, 2952, 192, 192}, // Frame 4: Row 44, Column 4
+		{768, 2952, 192, 192}, // Frame 5: Row 44, Column 5
+		{960, 2952, 192, 192}  // Frame 6: Row 44, Column 6
+	};
+
+	// ATTACK LEFT (Row 51)
+	static Rectangle sword_attack_LEFT[6] = {
+		{0, 3144, 192, 192},   // Frame 1: Row 51, Column 1
+		{192, 3144, 192, 192}, // Frame 2: Row 51, Column 2
+		{384, 3144, 192, 192}, // Frame 3: Row 51, Column 3
+		{576, 3144, 192, 192}, // Frame 4: Row 51, Column 4
+		{768, 3144, 192, 192}, // Frame 5: Row 51, Column 5
+		{960, 3144, 192, 192}  // Frame 6: Row 51, Column 6
+	};
+
+	// ATTACK DOWN (Row 54)
+	static Rectangle sword_attack_DOWN[6] = {
+		{0, 3336, 192, 192},   // Frame 1: Row 54, Column 1
+		{192, 3336, 192, 192}, // Frame 2: Row 54, Column 2
+		{384, 3336, 192, 192}, // Frame 3: Row 54, Column 3
+		{576, 3336, 192, 192}, // Frame 4: Row 54, Column 4
+		{768, 3336, 192, 192}, // Frame 5: Row 54, Column 5
+		{960, 3336, 192, 192}  // Frame 6: Row 54, Column 6
+	};
+
+	// ATTACK RIGHT (Row 57)
+	static Rectangle sword_attack_RIGHT[6] = {
+		{0, 3528, 192, 192},   // Frame 1: Row 57, Column 1
+		{192, 3528, 192, 192}, // Frame 2: Row 57, Column 2
+		{384, 3528, 192, 192}, // Frame 3: Row 57, Column 3
+		{576, 3528, 192, 192}, // Frame 4: Row 57, Column 4
+		{768, 3528, 192, 192}, // Frame 5: Row 57, Column 5
+		{960, 3528, 192, 192}  // Frame 6: Row 57, Column 6
+	};
+
+	GameObject *object = &npc->base;
+
+	switch (object->currentDirection)
+	{
+	case UP:
+		InitGameObjectAnimation(object, sword_attack_UP, 6, 0.035f);
+		break;
+	case DOWN:
+		InitGameObjectAnimation(object, sword_attack_DOWN, 6, 0.035f);
+		break;
+	case LEFT:
+		InitGameObjectAnimation(object, sword_attack_LEFT, 6, 0.035f);
+		break;
+	case RIGHT:
+		InitGameObjectAnimation(object, sword_attack_RIGHT, 6, 0.035f);
+		break;
+	}
+}
+
 // Enter function for Attacking state, executed once upon entering Attacking
 void NPCEnterAttacking(GameObject *object, float deltaTime)
 {
@@ -520,11 +581,22 @@ void NPCEnterAttacking(GameObject *object, float deltaTime)
 // Update function for Attacking state, called repeatedly during game ticks while in Attacking
 void NPCUpdateAttacking(GameObject *object, float deltaTime)
 {
-	(void)deltaTime;
 	NPC *npc = (NPC *)object;
 	printf("%s -> UPDATE -> Attacking\n", object->name);
 	printf("Aggression: %d\n\n", npc->aggression);
 	// During game loop and game ticks, execute Attacking state behavior here, such as dealing damage.
+
+	// Move according to inputAxis
+	NPCMove(npc, object->inputAxis, deltaTime);
+
+	// Check if moving and direction changed since last frame
+	if (Vector2Length(object->inputAxis) != 0.0f &&
+		object->currentDirection != object->previousDirection)
+	{
+		InitAttackAnimation(npc);
+		object->previousDirection = object->currentDirection;
+	}
+
 	UpdateAnimation(&object->animation, deltaTime);
 
 	if (npc->base.health <= 0)
