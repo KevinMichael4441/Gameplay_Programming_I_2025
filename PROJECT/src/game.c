@@ -396,6 +396,32 @@ static void DrawHeartsForGameObject(const GameObject *object, const Texture t_he
 	}
 }
 
+static void DrawControlText()
+{
+
+	const char *text1 = "'Z' in keyboard or 'A' in XBOX or Cross in PS to Attack";
+	const char *text2 = "'X' in keyboard or 'B' in XBOX or Circle in PS to Defend";
+	const char *text3 = "'C' in keyboard or 'X' in XBOX or Square in PS for Special Buff";
+
+	DrawText(
+			text1,
+			SCREEN_WIDTH / 2 - (MeasureText(text1, DEFAULT_FONT_SIZE) / 2), // Measure the text with with MeasureText
+			SCREEN_HEIGHT - 60,
+			DEFAULT_FONT_SIZE, GOLD);
+
+	DrawText(
+			text2,
+			SCREEN_WIDTH / 2 - (MeasureText(text2, DEFAULT_FONT_SIZE) / 2), // Measure the text with with MeasureText
+			SCREEN_HEIGHT - 40,
+			DEFAULT_FONT_SIZE, GOLD);
+		
+	DrawText(
+			text3,
+			SCREEN_WIDTH / 2 - (MeasureText(text3, DEFAULT_FONT_SIZE) / 2), // Measure the text with with MeasureText
+			SCREEN_HEIGHT - 20,
+			DEFAULT_FONT_SIZE, GOLD);
+}
+
 /**
  * DrawGame : Draws all the craic on screen.
  *
@@ -412,6 +438,8 @@ void DrawGame(const GameData *data)
 
 	// Draw some basic UI text (game title and description)
 	DrawFPS(10, 20);
+
+	DrawControlText();
 
 	//---------------------------------------------------------
 	// Drawing NPC and Position Data
