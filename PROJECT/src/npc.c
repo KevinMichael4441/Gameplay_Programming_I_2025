@@ -179,7 +179,7 @@ void InitNPCFSM(GameObject *object)
 	// STATE_COLLISION
 	// For unimplemented states, set them to empty defaults
 	// Alternatively NPC has its own FSM with only the implemented states
-
+	object->stateConfigs[STATE_SPECIAL] = UNIMPLEMENTED_STATE_CONFIG;
 	object->stateConfigs[STATE_COLLISION] = UNIMPLEMENTED_STATE_CONFIG;
 
 	// Print out Configs
