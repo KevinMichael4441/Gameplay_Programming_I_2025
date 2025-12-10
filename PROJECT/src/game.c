@@ -247,12 +247,12 @@ static void DrawGameObjectManaBar(const GameObject *object)
 	lostMana = Clamp(lostMana, 0, manaBarHeight);
 
 	// Colours
-	Color background = ColorAlpha(GRAY, 0.5f);
+	Color background = ColorAlpha(BLACK, 0.5f);
 	Color currentManaColor = ColorAlpha(BLUE, 0.5f);
-	Color lostManaColor = ColorAlpha(BLACK, 0.5f);
+	Color lostManaColor = ColorAlpha(DARKBLUE, 0.5f);
 
-	// Background (gray)
-	DrawRectangle(manaBarX, manaBarY, manaBarWidth, manaBarHeight, background);
+	// Background (black)
+	DrawRectangle(manaBarX - 3, manaBarY - 3, manaBarWidth + 6, manaBarHeight + 6, background);
 
 	// Current health (blue)
 	DrawRectangle(manaBarX, manaBarY + lostMana, manaBarWidth, currentMana, currentManaColor);
@@ -286,12 +286,12 @@ static void DrawGamePlayerHealthBar(const GameObject *object)
 	lostHealth = Clamp(lostHealth, 0, healthBarWidth);
 
 	// Colours
-	Color background = ColorAlpha(GRAY, 0.5f);
+	Color background = ColorAlpha(BLACK, 0.5f);
 	Color currentHealthColor = ColorAlpha(GREEN, 0.5f);
 	Color lostHealthColor = ColorAlpha(RED, 0.5f);
 
-	// Background (gray)
-	DrawRectangle(healthBarX, healthBarY, healthBarWidth, healthBarHeight, background);
+	// Background (black)
+	DrawRectangle(healthBarX - 3, healthBarY - 3, healthBarWidth + 6, healthBarHeight + 6, background);
 
 	// Current health (green)
 	DrawRectangle(healthBarX, healthBarY, currentHealth, healthBarHeight, currentHealthColor);
@@ -325,12 +325,12 @@ static void DrawGameNPCHealthBar(const GameObject *object)
 	lostHealth = Clamp(lostHealth, 0, healthBarWidth);
 
 	// Colours
-	Color background = ColorAlpha(GRAY, 0.5f);
+	Color background = ColorAlpha(BLACK, 0.5f);
 	Color currentHealthColor = ColorAlpha(GREEN, 0.5f);
 	Color lostHealthColor = ColorAlpha(RED, 0.5f);
 
-	// Background (gray)
-	DrawRectangle(healthBarX, healthBarY, healthBarWidth, healthBarHeight, background);
+	// Background (black)
+	DrawRectangle(healthBarX-3, healthBarY-3, healthBarWidth+6, healthBarHeight+6, background);
 
 	// Current health (green)
 	DrawRectangle(healthBarX, healthBarY, currentHealth, healthBarHeight, currentHealthColor);
@@ -360,19 +360,6 @@ static void DrawGameObjectColliderCircle(const GameObject *object)
 	);
 }
 
-// Draw position information at the bottom of the GameObject
-static void DrawGameObjectPositionInfo(const GameObject *object)
-{
-	const char *information = TextFormat("(%.f, %.f)",
-										 object->position.x,
-										 object->position.y);
-	DrawText(
-		information,
-		object->position.x - (MeasureText(information, DEFAULT_FONT_SIZE) / 2), // Measure the text with with MeasureText
-		object->position.y + 30,								 // Place it below the GameObject
-		DEFAULT_FONT_SIZE, DARKGRAY);
-}
-
 // Draws heart for how much health is there
 static void DrawHeartsForGameObject(const GameObject *object, const Texture t_heart)
 {
@@ -382,16 +369,16 @@ static void DrawHeartsForGameObject(const GameObject *object, const Texture t_he
 		case 0:
 			break;
 		case 1:
-			DrawTexture(t_heart, object->position.x, object->position.y + OFFSET, WHITE);
+			DrawTexture(t_heart, object->position.x - 5, object->position.y + OFFSET, WHITE);
 			break;
 		case 2:
-			DrawTexture(t_heart, object->position.x - 30, object->position.y + OFFSET, WHITE);
-			DrawTexture(t_heart, object->position.x + 30, object->position.y + OFFSET, WHITE);
+			DrawTexture(t_heart, object->position.x - 30 - 5, object->position.y + OFFSET, WHITE);
+			DrawTexture(t_heart, object->position.x + 30 - 5, object->position.y + OFFSET, WHITE);
 			break;
 		case 3:
-			DrawTexture(t_heart, object->position.x - 30, object->position.y + OFFSET, WHITE);
-			DrawTexture(t_heart, object->position.x, object->position.y + OFFSET, WHITE);
-			DrawTexture(t_heart, object->position.x + 30, object->position.y + OFFSET, WHITE);
+			DrawTexture(t_heart, object->position.x - 30 - 5, object->position.y + OFFSET, WHITE);
+			DrawTexture(t_heart, object->position.x - 5, object->position.y + OFFSET, WHITE);
+			DrawTexture(t_heart, object->position.x + 30 - 5, object->position.y + OFFSET, WHITE);
 			break;
 	}
 }
@@ -447,11 +434,7 @@ void DrawGame(const GameData *data)
 	//---------------------------------------------------------
 	DrawGameObjectColliderCircle(&data->npc->base);
 
-	// Render the npc's animation at their current position
-	DrawAnimation(&data->npc->base.animation, data->npc->base.position, RAYWHITE);
-
-	// Player Position Information
-	DrawGameObjectPositionInfo(&data->npc->base);
+	
 
 	// Drawing Health Bar for the npc
 	DrawGameNPCHealthBar(&data->npc->base);
@@ -463,16 +446,17 @@ void DrawGame(const GameData *data)
 	//---------------------------------------------------------
 	DrawGameObjectColliderCircle(&data->player->base);
 
-	// Render the player's animation at their current position
-	DrawAnimation(&data->player->base.animation, data->player->base.position, WHITE);
-
-	// Player Position Information
-	DrawGameObjectPositionInfo(&data->player->base);
-
+	
 	// Drawing Health Bar for the player
 	DrawGamePlayerHealthBar(&data->player->base);
 	DrawGameObjectManaBar(&data->player->base);
 	DrawHeartsForGameObject(&data->player->base, data->heart);
+
+
+	// Render the npc's animation at their current position
+	DrawAnimation(&data->npc->base.animation, data->npc->base.position, RAYWHITE);
+	// Render the player's animation at their current position
+	DrawAnimation(&data->player->base.animation, data->player->base.position, WHITE);
 
 
 	if (data->gsm == STATE_GAMELOST || data->gsm == STATE_GAMEWON)
