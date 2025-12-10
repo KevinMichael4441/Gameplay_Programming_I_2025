@@ -216,6 +216,47 @@ void UpdateGame(GameData *data, float deltaTime)
 }
 
 // Draw GameObject HealthBar
+static void DrawGameObjectManaBar(const GameObject *object)
+{
+	Player *player = (Player*)object;
+
+	// Healthbar Dimensions
+	const int manaBarWidth = 10;
+	const int manaBarHeight = 100;
+
+	// Statically positioned on top right
+	const int manaBarX = SCREEN_WIDTH - 50;
+	const int manaBarY = (manaBarHeight / 2);
+
+	// Make sure health is between 0 and 100
+	int mana = player->mana;
+	if (mana < 0)
+		mana = 0;
+	if (mana > 100)
+		mana = 100;
+
+	// Bar width
+	float manaPercentage = mana / 100.0f;
+	int currentMana = (int)(manaBarHeight * manaPercentage);
+	int lostMana = manaBarHeight - currentMana;
+	lostMana = Clamp(lostMana, 0, manaBarHeight);
+
+	// Colours
+	Color background = ColorAlpha(GRAY, 0.5f);
+	Color currentManaColor = ColorAlpha(BLUE, 0.5f);
+	Color lostManaColor = ColorAlpha(BLACK, 0.5f);
+
+	// Background (gray)
+	DrawRectangle(manaBarX, manaBarY, manaBarWidth, manaBarHeight, background);
+
+	// Current health (blue)
+	DrawRectangle(manaBarX, manaBarY + lostMana, manaBarWidth, currentMana, currentManaColor);
+
+	// Lost health (red)
+	DrawRectangle(manaBarX, manaBarY, manaBarWidth, lostMana, lostManaColor);
+}
+
+// Draw GameObject HealthBar
 static void DrawGameObjectHealthBar(const GameObject *object)
 {
 	// Healthbar Dimensions
@@ -357,6 +398,7 @@ void DrawGame(const GameData *data)
 
 	// Drawing Health Bar for the player
 	DrawGameObjectHealthBar(&data->player->base);
+	DrawGameObjectManaBar(&data->player->base);
 	DrawHeartsForGameObject(&data->player->base, data->heart);
 
 

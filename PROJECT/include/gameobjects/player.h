@@ -12,7 +12,8 @@
 // Define the Player structure that extends GameObject with additional properties like stamina and mana
 typedef struct
 {
-	GameObject base; // The base game object (inherits from GameObject)
+	GameObject base; 	// The base game object (inherits from GameObject)
+	int mana;			// Mana of the player
 } Player;
 
 // Initialise a new Player with a given name (returns a pointer to the Player)
