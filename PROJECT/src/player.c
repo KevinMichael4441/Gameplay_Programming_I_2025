@@ -22,9 +22,20 @@ Player *InitPlayer(const char *name, Vector2 position, int radius)
 	}
 
 	// Load player texture
-	Texture2D texture = LoadTexture("./assets/player_sprite_sheet.png");
+	Texture2D defaultTexture = LoadTexture("./assets/player_sprite_sheet.png");
+	player->bufferTexture = defaultTexture;
 
-	// Setup Collider
+	Image speedBuffPlayerImage = LoadImageFromTexture(defaultTexture);
+	ImageColorTint(&speedBuffPlayerImage, GREEN);
+	player->speedTexture = LoadTextureFromImage(speedBuffPlayerImage);
+	UnloadImage(speedBuffPlayerImage);
+
+	Image regenBuffPlayerImage = LoadImageFromTexture(defaultTexture);
+	ImageColorTint(&regenBuffPlayerImage, PURPLE);
+	player->regenTexture = LoadTextureFromImage(regenBuffPlayerImage);
+	UnloadImage(regenBuffPlayerImage);
+
+	// Setup Collide
 	c2Circle collider = (c2Circle){.p = {position.x, position.y}, .r = radius};
 
 	InitGameObject(&player->base,
@@ -33,12 +44,16 @@ Player *InitPlayer(const char *name, Vector2 position, int radius)
 				   STATE_IDLE, // Initial State
 				   DARKGREEN,  // Player Color
 				   collider,   // cute_c2 Circle Collider
-				   texture,	   // Player spritesheet
+				   defaultTexture,	   // Player spritesheet
 				   100,		   // Initial Health
 				   3			// Lives
 	);
 
 	player->mana = 100;
+
+	player->hasRegenBuff = false;
+	player->hasSpeedBuff = false;
+	player->buffTimer = 0;
 
 	// Init the Player FSM
 	InitPlayerFSM(&player->base);
@@ -63,11 +78,14 @@ void DeletePlayer(GameObject *object)
 {
 	// Perform any player-specific cleanup here
 	// Cast to Player if player-specific cleanup is required
-	// Player *player = (Player *)object;
+	Player *player = (Player *)object;
 	// Example of potential cleanup (not implemented here):
 	// If the player is holding a dynamically allocated object, such as a Shield:
 	// free(player->holding);
 	// Perform any player-specific cleanup here
+	UnloadTexture(player->bufferTexture);
+	UnloadTexture(player->regenTexture);
+	UnloadTexture(player->speedTexture);
 	DeleteGameObject(object);
 }
 
@@ -96,7 +114,8 @@ void InitPlayerFSM(GameObject *object)
 		{EVENT_MOVE, STATE_WALKING},
 		{EVENT_ATTACK, STATE_ATTACKING},
 		{EVENT_DEFEND, STATE_SHIELD},
-		{EVENT_DIE, STATE_DEAD}};
+		{EVENT_DIE, STATE_DEAD},
+		{EVENT_SPECIAL, STATE_SPECIAL}};
 	// Set up the state configuration for STATE_IDLE
 	InitStateConfig(object, STATE_IDLE, "Player_Idle", PlayerEnterIdle, PlayerUpdateIdle, PlayerExitIdle);
 	// Configure valid transitions for STATE_IDLE
@@ -108,11 +127,23 @@ void InitPlayerFSM(GameObject *object)
 		// EVENT -> STATE
 		{EVENT_NONE, STATE_IDLE},
 		{EVENT_ATTACK, STATE_ATTACKING},
-		{EVENT_DIE, STATE_DEAD}};
+		{EVENT_DIE, STATE_DEAD},
+		{EVENT_SPECIAL, STATE_SPECIAL}};
 	// Set up the state configuration for STATE_WALKING
 	InitStateConfig(object, STATE_WALKING, "Player_Walking", PlayerEnterWalking, PlayerUpdateWalking, PlayerExitWalking);
 	// Configure valid transitions for STATE_WALKING
 	StateTransitions(&object->stateConfigs[STATE_WALKING], walkingValidTransitions, sizeof(walkingValidTransitions) / sizeof(EventStateTransition));
+
+	// ---- STATE_SPECIAL state configuration ----
+	// Define valid transitions from STATE_WALKING
+	EventStateTransition specialValidTransitions[] = {
+		// EVENT -> STATE
+		{EVENT_NONE, STATE_IDLE}};
+	// Set up the state configuration for STATE_WALKING
+	InitStateConfig(object, STATE_SPECIAL, "Player_Buffing", PlayerEnterSpecial, PlayerUpdateSpecial, PlayerExitSpecial);
+	// Configure valid transitions for STATE_WALKING
+	StateTransitions(&object->stateConfigs[STATE_SPECIAL], specialValidTransitions, sizeof(specialValidTransitions) / sizeof(EventStateTransition));
+
 
 	// ---- STATE_ATTACKING state configuration ----
 	// Define valid transitions from STATE_ATTACKING
@@ -175,7 +206,16 @@ void InitPlayerFSM(GameObject *object)
 
 void PlayerMove(Player *player, Vector2 inputAxis, float deltaTime)
 {
-	float speed = 130.0f;
+	float speed; 
+	
+	if (player->hasSpeedBuff)
+	{
+		speed = 200.0f;
+	}
+	else
+	{
+		speed = 130.0f;
+	}
 
 	player->base.position.x += inputAxis.x * speed * deltaTime;
 	player->base.position.y += inputAxis.y * speed * deltaTime;
@@ -472,6 +512,52 @@ void PlayerExitWalking(GameObject *object, float deltaTime)
 	object->timer = 0.0f;
 }
 
+
+void PlayerEnterSpecial(GameObject *object, float deltaTime)
+{
+	(void)deltaTime;
+	Player *player = (Player *)object;
+	printf("\n%s -> ENTER -> Special\n", object->name);
+	printf("Lives: %d\n\n", player->base.lives);
+
+	if (player->mana > 50 && !player->hasRegenBuff && !player->hasSpeedBuff)
+	{
+		player->mana -= 50;
+
+		int buff = rand() % 2;
+		if (buff == 0)
+		{
+			player->hasSpeedBuff = true;
+			player->base.keyframes = player->speedTexture;
+		}
+		else
+		{
+			player->hasRegenBuff = true;
+			player->base.keyframes = player->regenTexture;
+		}
+	}
+
+	object->timer = 0.0f;
+}
+
+void PlayerUpdateSpecial(GameObject *object, float deltaTime)
+{
+	(void)object;
+	(void)deltaTime;
+	ChangeState(object, STATE_IDLE, deltaTime);
+}
+
+void PlayerExitSpecial(GameObject *object, float deltaTime)
+{
+	(void)deltaTime;
+	Player *player = (Player *)object;
+	//printf("\n%s <- EXIT <- Special\n", object->name);
+	//printf("Lives: %d\n\n", player->base.lives);
+	// Complete the remainder of the method
+	object->timer = 0.0f;
+	player->buffTimer = 0.0f;
+}
+
 /**
  * InitAttackAnimation - Picks the correct attack arc for the direction.
  *
@@ -589,12 +675,27 @@ void AllStatePlayerUpdate(GameObject *object, float deltaTime)
 	}
 
 	object->timer += deltaTime;
+	player->buffTimer += deltaTime;
 
 	if (object->timer >= 0.5f)
 	{
 		player->mana += 2;
 		player->mana = Clamp(player->mana, 0, 100);
 		object->timer = 0.0f;
+
+		if (player->hasRegenBuff)
+		{
+			player->base.health += 4;
+			player->base.health = Clamp(player->base.health, 0, 100);
+		}
+	}
+
+	if (player->buffTimer > 5.0f)
+	{
+		player->hasRegenBuff = false;
+		player->hasSpeedBuff = false;
+		player->buffTimer = 0.0f;
+		object->keyframes = player->bufferTexture;
 	}
 }
 
@@ -810,6 +911,7 @@ void PlayerUpdateRespawn(GameObject *object, float deltaTime)
 
 void PlayerExitRespawn(GameObject *object, float deltaTime)
 {
+	Player *player = (Player *)object;
 	(void)deltaTime;
 	printf("\n%s <- EXIT <- Respawn\n", object->name);
 	// Complete the remainder of the method
@@ -822,4 +924,5 @@ void PlayerExitRespawn(GameObject *object, float deltaTime)
 	object->collider.p.y = object->position.y;
 	
 	object->health = 100.0f;
+	player->mana = 100.0f;
 }

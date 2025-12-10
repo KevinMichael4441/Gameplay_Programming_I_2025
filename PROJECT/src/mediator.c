@@ -124,6 +124,11 @@ void MediatorHandleCommand(Mediator *mediator, Command command, float deltaTime)
 		HandleEvent(object, EVENT_DEFEND, deltaTime);
 	else if (attacking && defending)
 		HandleEvent(object, EVENT_DEFEND, deltaTime);
+
+	if (IsCommandActive(command, SPECIAL))
+	{
+		HandleEvent(object, EVENT_SPECIAL, deltaTime);
+	}
 }
 
 /**

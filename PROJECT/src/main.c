@@ -22,6 +22,8 @@ void GameLoop(GameData *data);
 
 int main(void)
 {
+	srand(time(NULL));
+
 	// Init raylib window
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Raylib Command Pattern with Animated FSM Starter Kit GPP I");
 

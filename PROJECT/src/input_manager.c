@@ -51,6 +51,7 @@ Command PollInput()
 							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
 							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
 							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_UP) ||
+							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT) ||
 
 							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_UP) ||
 							  IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) ||
@@ -94,12 +95,20 @@ Command PollInput()
 
 			if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_UP))
 				command |= RESTART;
+
+			if (IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT))
+				command |= SPECIAL;
 		}
 	}
 
 	if (IsKeyPressed(KEY_R))
 	{
 		command |= RESTART;
+	}
+
+	if (IsKeyPressed(KEY_C))
+	{
+		command |= SPECIAL;
 	}
 
 	// If no gamepad input check keyboard

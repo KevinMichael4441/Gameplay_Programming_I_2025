@@ -12,8 +12,14 @@
 // Define the Player structure that extends GameObject with additional properties like stamina and mana
 typedef struct
 {
-	GameObject base; 	// The base game object (inherits from GameObject)
-	int mana;			// Mana of the player
+	GameObject base; 		// The base game object (inherits from GameObject)
+	int mana;				// Mana of the player
+	bool hasRegenBuff;		//	Regen Buff
+	bool hasSpeedBuff;		//	Speed Buff
+	Texture2D bufferTexture;	//	buffer to store Texture from Game Object
+	Texture2D speedTexture;	//	Special Texture for Speed Buff
+	Texture2D regenTexture;	//	Special Texture for Regen Buff
+	float buffTimer;		// Timer for Buff active status
 } Player;
 
 // Initialise a new Player with a given name (returns a pointer to the Player)
@@ -38,6 +44,10 @@ void PlayerEnterWalking(GameObject *object, float deltaTime);  // Called when en
 void PlayerUpdateWalking(GameObject *object, float deltaTime); // Called to update the player's behavior while walking
 void PlayerExitWalking(GameObject *object, float deltaTime);   // Called when exiting the walking state
 
+// State functions for walking state
+void PlayerEnterSpecial(GameObject *object, float deltaTime);  // Called when entering the walking state
+void PlayerUpdateSpecial(GameObject *object, float deltaTime); // Called to update the player's behavior while walking
+void PlayerExitSpecial(GameObject *object, float deltaTime);   // Called when exiting the walking state
 
 // State functions for attacking state
 void PlayerEnterAttacking(GameObject *object, float deltaTime);	 // Called when entering the attacking state
