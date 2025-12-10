@@ -151,6 +151,7 @@ void InitPlayerFSM(GameObject *object)
 		// EVENT -> STATE
 		{EVENT_NONE, STATE_IDLE},
 		{EVENT_MOVE, STATE_WALKING},
+		{EVENT_DEFEND, STATE_SHIELD},
 		{EVENT_DIE, STATE_DEAD}};
 	// Set up the state configuration for STATE_ATTACKING
 	InitStateConfig(object, STATE_ATTACKING, "Player_Attacking", PlayerEnterAttacking, PlayerUpdateAttacking, PlayerExitAttacking);
@@ -162,6 +163,7 @@ void InitPlayerFSM(GameObject *object)
 	EventStateTransition sheildingValidTransitions[] = {
 		// EVENT -> STATE
 		{EVENT_NONE, STATE_IDLE},
+		{EVENT_MOVE, STATE_WALKING},
 		{EVENT_ATTACK, STATE_ATTACKING},
 		{EVENT_DIE, STATE_DEAD}};
 	// Set up the state configuration for STATE_SHIELD
@@ -635,6 +637,15 @@ void PlayerEnterAttacking(GameObject *object, float deltaTime)
 	// Example: Deduct some stamina when attacking
 	InitAttackAnimation(player);
 
+	player->mana -= 10 ;
+	if (player->mana <= 0)
+	{
+		ChangeState(object, STATE_IDLE, deltaTime);
+	}
+	player->mana = Clamp(player->mana,0,100);
+
+	object->timer = 0.0f;
+
 	object->timer = 0;
 }
 
@@ -663,40 +674,6 @@ void PlayerUpdateAttacking(GameObject *object, float deltaTime)
 
 	AllStatePlayerUpdate(object, deltaTime);
 
-}
-
-void AllStatePlayerUpdate(GameObject *object, float deltaTime)
-{
-	Player *player = (Player *)object;
-
-	if (player->base.health <= 0)
-	{
-		ChangeState(object, STATE_DEAD, deltaTime);
-	}
-
-	object->timer += deltaTime;
-	player->buffTimer += deltaTime;
-
-	if (object->timer >= 0.5f)
-	{
-		player->mana += 2;
-		player->mana = Clamp(player->mana, 0, 100);
-		object->timer = 0.0f;
-
-		if (player->hasRegenBuff)
-		{
-			player->base.health += 4;
-			player->base.health = Clamp(player->base.health, 0, 100);
-		}
-	}
-
-	if (player->buffTimer > 5.0f)
-	{
-		player->hasRegenBuff = false;
-		player->hasSpeedBuff = false;
-		player->buffTimer = 0.0f;
-		object->keyframes = player->bufferTexture;
-	}
 }
 
 void PlayerExitAttacking(GameObject *object, float deltaTime)
@@ -796,10 +773,10 @@ void PlayerEnterShielding(GameObject *object, float deltaTime)
 
 	InitShieldAnimation(player);
 
-	player->mana -= 5 ;
+	player->mana -= 10 ;
 	if (player->mana <= 0)
 	{
-		ChangeState(object, player->base.previousState, deltaTime);
+		ChangeState(object, STATE_IDLE, deltaTime);
 	}
 	player->mana = Clamp(player->mana,0,100);
 
@@ -925,4 +902,38 @@ void PlayerExitRespawn(GameObject *object, float deltaTime)
 	
 	object->health = 100.0f;
 	player->mana = 100.0f;
+}
+
+void AllStatePlayerUpdate(GameObject *object, float deltaTime)
+{
+	Player *player = (Player *)object;
+
+	if (player->base.health <= 0)
+	{
+		ChangeState(object, STATE_DEAD, deltaTime);
+	}
+
+	object->timer += deltaTime;
+	player->buffTimer += deltaTime;
+
+	if (object->timer >= 0.5f)
+	{
+		player->mana += 8;
+		player->mana = Clamp(player->mana, 0, 100);
+		object->timer = 0.0f;
+
+		if (player->hasRegenBuff)
+		{
+			player->base.health += 4;
+			player->base.health = Clamp(player->base.health, 0, 100);
+		}
+	}
+
+	if (player->buffTimer > 5.0f)
+	{
+		player->hasRegenBuff = false;
+		player->hasSpeedBuff = false;
+		player->buffTimer = 0.0f;
+		object->keyframes = player->bufferTexture;
+	}
 }
