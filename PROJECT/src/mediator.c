@@ -165,7 +165,7 @@ void MediatorUpdateNPC(Mediator *mediator, float deltaTime)
 	static float lastAITime = 0.0f;
 
 	// Check if 1 second has passed since the last AI action
-	if (GetTime() - lastAITime >= 0.6f)
+	if (GetTime() - lastAITime >= 0.4f)
 	{
 		// Poll and execute random commands for the NPC (simulate AI actions)
 		printf("\n#######################################\n");
