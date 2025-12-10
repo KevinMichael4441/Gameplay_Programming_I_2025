@@ -25,7 +25,7 @@ int main(void)
 	srand(time(NULL));
 
 	// Init raylib window
-	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Raylib Command Pattern with Animated FSM Starter Kit GPP I");
+	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Aliens v Mech by Kevin Michael c00313609");
 
 	// Create GameData Pointer
 	GameData *data = (GameData *)(malloc(sizeof(GameData)));

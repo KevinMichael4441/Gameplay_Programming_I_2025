@@ -401,7 +401,7 @@ static void DrawControlText()
 
 	const char *text1 = "'Z' in keyboard or 'A' in XBOX or Cross in PS to Attack";
 	const char *text2 = "'X' in keyboard or 'B' in XBOX or Circle in PS to Defend";
-	const char *text3 = "'C' in keyboard or 'X' in XBOX or Square in PS for Special Buff";
+	const char *text3 = "'C' in keyboard or 'X' in XBOX or Square in PS to Buff Up";
 
 	DrawText(
 			text1,
