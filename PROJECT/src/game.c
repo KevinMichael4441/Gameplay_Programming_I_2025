@@ -18,6 +18,11 @@
 
 void InitGame(GameData *data)
 {
+	data->elapsedSeconds = 0;
+	data->elapsedMinutes = 0;
+	data->elapsedHours = 0;
+	data->aSecond = 0.0f;
+
 	printf("Game Initialised!\n");
 	data->gsm = STATE_PLAY;
 
@@ -121,6 +126,29 @@ void InitGame(GameData *data)
 	InitAIManager();
 }
 
+static void updateTime(GameData *data, float deltaTime)
+{
+	data->aSecond += deltaTime;
+
+	if (data->aSecond >= 1.0)
+	{
+		data->elapsedSeconds++;
+		data->aSecond = 0.0f;
+	}
+
+	if (data->elapsedSeconds >= 60)
+	{
+		data->elapsedMinutes++;
+		data->elapsedSeconds = 0.0f;
+	}
+
+	if (data->elapsedMinutes >= 60)
+	{
+		data->elapsedHours++;
+		data->elapsedMinutes = 0.0f;
+	}
+}
+
 /**
  * UpdateGame : Runs one tick of game logic.
  *
@@ -192,6 +220,9 @@ void UpdateGame(GameData *data, float deltaTime)
 			data->gsm = STATE_GAMEWON;
 		}
 
+		updateTime(data, deltaTime);
+
+
 		if (MediatorUpdateGame())
 		{
 			InitGame(data);
@@ -218,6 +249,23 @@ void UpdateGame(GameData *data, float deltaTime)
 			InitGame(data);
 		}
 	}
+}
+
+
+static void drawTime(const GameData *data)
+{
+	char text[30];
+
+	sprintf(text, "Time: %d:%d:%d", data->elapsedHours, data->elapsedMinutes, data->elapsedSeconds);
+	//sprintf(text, ":%d", data->elapsedMinutes);
+	//sprintf(text, ":%d", data->elapsedSeconds);
+
+
+	DrawText(
+			text,
+			SCREEN_WIDTH / 2 - (MeasureText(text, DEFAULT_FONT_SIZE) / 2), // Measure the text with with MeasureText
+			20,
+			DEFAULT_FONT_SIZE, GOLD);
 }
 
 // Draw GameObject HealthBar
@@ -428,6 +476,7 @@ void DrawGame(const GameData *data)
 
 	DrawControlText();
 
+	drawTime(data);
 	//---------------------------------------------------------
 	// Drawing NPC and Position Data
 	// NPC Circle

@@ -29,6 +29,11 @@ typedef struct
     // Game State Manager
 	GameState gsm;
 
+    int elapsedSeconds;
+    int elapsedMinutes;
+    unsigned int elapsedHours;
+    float aSecond;
+
 } GameData;
 
 // Initialises the game components (player, npc, mediator)
