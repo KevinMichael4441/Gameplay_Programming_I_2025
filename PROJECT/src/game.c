@@ -257,8 +257,6 @@ static void drawTime(const GameData *data)
 	char text[30];
 
 	sprintf(text, "Time: %d:%d:%d", data->elapsedHours, data->elapsedMinutes, data->elapsedSeconds);
-	//sprintf(text, ":%d", data->elapsedMinutes);
-	//sprintf(text, ":%d", data->elapsedSeconds);
 
 
 	DrawText(
@@ -511,6 +509,8 @@ void DrawGame(const GameData *data)
 	if (data->gsm == STATE_GAMELOST || data->gsm == STATE_GAMEWON)
 	{
 		char *gameOverText;
+		char timer[30];
+		sprintf(timer, "Your time was: %d:%d:%d", data->elapsedHours, data->elapsedMinutes, data->elapsedSeconds);
 
 		if (data->gsm == STATE_GAMELOST)
 		{
@@ -519,13 +519,18 @@ void DrawGame(const GameData *data)
 		else if (data->gsm == STATE_GAMEWON)
 		{
 			gameOverText = "Ya WON!!! 'R' in Keyboard, 'Y' in XBOX or Triangle in PS to restart";
+
+			DrawText(
+			timer,
+			SCREEN_WIDTH / 2 - (MeasureText(timer, DEFAULT_FONT_SIZE) / 2), // Measure the text with with MeasureText
+			SCREEN_HEIGHT / 2 + 20,
+			DEFAULT_FONT_SIZE, GOLD);
 		}
-		// Game Over Text
 		
 		DrawText(
 			gameOverText,
 			SCREEN_WIDTH / 2 - (MeasureText(gameOverText, DEFAULT_FONT_SIZE) / 2), // Measure the text with with MeasureText
-			SCREEN_HEIGHT / 2,
+			SCREEN_HEIGHT / 2 - 20,
 			DEFAULT_FONT_SIZE, GOLD);
 	}
 }
